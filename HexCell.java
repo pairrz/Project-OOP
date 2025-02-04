@@ -1,12 +1,18 @@
 public class HexCell {
     private int x;
     private int y;
+    private Player owner;
     private Minion minion;
 
     public HexCell(int x, int y) {
         this.x = x;
         this.y = y;
-        this.minion = null; // ไม่มีมินเนียนตอนเริ่มต้น
+        this.minion = null;
+        this.owner = null;
+    }
+
+    public void setOwner(Player player) {
+        this.owner = player;
     }
 
     public void setMinion(Minion minion) {
@@ -18,7 +24,11 @@ public class HexCell {
     }
 
     public boolean isOccupied() {
-        return minion != null;
+        return owner != null;
+    }
+
+    public boolean isEmpty() {
+        return minion == null;
     }
 
     public int getX() {
@@ -27,6 +37,10 @@ public class HexCell {
 
     public int getY() {
         return y;
+    }
+
+    public Player getOwner() {
+        return owner;
     }
 
     public Minion getMinion() {

@@ -22,5 +22,4 @@ public class GameRule {
             case "max_spawns" -> MaxSpawns = x;
         }
     }
-
 }

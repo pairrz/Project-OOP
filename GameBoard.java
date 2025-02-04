@@ -1,24 +1,17 @@
-import java.awt.image.AreaAveragingScaleFilter;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 
 public class GameBoard {
-    private HexCell[][] grid;
     private static GameBoard instance;
-    private boolean[][] isOccupied;
+    private HexCell[][] grid;
+    private int size = 8;
+    private boolean[][] isOccupied = new boolean[8][8];
+
+    private Player playerOne, playerTwo;
+    private Player currentPlayer;
     private ArrayList<HexCell> player1Hexes;
     private ArrayList<HexCell> player2Hexes;
-    private int size;
 
-    public GameBoard() {
-        grid = new HexCell[size][size];
-        for (int i = 1; i <= size; i++) {
-            for (int j = 1; j <= size; j++) {
-                grid[i][j] = new HexCell(i, j);
-            }
-        }
-        setupPlayerHexes();
-    }
 
     public static GameBoard getInstance() {
         if (instance == null) {
@@ -27,6 +20,21 @@ public class GameBoard {
         return instance;
     }
 
+    public GameBoard() {
+        playerOne = new HumanPlayer("Player One");
+        playerTwo = new HumanPlayer("Player Two");
+        currentPlayer = playerOne;
+
+        grid = new HexCell[size][size];
+
+        for (int i = 1; i < size; i++) {
+            for (int j = 1; j < size; j++) {
+                grid[i][j] = new HexCell(i, j);
+                isOccupied[i][j] = false;
+            }
+        }
+        setupPlayerHexes();
+    }
 
     private void setupPlayerHexes() {
         this.player1Hexes = new ArrayList<>();
@@ -34,15 +42,36 @@ public class GameBoard {
 
         int k = 3;
         for (int i = 1; i <= 2; i++) {
-            player1Hexes.addAll(Arrays.asList(grid[i]).subList(1, k + 1));
+            for (int j = 1; j <= k; j++) {
+                player1Hexes.add(grid[i][j]);
+                isOccupied[i][j] = true;
+            }
             k--;
         }
 
         k = 6;
         for (int i = 8; i >= 7; i--) {
-            player2Hexes.addAll(Arrays.asList(grid[i]).subList(k, 9));
+            for (int j = k; j <= size; j++) {
+                player2Hexes.add(grid[i][j]);
+                isOccupied[i][j] = true;
+            }
             k++;
         }
+    }
+
+    public int checkCellOwner(int x, int y) {
+        if (isValidPosition(x, y)) {
+            HexCell cell = grid[x][y];
+            if (cell.isOccupied()) {
+                if(cell.getOwner().equals(playerOne)) {
+                    return 1;
+                }
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+        return "Invalid position";
     }
 
     public ArrayList<HexCell> getPlayer1Hexes() {
@@ -65,14 +94,21 @@ public class GameBoard {
         return cell != null && cell.isOccupied();
     }
 
+    public boolean isValidPosition(int x, int y) {
+        if(x <= 0 || y <= 0 || x > size || y > size) {
+            return false;
+        }
+        return true;
+    }
+
     public void resetBoard() {
         initializeBoard();
     }
 
     private void initializeBoard() {
-        grid = new HexCell[8][8];
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        grid = new HexCell[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
                 grid[i][j] = new HexCell(i, j);
             }
         }

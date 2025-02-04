@@ -15,7 +15,7 @@ public class GiantMinion implements Minion {
     }
 
     @Override
-    public int getHp() {
+    public int getHP() {
         return hp;
     }
 

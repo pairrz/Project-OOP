@@ -1,11 +1,8 @@
 public class GameManage {
-    int TurnLoops;
+    private GameBoard gameBoard;
 
-    public void changeTurn(){
-        TurnLoops++;
+    public GameManage() {
+        gameBoard = GameBoard.getInstance();
     }
 
-    public void gameOver(){
-
-    }
 }

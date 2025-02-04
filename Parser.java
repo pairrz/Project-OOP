@@ -1,5 +1,5 @@
-import SyntaxErrorException.SyntaxError;
+import java.io.IOException;
 
 public interface Parser {
-    public Expr parse() throws SyntaxError;
+    public Expr parse() throws IOException;
 }

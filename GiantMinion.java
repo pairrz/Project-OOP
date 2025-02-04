@@ -15,6 +15,11 @@ public class GiantMinion implements Minion {
     }
 
     @Override
+    public void minionStrategy(String strategy) {
+
+    }
+
+    @Override
     public int getHP() {
         return hp;
     }
@@ -35,8 +40,23 @@ public class GiantMinion implements Minion {
     }
 
     @Override
+    public int getIndex() {
+        return 0;
+    }
+
+    @Override
+    public Player getOwner() {
+        return null;
+    }
+
+    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    @Override
+    public void setHP(int hp) {
+
     }
 }

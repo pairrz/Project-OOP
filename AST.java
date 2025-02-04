@@ -272,13 +272,31 @@ record NearbyExpr(String direction, Player player, Minion minion, GameBoard boar
     }
 }
 
-record Variable(String name) implements Expr {
+record Variable(String var,Player player, Minion minion,GameBoard board) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) {
-        if (bindings.containsKey(name)) {
-            return bindings.get(name);
+        if (var.equals("row")) {
+            return minion.getY();
+        }else if(var.equals("col")) {
+            return minion.getX();
+        }else if(var.equals("budget")) {
+            return player.getBudget();
+        }else if (var.equals("int")) {
+            return player.getRate(GameManage.turn);
+        }else if(var.equals("maxbudget")){
+            return GameRule.MaxBudget;
+        }else if(var.equals("")){
+            return board.spawnleft();
+        }else if(var.equals("random")){
+            int a = (int) Math.random();
+            return (a % 1000);
         }
-        throw new EvalError("Undefined variable: " + name);
+
+        if (bindings.containsKey(var)) {
+            return bindings.get(var);
+        }
+
+        throw new EvalError("Undefined variable: " + var);
     }
 }
 

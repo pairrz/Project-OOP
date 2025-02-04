@@ -146,7 +146,7 @@ public class ExprParse implements Parser{
         if (isDigit(Integer.parseInt(token.peek()))) {
             return new IntLit(Integer.parseInt(token.consume()));
         } else if (Character.isLetter(token.peek().charAt(0))) {
-            return new Variable(token.consume());
+            return new Variable(token.consume(),player,minion,board);
         } else if (token.peek("(")) {
             token.consume("(");
             Expr expr = Expression();
@@ -168,9 +168,9 @@ public class ExprParse implements Parser{
         }
     }
 
-    private boolean checkResWord(String word) {
-        return resWords.contains(word);
-    }
+//    private boolean checkResWord(String word) {
+//        return resWords.contains(word);
+//    }
 
     private boolean checkComWord(String word) {
         return commandWords.contains(word);

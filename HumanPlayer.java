@@ -6,6 +6,7 @@ public class HumanPlayer implements Player {
     ArrayList<HexCell> hexCells;
     ArrayList<Minion> minions;
     int numMinions;
+    int baseR;
 
     public HumanPlayer(String name) {
         this.name = name;
@@ -13,11 +14,36 @@ public class HumanPlayer implements Player {
         this.hexCells = new ArrayList<>();
         this.minions = new ArrayList<>();
         this.numMinions = 0;
+        this.baseR = GameRule.InterestPct;
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     @Override
     public int getBudget() {
         return budget;
+    }
+
+    @Override
+    public int getNumber() {
+        return numMinions;
+    }
+
+    @Override
+    public int getSumHP() {
+        int sum = 0;
+        for(Minion minion : minions) {
+            sum += minion.getHP();
+        }
+        return sum;
+    }
+
+    @Override
+    public int getRate(int turn) {
+        return (int) (baseR * Math.log10(Double.valueOf(budget)) * Math.log(Double.valueOf(turn)));
     }
 
     @Override
@@ -31,13 +57,11 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public boolean isPlayerOne() {
-        return false;
-    }
-
-    @Override
-    public boolean isPlayerTwo() {
-        return false;
+    public void setBudget(int turn) {
+        if(turn > 1){
+            int result = budget * (int) getRate(turn) / 100;
+            budget = result;
+        }
     }
 
     @Override
@@ -47,7 +71,6 @@ public class HumanPlayer implements Player {
             minions.add(minion);
             numMinions++;
         }
-
     }
 
     @Override
@@ -56,8 +79,10 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public void takeTurn() {
-
+    public void takeTurn(int turn) {
+        for(Minion minion : minions) {
+            minion.minionStrategy("D:\\OOP project\\Strategy.txt");
+        }
     }
 
     @Override
@@ -65,4 +90,6 @@ public class HumanPlayer implements Player {
         minions.remove(index);
         numMinions--;
     }
+
+
 }

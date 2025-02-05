@@ -10,67 +10,71 @@ public class GameManage {
     }
 
     public void gamePlay() throws IOException {
+        // อ่านค่าคอนฟิกจากไฟล์
         FileProcess file = new FileProcess();
         file.readConfig("D:\\OOP project\\Configuration");
 
+        // เล่นเกมจนกว่าจะจบ
         while(!isOver()){
             current().takeTurn(turn);
             gameBoard.switchPlayers();
             turn++;
         }
+        // รีเซ็ตบอร์ดหลังจากจบเกม
         gameBoard.resetBoard();
         gameOver();
     }
 
-    private boolean isOver(){
+    // ฟังก์ชันตรวจสอบว่าเกมจบหรือยัง
+    boolean isOver(){
+        // ตรวจสอบว่า Minion ของผู้เล่นฝ่ายตรงข้ามหรือผู้เล่นฝ่ายปัจจุบันเป็น 0 หรือไม่
         if(opponentMin() == 0 && turn > 2){
-            System.out.println("Congratulations! You won!");
-            System.out.println(currentName());
+            System.out.println("Congratulations! " + currentName() + " won!");
             return true;
         }else if(currentMin() == 0 && turn > 2){
-            System.out.println("Congratulations! You won!");
-            System.out.println(opponentName());
+            System.out.println("Congratulations! " + opponentName() + " won!");
             return true;
-        }else if(turn == maxTurn){
+        }
+
+        // ถ้า turn ถึง maxTurn จะเริ่มการเปรียบเทียบ
+        if(turn > maxTurn){
+            // เปรียบเทียบ Minion ของทั้งสองฝ่าย
             if(currentMin() > opponentMin()){
-                System.out.println("Congratulations! You won!");
-                System.out.println(currentName());
+                System.out.println("Congratulations! " + currentName() + " won!");
                 return true;
-            }else if(currentMin() < opponentMin()){
-                System.out.println("Congratulations! You won!");
-                System.out.println(opponentName());
+            } else if(currentMin() < opponentMin()){
+                System.out.println("Congratulations! " + opponentName() + " won!");
                 return true;
-            }else{
+            } else {
+                // ถ้า Minion เท่ากัน เปรียบเทียบ HP
                 if(currentHP() > opponentHP()){
-                    System.out.println("Congratulations! You won!");
-                    System.out.println(currentName());
+                    System.out.println("Congratulations! " + currentName() + " won!");
                     return true;
-                }else if(currentHP() < opponentHP()){
-                    System.out.println("Congratulations! You won!");
-                    System.out.println(opponentName());
+                } else if(currentHP() < opponentHP()){
+                    System.out.println("Congratulations! " + opponentName() + " won!");
                     return true;
-                }else{
+                } else {
+                    // ถ้า HP เท่ากัน เปรียบเทียบ Budget
                     if(currentBudget() > opponentBudget()){
-                        System.out.println("Congratulations! You won!");
-                        System.out.println(currentName());
+                        System.out.println("Congratulations! " + currentName() + " won!");
                         return true;
-                    }else{
-                        System.out.println("Congratulations! You won!");
-                        System.out.println(opponentName());
+                    } else {
+                        System.out.println("Congratulations! " + opponentName() + " won!");
                         return true;
                     }
                 }
             }
-        }else{
-            return false;
         }
+
+        return false; // เกมยังไม่จบ
     }
 
-    private void gameOver() {
+    // จบเกมและรีเซ็ตสถานะ
+    void gameOver() {
         System.out.println("Game has ended.");
-        System.exit(0);
     }
 
+    // ฟังก์ชันช่วยในการเข้าถึงผู้เล่นปัจจุบัน
     private Player current(){
         return gameBoard.getCurrentPlayer();
     }
@@ -83,6 +87,7 @@ public class GameManage {
         return gameBoard.getOpponentPlayer().getName();
     }
 
+    // ฟังก์ชันช่วยในการเข้าถึงจำนวน Minion ของผู้เล่น
     private int currentMin(){
         return gameBoard.getCurrentPlayer().getNumber();
     }
@@ -91,6 +96,7 @@ public class GameManage {
         return gameBoard.getOpponentPlayer().getNumber();
     }
 
+    // ฟังก์ชันช่วยในการเข้าถึง HP ของผู้เล่น
     private int currentHP(){
         return gameBoard.getCurrentPlayer().getSumHP();
     }
@@ -99,6 +105,7 @@ public class GameManage {
         return gameBoard.getOpponentPlayer().getSumHP();
     }
 
+    // ฟังก์ชันช่วยในการเข้าถึง Budget ของผู้เล่น
     private int currentBudget(){
         return gameBoard.getCurrentPlayer().getBudget();
     }

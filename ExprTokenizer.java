@@ -1,7 +1,9 @@
 import SyntaxErrorException.LexicalError;
 import SyntaxErrorException.SyntaxError;
+
+import java.util.List;
 import java.util.NoSuchElementException;
-import static com.sun.org.apache.xml.internal.utils.XMLChar.isSpace;
+import static java.lang.Character.isWhitespace;
 import static java.lang.Character.isDigit;
 
 public class ExprTokenizer implements Tokenizer {
@@ -42,7 +44,7 @@ public class ExprTokenizer implements Tokenizer {
     }
 
     private void computeNext() {
-        while (pos < src.length() && isSpace(src.charAt(pos))) {
+        while (pos < src.length() && isWhitespace(src.charAt(pos))) {
             pos++;
         }
 
@@ -54,7 +56,7 @@ public class ExprTokenizer implements Tokenizer {
 
         char c = src.charAt(pos);
 
-        if (isDigit(c)) {
+        if (Character.isDigit(c)) {
             int start = pos;
             while (pos < src.length() && isDigit(src.charAt(pos))) {
                 pos++;
@@ -88,5 +90,10 @@ public class ExprTokenizer implements Tokenizer {
         }else{
             throw new SyntaxError(s + " expected");
         }
+    }
+
+    @Override
+    public void setTokens(List<String> tokens) {
+
     }
 }

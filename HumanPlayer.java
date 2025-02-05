@@ -91,5 +91,15 @@ public class HumanPlayer implements Player {
         numMinions--;
     }
 
+    @Override
+    public void setNumber(int i) {
+
+    }
+
+    @Override
+    public void setSumHP(int i) {
+
+    }
+
 
 }

@@ -1,513 +1,70 @@
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class ExprParseTest {
+class ExprParserTest {
 
-    private ExprParse parser;
-
-    @BeforeEach
-    void setUp() {
-        Tokenizer tokenizer = new ExprTokenizer("move up");
-        tokenizer.setTokens(List.of("move", "up"));
-        parser = new ExprParse(tokenizer, new Player() {
-            @Override
-            public String getName() {
-                return "";
-            }
-
-            @Override
-            public int getBudget() {
-                return 0;
-            }
-
-            @Override
-            public int getNumber() {
-                return 0;
-            }
-
-            @Override
-            public int getSumHP() {
-                return 0;
-            }
-
-            @Override
-            public int getRate(int turn) {
-                return 0;
-            }
-
-            @Override
-            public ArrayList<Minion> getMinions() {
-                return null;
-            }
-
-            @Override
-            public ArrayList<HexCell> getHexCells() {
-                return null;
-            }
-
-            @Override
-            public void setBudget(int budget) {
-
-            }
-
-            @Override
-            public void buyMinion(Minion minion, boolean isMyHexCell) {
-
-            }
-
-            @Override
-            public void buyHexCell(HexCell cell) {
-
-            }
-
-            @Override
-            public void takeTurn(int turn) {
-
-            }
-
-            @Override
-            public void removeMinion(int index) {
-
-            }
-
-            @Override
-            public void setNumber(int i) {
-
-            }
-
-            @Override
-            public void setSumHP(int i) {
-
-            }
-        }, new Minion() {
-            @Override
-            public void minionStrategy(String string) {
-
-            }
-
-            @Override
-            public int getHP() {
-                return 0;
-            }
-
-            @Override
-            public int getDef() {
-                return 0;
-            }
-
-            @Override
-            public int getX() {
-                return 0;
-            }
-
-            @Override
-            public int getY() {
-                return 0;
-            }
-
-            @Override
-            public int getIndex() {
-                return 0;
-            }
-
-            @Override
-            public Player getOwner() {
-                return null;
-            }
-
-            @Override
-            public void setPosition(int x, int y) {
-
-            }
-
-            @Override
-            public void setHP(int hp) {
-
-            }
-        });
+    private Parser createParser(String input) {
+        Tokenizer token = new ExprTokenizer(input);
+        HexCell hex = new HexCell(1, 1);
+        Player player = new HumanPlayer("player");
+        Minion minion = new HumanMinion("minion", hex);
+        return new ExprParse(token, player, minion);
     }
 
     @Test
     void testParseMoveCommand() throws IOException {
+        Parser parser = createParser("move down");
         Expr expr = parser.parse();
-        assertTrue(expr instanceof MoveExpr);
+
+        assertAll(
+                () -> assertNotNull(expr, "Parsed expression should not be null"),
+                () -> assertInstanceOf(MoveExpr.class, expr, "Parsed expression should be a MoveExpr")
+        );
     }
 
     @Test
     void testParseIfStatement() throws IOException {
-        Tokenizer tokenizer = new ExprTokenizer("if (move up) then done else move down");
-        tokenizer.setTokens(List.of("if", "(", "move", "up", ")", "then", "done", "else", "move", "down"));
-        parser = new ExprParse(tokenizer, new Player() {
-            @Override
-            public String getName() {
-                return "";
-            }
-
-            @Override
-            public int getBudget() {
-                return 0;
-            }
-
-            @Override
-            public int getNumber() {
-                return 0;
-            }
-
-            @Override
-            public int getSumHP() {
-                return 0;
-            }
-
-            @Override
-            public int getRate(int turn) {
-                return 0;
-            }
-
-            @Override
-            public ArrayList<Minion> getMinions() {
-                return null;
-            }
-
-            @Override
-            public ArrayList<HexCell> getHexCells() {
-                return null;
-            }
-
-            @Override
-            public void setBudget(int budget) {
-
-            }
-
-            @Override
-            public void buyMinion(Minion minion, boolean isMyHexCell) {
-
-            }
-
-            @Override
-            public void buyHexCell(HexCell cell) {
-
-            }
-
-            @Override
-            public void takeTurn(int turn) {
-
-            }
-
-            @Override
-            public void removeMinion(int index) {
-
-            }
-
-            @Override
-            public void setNumber(int i) {
-
-            }
-
-            @Override
-            public void setSumHP(int i) {
-
-            }
-        }, new Minion() {
-            @Override
-            public void minionStrategy(String string) {
-
-            }
-
-            @Override
-            public int getHP() {
-                return 0;
-            }
-
-            @Override
-            public int getDef() {
-                return 0;
-            }
-
-            @Override
-            public int getX() {
-                return 0;
-            }
-
-            @Override
-            public int getY() {
-                return 0;
-            }
-
-            @Override
-            public int getIndex() {
-                return 0;
-            }
-
-            @Override
-            public Player getOwner() {
-                return null;
-            }
-
-            @Override
-            public void setPosition(int x, int y) {
-
-            }
-
-            @Override
-            public void setHP(int hp) {
-
-            }
-        });
-
+        Parser parser = createParser("if (0) then done else move downleft");
         Expr expr = parser.parse();
-        assertTrue(expr instanceof IfStatementExpr);
+
+        assertInstanceOf(IfStatementExpr.class, expr, "Parsed expression should be an IfStatementExpr");
+        //expr.execute(); // ทดสอบการ execute เพื่อให้เกิดผลลัพธ์จริง
     }
 
     @Test
     void testParseWhileStatement() throws IOException {
-        Tokenizer tokenizer = new ExprTokenizer("while (move up) then move down");
-        tokenizer.setTokens(List.of("while", "(", "move", "up", ")", "then", "move", "down"));
-        parser = new ExprParse(tokenizer, new Player() {
-            @Override
-            public String getName() {
-                return "";
-            }
-
-            @Override
-            public int getBudget() {
-                return 0;
-            }
-
-            @Override
-            public int getNumber() {
-                return 0;
-            }
-
-            @Override
-            public int getSumHP() {
-                return 0;
-            }
-
-            @Override
-            public int getRate(int turn) {
-                return 0;
-            }
-
-            @Override
-            public ArrayList<Minion> getMinions() {
-                return null;
-            }
-
-            @Override
-            public ArrayList<HexCell> getHexCells() {
-                return null;
-            }
-
-            @Override
-            public void setBudget(int budget) {
-
-            }
-
-            @Override
-            public void buyMinion(Minion minion, boolean isMyHexCell) {
-
-            }
-
-            @Override
-            public void buyHexCell(HexCell cell) {
-
-            }
-
-            @Override
-            public void takeTurn(int turn) {
-
-            }
-
-            @Override
-            public void removeMinion(int index) {
-
-            }
-
-            @Override
-            public void setNumber(int i) {
-
-            }
-
-            @Override
-            public void setSumHP(int i) {
-
-            }
-        }, new Minion() {
-            @Override
-            public void minionStrategy(String string) {
-
-            }
-
-            @Override
-            public int getHP() {
-                return 0;
-            }
-
-            @Override
-            public int getDef() {
-                return 0;
-            }
-
-            @Override
-            public int getX() {
-                return 0;
-            }
-
-            @Override
-            public int getY() {
-                return 0;
-            }
-
-            @Override
-            public int getIndex() {
-                return 0;
-            }
-
-            @Override
-            public Player getOwner() {
-                return null;
-            }
-
-            @Override
-            public void setPosition(int x, int y) {
-
-            }
-
-            @Override
-            public void setHP(int hp) {
-
-            }
-        });
-
+        Parser parser = createParser("while (move up) then move down");
         Expr expr = parser.parse();
-        assertTrue(expr instanceof WhileStatementExpr);
+
+        assertInstanceOf(WhileStatementExpr.class, expr, "Parsed expression should be a WhileStatementExpr");
+        //expr.execute();
     }
 
     @Test
-    void testUnexpectedToken() throws IOException {
-        Tokenizer tokenizer = new ExprTokenizer("unexpectedToken");
-        tokenizer.setTokens(List.of("unexpectedToken"));
-        parser = new ExprParse(tokenizer, new Player() {
-            @Override
-            public String getName() {
-                return "";
-            }
+    void testTokenStream() throws IOException {
+        Tokenizer tokenizer = new ExprTokenizer("if (0) then done else move downleft");
 
-            @Override
-            public int getBudget() {
-                return 0;
-            }
+        assertTrue(tokenizer.hasNextToken(), "Tokenizer should have tokens available");
+    }
 
-            @Override
-            public int getNumber() {
-                return 0;
-            }
+    @Test
+    void testUnexpectedToken() {
+        Parser parser = createParser("$!@");
 
-            @Override
-            public int getSumHP() {
-                return 0;
-            }
+        Exception exception = assertThrows(IOException.class, parser::parse, "Parsing an unexpected token should throw IOException");
+        assertTrue(exception.getMessage().contains("Unexpected token"), "Error message should indicate an unexpected token");
+    }
 
-            @Override
-            public int getRate(int turn) {
-                return 0;
-            }
+    @Test
+    void testFullExecution() throws IOException {
+        HexCell hex = new HexCell(1, 1);
+        Minion minion = new HumanMinion("minion", hex);
 
-            @Override
-            public ArrayList<Minion> getMinions() {
-                return null;
-            }
+        Expr expr = createParser("move down").parse();
+        expr.execute();
 
-            @Override
-            public ArrayList<HexCell> getHexCells() {
-                return null;
-            }
-
-            @Override
-            public void setBudget(int budget) {
-
-            }
-
-            @Override
-            public void buyMinion(Minion minion, boolean isMyHexCell) {
-
-            }
-
-            @Override
-            public void buyHexCell(HexCell cell) {
-
-            }
-
-            @Override
-            public void takeTurn(int turn) {
-
-            }
-
-            @Override
-            public void removeMinion(int index) {
-
-            }
-
-            @Override
-            public void setNumber(int i) {
-
-            }
-
-            @Override
-            public void setSumHP(int i) {
-
-            }
-        }, new Minion() {
-            @Override
-            public void minionStrategy(String string) {
-
-            }
-
-            @Override
-            public int getHP() {
-                return 0;
-            }
-
-            @Override
-            public int getDef() {
-                return 0;
-            }
-
-            @Override
-            public int getX() {
-                return 0;
-            }
-
-            @Override
-            public int getY() {
-                return 0;
-            }
-
-            @Override
-            public int getIndex() {
-                return 0;
-            }
-
-            @Override
-            public Player getOwner() {
-                return null;
-            }
-
-            @Override
-            public void setPosition(int x, int y) {
-
-            }
-
-            @Override
-            public void setHP(int hp) {
-
-            }
-        });
-
-        assertThrows(IOException.class, () -> parser.parse());
+        HexCell expectedPosition = new HexCell(2, 1); // ตรวจสอบว่ามินเนียนเคลื่อนที่ลงจริง
+        assertEquals(expectedPosition, minion.getPosition(), "Minion should move down correctly");
     }
 }

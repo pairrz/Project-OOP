@@ -1,7 +1,5 @@
 import SyntaxErrorException.DoneException;
 import SyntaxErrorException.EvalError;
-
-import java.util.ArrayList;
 import java.util.Map;
 
 record AssignmentExpr(String var, Expr expr) implements Expr {
@@ -285,8 +283,8 @@ record Variable(String var,Player player, Minion minion,GameBoard board) impleme
             return player.getRate(GameManage.turn);
         }else if(var.equals("maxbudget")){
             return GameRule.MaxBudget;
-        }else if(var.equals("")){
-            return board.spawnleft();
+        }else if(var.equals("spawnRemaining")){
+            return board.getSpawnRemaining();
         }else if(var.equals("random")){
             int a = (int) Math.random();
             return (a % 1000);

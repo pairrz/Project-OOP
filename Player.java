@@ -13,8 +13,6 @@ public interface Player {
     void buyHexCell(HexCell cell);
     void takeTurn(int turn);
     void removeMinion(int index);
-
     void setNumber(int i);
-
     void setSumHP(int i);
 }

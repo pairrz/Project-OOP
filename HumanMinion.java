@@ -4,14 +4,15 @@ public class HumanMinion implements Minion {
     int def;
     int x;
     int y;
-
     int bonusHP = 10;
     int bonusDef = 10;
 
-    public HumanMinion(String name) {
+    public HumanMinion(String name,HexCell hexCell) {
         this.name = name;
         this.hp = GameRule.InitHp + bonusHP;
         this.def = bonusDef;
+        this.x = hexCell.getX();
+        this.y = hexCell.getY();
     }
 
     @Override
@@ -47,6 +48,11 @@ public class HumanMinion implements Minion {
     @Override
     public Player getOwner() {
         return null;
+    }
+
+    @Override
+    public HexCell getPosition() {
+        return new HexCell(x,y);
     }
 
     @Override

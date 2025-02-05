@@ -6,6 +6,7 @@ public interface Minion {
     int getY();
     int getIndex();
     Player getOwner();
+    HexCell getPosition();
     void setPosition(int x, int y);
     void setHP(int hp);
 }

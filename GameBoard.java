@@ -11,7 +11,7 @@ public class GameBoard {
     private Player opponentPlayer;
     private ArrayList<HexCell> player1Hexes;
     private ArrayList<HexCell> player2Hexes;
-    private int spawnleft = GameRule.MaxSpawns;
+    private int SpawnRemaining = GameRule.MaxSpawns;
 
     // Singleton pattern for GameBoard
     public static GameBoard getInstance() {
@@ -110,8 +110,8 @@ public class GameBoard {
         }
     }
 
-    public int spawnleft() {
-        return spawnleft -= playerOne.getNumber() + playerTwo.getNumber();
+    public int getSpawnRemaining() {
+        return SpawnRemaining -= playerOne.getNumber() + playerTwo.getNumber();
     }
 
     public HexCell getHexCell(int x, int y) {

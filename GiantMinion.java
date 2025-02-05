@@ -50,6 +50,11 @@ public class GiantMinion implements Minion {
     }
 
     @Override
+    public HexCell getPosition() {
+        return new HexCell(x, y);
+    }
+
+    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;

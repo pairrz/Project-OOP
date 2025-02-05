@@ -1,10 +1,3 @@
-import SyntaxErrorException.SyntaxError;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import static java.lang.Character.isDigit;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;

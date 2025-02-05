@@ -50,6 +50,11 @@ public class LordMinion implements Minion {
     }
 
     @Override
+    public HexCell getPosition() {
+        return null;
+    }
+
+    @Override
     public void setPosition(int x, int y) {
 
     }

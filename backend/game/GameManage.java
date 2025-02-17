@@ -3,6 +3,7 @@ package backend.game;
 import backend.players.Player;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class GameManage {
     private GameBoard gameBoard;
@@ -17,6 +18,17 @@ public class GameManage {
         // อ่านค่าคอนฟิกจากไฟล์
         FileProcess file = new FileProcess();
         file.readConfig("D:\\OOP project\\Configuration");
+
+        System.out.println("Select game mode");
+        System.out.println("1.Duel Mode\n2.Solitaire Mode\n3.Auto Mode");
+
+        Scanner s = new Scanner(System.in);
+        int x = s.nextInt();
+
+        switch (x){
+            case 1:
+
+        }
 
         // เล่นเกมจนกว่าจะจบ
         while(!isOver()){

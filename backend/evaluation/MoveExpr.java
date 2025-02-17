@@ -1,0 +1,53 @@
+package backend.evaluation;
+
+import backend.game.GameBoard;
+import backend.game.HexCell;
+import backend.minions.Minion;
+import backend.parser.Expr;
+
+import java.util.Map;
+
+public record MoveExpr(Minion minion, String direction, GameBoard board) implements Expr {
+    public boolean moveDirect() {
+        int x = minion.getX();
+        int y = minion.getY();
+        int newX = x, newY = y;
+
+        switch (direction) {
+            case "up": newX--; break;
+            case "down": newX++; break;
+            case "upleft": newX--; newY--; break;
+            case "upright": newX--; newY++; break;
+            case "downleft": newY--; break;
+            case "downright": newY++; break;
+            default:
+                throw new IllegalArgumentException("Invalid direction: " + direction);
+        }
+
+        HexCell currentCell = board.getHexCell(x, y);
+        HexCell newCell = board.getHexCell(newX, newY);
+
+        if (newCell == null || newCell.isOccupied()) {
+            return false;
+        }
+        currentCell.removeMinion();
+        newCell.setMinion(minion);
+        minion.setPosition(newX, newY);
+
+        return true;
+    }
+
+    @Override
+    public int eval(Map<String, Integer> bindings) throws Exception {
+        int budget = bindings.getOrDefault("budget", 0);
+        if (budget < 1) {
+            return 0;
+        }
+
+        if (moveDirect()) {
+            bindings.put("budget", budget - 1);
+        }
+
+        return 0;
+    }
+}

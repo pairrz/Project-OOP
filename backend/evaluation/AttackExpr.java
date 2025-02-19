@@ -55,7 +55,7 @@ public record AttackExpr(Player player, Minion attacker, String direction, Expr 
         if (newHP == 0) {
             targetCell.removeMinion();
             Player player = targetMinion.getOwner();
-            player.removeMinion(targetMinion.getIndex());
+            player.removeMinion(targetMinion);
         }
         return 0;
     }

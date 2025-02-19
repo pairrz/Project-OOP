@@ -2,7 +2,6 @@ package backend.parser;
 
 import SyntaxErrorException.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 import static java.lang.Character.isWhitespace;
 import static java.lang.Character.isDigit;
@@ -91,10 +90,5 @@ public class ExprTokenizer implements Tokenizer {
         }else{
             throw new SyntaxError(s + " expected");
         }
-    }
-
-    @Override
-    public void setTokens(List<String> tokens) {
-
     }
 }

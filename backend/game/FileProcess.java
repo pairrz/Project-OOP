@@ -2,7 +2,6 @@ package backend.game;
 
 import backend.minions.*;
 import backend.parser.*;
-import backend.players.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +12,7 @@ import java.nio.file.Paths;
 
 public class FileProcess {
 
-    public void readStrategy(String fileName , Player player , Minion minion) throws IOException {
+    public void readStrategy(String fileName,Minion minion) throws IOException {
         Path path = Paths.get(fileName);
         Charset charset = Charset.forName("UTF-8");
 
@@ -28,7 +27,7 @@ public class FileProcess {
             while ((line = reader.readLine()) != null) {
                 try {
                     Tokenizer token = new ExprTokenizer(line);
-                    Parser parser = new ExprParse(token, player, minion);
+                    Parser parser = new ExprParse(token,minion);
                 } catch (IllegalArgumentException x) {
                     System.out.println("Invalid operator in expression: " + line + " -> " + x.getMessage());
                 } catch (ArithmeticException x) {

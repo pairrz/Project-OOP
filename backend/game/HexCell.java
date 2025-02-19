@@ -1,13 +1,19 @@
 package backend.game;
 
-import backend.minions.Minion;
-import backend.players.Player;
-
-import java.util.ArrayList;
+import backend.minions.*;
+import backend.players.*;
 
 public class HexCell {
     private int x;
     private int y;
+    private String status;
+    /*
+        - hex cell ว่าง
+        1 ช่องของ py1
+        2 ช่องของ py2
+        * ช่องของมินเนียน py1
+        # ช่องของมินเนียน py2
+     */
     private Player owner;  // เจ้าของเซลล์
     private Minion minion; // มินเนี่ยนในเซลล์
 
@@ -16,6 +22,7 @@ public class HexCell {
         this.y = y;
         this.minion = null;
         this.owner = null;
+        this.status = "-";
     }
 
     // ตั้งค่าเจ้าของเซลล์
@@ -23,9 +30,17 @@ public class HexCell {
         this.owner = player;
     }
 
+    public  String getStatus() {
+        return status;
+    }
+
     // ตั้งค่า backend.minions.Minion ในเซลล์
     public void setMinion(Minion minion) {
         this.minion = minion;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     // ลบ backend.minions.Minion ออกจากเซลล์
@@ -35,7 +50,7 @@ public class HexCell {
 
     // เช็คว่าเซลล์ถูกยึดครองหรือไม่
     public boolean isOccupied() {
-        return owner != null;  // เซลล์ถูกยึดครองถ้ามีเจ้าของ
+        return owner != null || minion != null;
     }
 
     // เช็คว่าเซลล์ว่างหรือไม่ (ไม่มี backend.minions.Minion)
@@ -59,84 +74,13 @@ public class HexCell {
         return minion;
     }
 
-    // ฟังก์ชันนี้ตั้งค่าให้เซลล์ถูกยึดครองหรือไม่ (โดยตั้งค่าเจ้าของ)
-    public void setOccupied(boolean occupied) {
-        if (occupied) {
-            // ถ้าต้องการให้เซลล์ถูกยึดครอง ให้ตั้งค่าผู้เล่นเป็นเจ้าของ
-            this.owner = new Player() {
-                @Override
-                public String getName() {
-                    return "";
-                }
-
-                @Override
-                public int getBudget() {
-                    return 0;
-                }
-
-                @Override
-                public int getNumber() {
-                    return 0;
-                }
-
-                @Override
-                public int getSumHP() {
-                    return 0;
-                }
-
-                @Override
-                public int getRate(int turn) {
-                    return 0;
-                }
-
-                @Override
-                public ArrayList<Minion> getMinions() {
-                    return null;
-                }
-
-                @Override
-                public ArrayList<HexCell> getHexCells() {
-                    return null;
-                }
-
-                @Override
-                public void setBudget(int budget) {
-
-                }
-
-                @Override
-                public void buyMinion(Minion minion, boolean isMyHexCell) {
-
-                }
-
-                @Override
-                public void buyHexCell(HexCell cell) {
-
-                }
-
-                @Override
-                public void takeTurn(int turn) {
-
-                }
-
-                @Override
-                public void removeMinion(int index) {
-
-                }
-
-                @Override
-                public void setNumber(int i) {
-
-                }
-
-                @Override
-                public void setSumHP(int i) {
-
-                }
-            };  // ใส่ผู้เล่นตามต้องการ
-        } else {
-            // ถ้าต้องการให้เซลล์ว่าง ให้ลบเจ้าของ
-            this.owner = null;
-        }
-    }
+//    // ฟังก์ชันนี้ตั้งค่าให้เซลล์ถูกยึดครองหรือไม่ (โดยตั้งค่าเจ้าของ)
+//    public void setOccupied(boolean occupied) {
+//        if (occupied) {
+//
+//        } else {
+//            // ถ้าต้องการให้เซลล์ว่าง ให้ลบเจ้าของ
+//            this.owner = null;
+//        }
+//    }
 }

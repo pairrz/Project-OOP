@@ -2,6 +2,8 @@ package backend.players;
 
 import backend.game.HexCell;
 import backend.minions.Minion;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public interface Player {
@@ -12,10 +14,12 @@ public interface Player {
     int getRate(int turn);
     ArrayList<Minion> getMinions();
     ArrayList<HexCell> getHexCells();
-    void buyMinion(int cost,Minion minion, boolean isMyHexCell);
-    void buyHexCell(HexCell cell);
-    void takeTurn(int turn);
-    void removeMinion(int index);
+    boolean isAdjacent(HexCell cell);
+    boolean isMyHexCell(HexCell cell);
+    void buyMinion(HexCell cell);
+    void buyHexCell();
+    void takeTurn(int turn) throws IOException;
+    void removeMinion(Minion minion);
     void setBudget(int budget);
     void setNumber(int i);
     void setSumHP(int i);

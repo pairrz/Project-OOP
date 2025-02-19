@@ -1,6 +1,6 @@
 package backend.game;
 
-import backend.players.Player;
+import backend.players.*;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -10,29 +10,58 @@ public class GameManage {
     public static int turn = 1;
     private int maxTurn = GameConfig.MaxTurns;
 
-    public GameManage(){
-        gameBoard = GameBoard.getInstance();
-    }
-
     public void gamePlay() throws IOException {
         // อ่านค่าคอนฟิกจากไฟล์
-        FileProcess file = new FileProcess();
-        file.readConfig("D:\\OOP project\\Configuration");
+        try {
+            FileProcess file = new FileProcess();
+            file.readConfig("D:\\OOP project\\Configuration");
+        } catch (IOException e) {
+            System.err.println("Error loading config file: " + e.getMessage());
+        }
 
-        System.out.println("Select game mode");
         System.out.println("1.Duel Mode\n2.Solitaire Mode\n3.Auto Mode");
+        System.out.print("Select game mode : ");
 
-        Scanner s = new Scanner(System.in);
-        int x = s.nextInt();
+        Scanner str1 = new Scanner(System.in);
+        int x = str1.nextInt();
 
         switch (x){
             case 1:
+            case 2:
+            case 3:
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Enter the first player's name: ");
+                String name1 = scanner.next();
 
+                System.out.print("Enter the second player's name: ");
+                String name2 = scanner.next();
+
+                gameBoard = GameBoard.getInstance(name1, name2);
+
+//                System.out.print("Enter the number of minion types: ");
+//                int n = scanner.nextInt();
+//
+//                System.out.print("Enter your strategy: ");
+//                String strategy = scanner.next();
+//                scanner.close();
+
+                //showBoard();
+                break;
         }
 
         // เล่นเกมจนกว่าจะจบ
-        while(!isOver()){
+        while (!isOver()) {
+            String winnerName = currentName(); // บันทึกชื่อก่อนสลับผู้เล่น
+            System.out.println(currentName() + " turn");
             current().takeTurn(turn);
+            gameBoard.setStatus();
+            //showBoard();
+
+            if (isOver()) {
+                System.out.println("Congratulations! " + winnerName + " won!");
+                break; // ออกจาก loop ทันทีหลังจากพบผู้ชนะ
+            }
+
             gameBoard.switchPlayers();
             turn++;
         }
@@ -42,12 +71,12 @@ public class GameManage {
     }
 
     // ฟังก์ชันตรวจสอบว่าเกมจบหรือยัง
-    boolean isOver(){
+    private boolean isOver(){
         // ตรวจสอบว่า backend.minions.Minion ของผู้เล่นฝ่ายตรงข้ามหรือผู้เล่นฝ่ายปัจจุบันเป็น 0 หรือไม่
-        if(opponentMin() == 0 && turn > 2){
+        if(opponentMin() == 0 && turn > 3){
             System.out.println("Congratulations! " + currentName() + " won!");
             return true;
-        }else if(currentMin() == 0 && turn > 2){
+        }else if(currentMin() == 0 && turn > 3){
             System.out.println("Congratulations! " + opponentName() + " won!");
             return true;
         }
@@ -80,13 +109,11 @@ public class GameManage {
                     }
                 }
             }
-        }
-
-        return false; // เกมยังไม่จบ
+        }else return false;// เกมยังไม่จบ
     }
 
     // จบเกมและรีเซ็ตสถานะ
-    void gameOver() {
+    private void gameOver() {
         System.out.println("Game has ended.");
     }
 
@@ -95,7 +122,7 @@ public class GameManage {
         return gameBoard.getCurrentPlayer();
     }
 
-    private String currentName(){
+    private String currentName() {
         return gameBoard.getCurrentPlayer().getName();
     }
 

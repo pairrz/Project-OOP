@@ -1,7 +1,10 @@
 package backend.minions;
 
+import backend.game.*;
+import backend.players.*;
+
 public class HumanMinion implements Minion {
-    String name;
+    //String name;
     int hp;
     int def;
     int x;
@@ -9,12 +12,10 @@ public class HumanMinion implements Minion {
     int bonusHP = 10;
     int bonusDef = 10;
 
-    public HumanMinion(String name, HexCell hexCell) {
-        this.name = name;
-        this.hp = GameRule.InitHp + bonusHP;
+    public HumanMinion() {
+        //this.name = name;
+        this.hp = GameConfig.InitHp + bonusHP;
         this.def = bonusDef;
-        this.x = hexCell.getX();
-        this.y = hexCell.getY();
     }
 
     @Override
@@ -43,11 +44,6 @@ public class HumanMinion implements Minion {
     }
 
     @Override
-    public int getIndex() {
-        return 0;
-    }
-
-    @Override
     public Player getOwner() {
         return null;
     }
@@ -59,11 +55,18 @@ public class HumanMinion implements Minion {
 
     @Override
     public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
 
+    @Override
+    public void setHex(HexCell hex) {
+        this.x = hex.getX();
+        this.y = hex.getY();
     }
 
     @Override
     public void setHP(int hp) {
-
+        this.hp = hp;
     }
 }

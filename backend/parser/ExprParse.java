@@ -14,15 +14,16 @@ import static java.lang.Character.isDigit;
 public class ExprParse implements Parser {
     private final List<String> commandWords = List.of("done", "move", "shoot");
     protected Tokenizer token;
-    private final GameBoard board = GameBoard.getInstance();
+    private final GameBoard board;
     protected Player player;
     protected Map<String, Integer> playerBindings = new HashMap<>();
     protected Minion minion;
 
-    public ExprParse(Tokenizer token, Player player, Minion minion) {
+    public ExprParse(Tokenizer token, Minion minion) {
         this.token = token;
-        this.player = player;
+        this.player = GameBoard.instance.getCurrentPlayer();
         this.minion = minion;
+        this.board = GameBoard.getInstance();
         playerBindings.put("budget", player.getBudget());
     }
 

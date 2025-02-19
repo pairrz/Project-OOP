@@ -1,5 +1,6 @@
-import backend.game.GameManage;
+package backend;
 
+import backend.game.*;
 import java.io.IOException;
 
 public class Main {

@@ -2,18 +2,95 @@ package backend.minions;
 
 import backend.game.*;
 import backend.players.*;
-
 import java.io.IOException;
 
-public interface Minion {
-    void minionStrategy(String string) throws IOException;
-    int getHP();
-    int getDef();
-    int getX();
-    int getY();
-    Player getOwner();
-    HexCell getPosition();
-    void setPosition(int x, int y);
-    void setHex(HexCell hex);
-    void setHP(int hp);
+public class Minion {
+    protected int hp;
+    protected int def;
+    protected int x;
+    protected int y;
+    protected HexCell position;
+    protected int bonusHP = 10;
+    protected int bonusDef = 10;
+    protected Player owner;
+    protected HexCell cell;
+
+    public Minion(Player owner, HexCell cell) {
+        this.position = cell;
+        this.owner = owner;
+        this.hp = GameConfig.InitHp + bonusHP;
+        this.def = bonusDef;
+    }
+
+    public void minionStrategy(String string) throws IOException{
+        FileProcess file = new FileProcess();
+        file.readStrategy(string, this);
+    }
+
+    public void setPosition(int newX, int newY) {
+        GameBoard board = GameBoard.getInstance(GameBoard.namePlayerOne, GameBoard.namePlayerTwo);
+
+        // ตรวจสอบว่าตำแหน่งใหม่อยู่ในขอบเขตบอร์ด
+        if (!board.isValidPosition(newX, newY)) {
+            System.out.println("ตำแหน่งใหม่อยู่นอกบอร์ด!");
+            return;
+        }
+
+        // ดึง HexCell ใหม่
+        HexCell newPosition = GameBoard.getHexCell(newX, newY);
+
+        // ตรวจสอบว่าตำแหน่งใหม่ถูกยึดครองอยู่หรือไม่
+        if (newPosition.isOccupied()) {
+            System.out.println("ตำแหน่งนี้มีมินเนียนอยู่แล้ว ไม่สามารถย้ายได้!");
+            return;
+        }
+
+        // ลบมินเนียนออกจากตำแหน่งเก่า
+        if (this.position != null) {
+            this.position.removeMinion();
+        }
+
+        // อัปเดตพิกัดของมินเนียน
+        setXY(newPosition);
+
+        // เพิ่มมินเนียนเข้าไปใน HexCell ใหม่
+        this.position.addMinion(this);
+
+        // อัปเดตสถานะกระดาน
+        board.setStatus();
+    }
+
+
+    public HexCell getPosition() {
+        return position;
+    }
+
+    public int getHP(){
+        return hp;
+    }
+
+    public int getDef(){
+        return def;
+    }
+
+    public int getX(){
+        return x;
+    }
+
+    public int getY(){
+        return y;
+    }
+
+    public Player getOwner(){
+        return owner;
+    }
+
+    public void setHP(int hp){
+        this.hp = hp;
+    }
+
+    public void setXY(HexCell newPosition){
+        this.x = newPosition.getX();
+        this.y = newPosition.getY();
+    }
 }

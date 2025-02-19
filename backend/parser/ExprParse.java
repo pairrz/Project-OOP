@@ -21,9 +21,9 @@ public class ExprParse implements Parser {
 
     public ExprParse(Tokenizer token, Minion minion) {
         this.token = token;
-        this.player = GameBoard.instance.getCurrentPlayer();
+        this.player = GameBoard.getInstance(GameBoard.namePlayerOne,GameBoard.namePlayerTwo).getCurrentPlayer();
         this.minion = minion;
-        this.board = GameBoard.getInstance();
+        this.board = GameBoard.getInstance(GameBoard.namePlayerOne, GameBoard.namePlayerTwo);
         playerBindings.put("budget", player.getBudget());
     }
 

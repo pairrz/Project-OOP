@@ -24,14 +24,20 @@ public record MoveExpr(Minion minion, String direction, GameBoard board) impleme
                 throw new IllegalArgumentException("Invalid direction: " + direction);
         }
 
-        HexCell currentCell = board.getHexCell(x, y);
-        HexCell newCell = board.getHexCell(newX, newY);
-
-        if (newCell == null || newCell.isOccupied()) {
+        // ตรวจสอบว่าตำแหน่งใหม่อยู่ในขอบเขตบอร์ด
+        if (!board.isValidPosition(newX, newY)) {
+            System.out.println("ตำแหน่งใหม่อยู่นอกบอร์ด!");
             return false;
         }
-        currentCell.removeMinion();
-        newCell.setMinion(minion);
+
+        // ตรวจสอบว่าตำแหน่งใหม่ถูกยึดครองหรือไม่
+        HexCell newCell = GameBoard.getHexCell(newX, newY);
+        if (newCell.isOccupied()) {
+            System.out.println("ตำแหน่งนี้มีมินเนียนอยู่แล้ว ไม่สามารถย้ายได้!");
+            return false;
+        }
+
+        // ใช้ setPosition เพื่ออัปเดตตำแหน่งของมินเนียน
         minion.setPosition(newX, newY);
 
         return true;

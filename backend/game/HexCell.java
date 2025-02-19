@@ -3,6 +3,8 @@ package backend.game;
 import backend.minions.*;
 import backend.players.*;
 
+import java.util.Objects;
+
 public class HexCell {
     private int x;
     private int y;
@@ -14,7 +16,7 @@ public class HexCell {
         * ช่องของมินเนียน py1
         # ช่องของมินเนียน py2
      */
-    private Player owner;  // เจ้าของเซลล์
+    private Player owner;  // เจ้าของเซลล์ฟ
     private Minion minion; // มินเนี่ยนในเซลล์
 
     public HexCell(int x, int y) {
@@ -22,7 +24,19 @@ public class HexCell {
         this.y = y;
         this.minion = null;
         this.owner = null;
-        this.status = "-";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        HexCell hexCell = (HexCell) obj;
+        return x == hexCell.x && y == hexCell.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     // ตั้งค่าเจ้าของเซลล์
@@ -30,12 +44,12 @@ public class HexCell {
         this.owner = player;
     }
 
-    public  String getStatus() {
+    public String getStatus() {
         return status;
     }
 
     // ตั้งค่า backend.minions.Minion ในเซลล์
-    public void setMinion(Minion minion) {
+    public void addMinion(Minion minion) {
         this.minion = minion;
     }
 
@@ -72,6 +86,10 @@ public class HexCell {
 
     public Minion getMinion() {
         return minion;
+    }
+
+    public boolean hasMinion() {
+        return this.minion != null;
     }
 
 //    // ฟังก์ชันนี้ตั้งค่าให้เซลล์ถูกยึดครองหรือไม่ (โดยตั้งค่าเจ้าของ)

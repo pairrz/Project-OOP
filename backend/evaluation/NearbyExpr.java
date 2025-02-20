@@ -1,63 +1,40 @@
 package backend.evaluation;
 
-import backend.game.GameBoard;
-import backend.minions.Minion;
-import backend.parser.Expr;
-import backend.players.Player;
+import backend.game.*;
+import backend.minions.*;
+import backend.parser.*;
 
 import java.util.Map;
 
-public record NearbyExpr(String direction, Player player, Minion minion, GameBoard board) implements Expr {
-
+public record NearbyExpr(String direction, Minion minion) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
         int x = minion.getX();
         int y = minion.getY();
-        int distance = 0;
+        int distance = 1;
 
-        while (board.isValidPosition(x, y)) {
-            Minion target = board.getHexCell(x, y).getMinion();
+        switch (direction) {
+            case "up" -> x--;
+            case "down" -> x++;
+            case "upleft" -> { x--; y--; }
+            case "upright" -> { x--; y++; }
+            case "downleft" -> y--;
+            case "downright" -> y++;
+            default -> throw new IllegalArgumentException("Invalid direction: " + direction);
+        }
 
+        while (GameBoard.isValidPosition(x, y)) {
+            Minion target = GameBoard.getHexCell(x, y).getMinion();
             if (target != null) {
-                int hpLength = String.valueOf(target.getHP()).length();
-                int defenseLength = String.valueOf(target.getDef()).length();
-                int minionDistance = distance;
-
-                if (target.getOwner() == player) {
-                    return -(100 * hpLength + 10 * defenseLength + minionDistance);
-                } else {
-                    return (100 * hpLength + 10 * defenseLength + minionDistance);
-                }
+                int result = 100 * target.getHP() + 10 * target.getDef() + distance;
+                bindings.put("nearby", result);
+                return result;
             }
-
-            switch (direction) {
-                case "up":
-                    x--;
-                    break;
-                case "down":
-                    x++;
-                    break;
-                case "upleft":
-                    x--;
-                    y--;
-                    break;
-                case "upright":
-                    x--;
-                    y++;
-                    break;
-                case "downleft":
-                    x++;
-                    y--;
-                    break;
-                case "downright":
-                    x++;
-                    y++;
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid direction: " + direction);
-            }
+            x += (direction.contains("up") ? -1 : 0) + (direction.contains("down") ? 1 : 0);
+            y += (direction.contains("left") ? -1 : 0) + (direction.contains("right") ? 1 : 0);
             distance++;
         }
+        bindings.put("nearby", 0);
         return 0;
     }
 }

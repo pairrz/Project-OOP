@@ -5,6 +5,8 @@ import backend.minions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MinionTest {
@@ -13,7 +15,7 @@ public class MinionTest {
     private HexCell cell;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         // สร้างกระดานเกมจำลอง
         board = GameBoard.getInstance("PlayerOne", "PlayerTwo");
 
@@ -35,10 +37,10 @@ public class MinionTest {
     }
 
     @Test
-    void testMinionMoveValid() {
+    void testMinionMoveValid() throws IOException {
         HexCell targetCell = GameBoard.getHexCell(1,1);
 
-        minion.setPosition(1, 1);
+        minion.checkPosition(1, 1);
 
         assertEquals(1, minion.getX());
         assertEquals(1, minion.getY());
@@ -46,26 +48,40 @@ public class MinionTest {
     }
 
     @Test
-    void testMinionMoveToOccupiedCell() {
-        HexCell occupiedCell = GameBoard.getHexCell(3,2);
+    void testMinionMoveToOccupiedCell() throws IOException {
+        HexCell occupiedCell = GameBoard.getHexCell(1,2);
 
-        // วางมินเนียนตัวใหม่ในตำแหน่ง (3,2)
+        // วางมินเนียนตัวใหม่ในตำแหน่ง (1,2)
         Minion otherMinion = new Minion(board.getPlayerTwo(), occupiedCell);
         occupiedCell.addMinion(otherMinion);
 
-        // พยายามย้ายมินเนียนไปที่ (3,2) ซึ่งถูกยึดครองอยู่
-        minion.setPosition(3, 2);
+        HexCell targetCell = GameBoard.getHexCell(1,1);
 
-        // ควรยังอยู่ที่ตำแหน่งเดิม (2,2)
-        assertEquals(2, minion.getX());
-        assertEquals(0, minion.getY());
+        minion.checkPosition(1, 1);
+
+        assertEquals(1, minion.getX());
+        assertEquals(1, minion.getY());
+
+        // พยายามย้ายมินเนียนไปที่ (1,2) ซึ่งถูกยึดครองอยู่
+        minion.checkPosition(1, 2);
+
+        // ควรยังอยู่ที่ตำแหน่งเดิม (1,1)
+        assertEquals(1, minion.getX());
+        assertEquals(1, minion.getY());
     }
 
     @Test
-    void testMinionMoveOutOfBounds() {
-        minion.setPosition(-1, 2); // ตำแหน่งนี้ไม่ควรอยู่บนบอร์ด
+    void testMinionMoveOutOfBounds() throws IOException {
+        HexCell targetCell = GameBoard.getHexCell(1,1);
 
-        assertEquals(2, minion.getX());
-        assertEquals(0, minion.getY());
+        minion.checkPosition(1, 1);
+
+        assertEquals(1, minion.getX());
+        assertEquals(1, minion.getY());
+
+        minion.checkPosition(-1, 2); // ตำแหน่งนี้ไม่ควรอยู่บนบอร์ด
+
+        assertEquals(1, minion.getX());
+        assertEquals(1, minion.getY());
     }
 }

@@ -1,7 +1,7 @@
 package backend.minions;
 
 import backend.game.*;
-import backend.players.*;
+import backend.players.Player;
 import java.io.IOException;
 
 public class Minion {
@@ -16,10 +16,11 @@ public class Minion {
     protected HexCell cell;
 
     public Minion(Player owner, HexCell cell) {
-        this.position = cell;
+        this.position = GameBoard.getHexCell(cell.getX(), cell.getY());
+        position.addMinion(this);
         this.owner = owner;
-        this.hp = GameConfig.InitHp + bonusHP;
-        this.def = bonusDef;
+        this.hp = 10;
+        this.def = 0;
     }
 
     public void minionStrategy(String string) throws IOException{
@@ -27,11 +28,11 @@ public class Minion {
         file.readStrategy(string, this);
     }
 
-    public void setPosition(int newX, int newY) {
+    public void checkPosition(int newX, int newY) throws IOException {
         GameBoard board = GameBoard.getInstance(GameBoard.namePlayerOne, GameBoard.namePlayerTwo);
 
         // ตรวจสอบว่าตำแหน่งใหม่อยู่ในขอบเขตบอร์ด
-        if (!board.isValidPosition(newX, newY)) {
+        if (!GameBoard.isValidPosition(newX, newY)) {
             System.out.println("ตำแหน่งใหม่อยู่นอกบอร์ด!");
             return;
         }
@@ -40,7 +41,7 @@ public class Minion {
         HexCell newPosition = GameBoard.getHexCell(newX, newY);
 
         // ตรวจสอบว่าตำแหน่งใหม่ถูกยึดครองอยู่หรือไม่
-        if (newPosition.isOccupied()) {
+        if (newPosition.hasMinion()) {
             System.out.println("ตำแหน่งนี้มีมินเนียนอยู่แล้ว ไม่สามารถย้ายได้!");
             return;
         }
@@ -51,7 +52,7 @@ public class Minion {
         }
 
         // อัปเดตพิกัดของมินเนียน
-        setXY(newPosition);
+        setPosition(newPosition);
 
         // เพิ่มมินเนียนเข้าไปใน HexCell ใหม่
         this.position.addMinion(this);
@@ -89,7 +90,14 @@ public class Minion {
         this.hp = hp;
     }
 
-    public void setXY(HexCell newPosition){
+    public void moveTo(int newX, int newY){
+        this.x = newX;
+        this.y = newY;
+        this.position = GameBoard.getHexCell(newX, newY);
+    }
+
+    public void setPosition(HexCell newPosition){
+        this.position = newPosition;
         this.x = newPosition.getX();
         this.y = newPosition.getY();
     }

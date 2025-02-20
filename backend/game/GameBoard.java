@@ -2,6 +2,8 @@ package backend.game;
 
 import backend.minions.Minion;
 import backend.players.*;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,18 +15,18 @@ public class GameBoard {
     private final int size = 8;
     private final boolean[][] isOccupied = new boolean[8][8];
 
-    private final Player playerOne;
-    private final Player playerTwo;
+    private static Player playerOne;
+    private static Player playerTwo;
     private Player currentPlayer;
     private Player opponentPlayer;
 
     private final Map<String, HexCell> player1Hexes;
     private final Map<String, HexCell> player2Hexes;
 
-    private final int spawnRemaining = GameConfig.MaxSpawns;
+    private static final int spawnRemaining = GameConfig.MaxSpawns;
 
     //Constructor
-    private GameBoard(String playerOneName, String playerTwoName) {
+    private GameBoard(String playerOneName, String playerTwoName) throws IOException {
         namePlayerOne = playerOneName;
         namePlayerTwo = playerTwoName;
         hexCellMap = new HashMap<>();
@@ -41,7 +43,7 @@ public class GameBoard {
     }
 
     //Singleton
-    public static GameBoard getInstance(String playerOneName, String playerTwoName) {
+    public static GameBoard getInstance(String playerOneName, String playerTwoName) throws IOException {
         if (instance == null) {
             instance = new GameBoard(playerOneName, playerTwoName);
         }
@@ -57,6 +59,7 @@ public class GameBoard {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 getHexCell(i, j);
+                isOccupied[i][j] = false;
             }
         }
     }
@@ -70,7 +73,7 @@ public class GameBoard {
                 player1Hexes.put(i + "," + j, cell);
                 cell.setOwner(playerOne);
                 cell.setStatus("1");
-                isOccupied[i][j] = true;
+                //isOccupied[i][j] = true;
             }
             k--;
         }
@@ -82,7 +85,7 @@ public class GameBoard {
                 player2Hexes.put(i + "," + j, cell);
                 cell.setOwner(playerTwo);
                 cell.setStatus("2");
-                isOccupied[i][j] = true;
+                //isOccupied[i][j] = true;
             }
             k++;
         }
@@ -139,7 +142,7 @@ public class GameBoard {
         }
     }
 
-    public int getSpawnRemaining() {
+    public static int getSpawnRemaining() {
         return spawnRemaining - (playerOne.getNumber() + playerTwo.getNumber());
     }
 
@@ -149,8 +152,8 @@ public class GameBoard {
         return cell != null && cell.isOccupied();
     }
 
-    public boolean isValidPosition(int x, int y) {
-        return x >= 0 && y >= 0 && x < size && y < size;
+    public static boolean isValidPosition(int x, int y) {
+        return x >= 0 && y >= 0 && x < 8 && y < 8;
     }
 
     public void resetBoard() {
@@ -175,7 +178,7 @@ public class GameBoard {
         setStatus();  //อัปเดตสถานะก่อนแสดงบอร์ด
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                System.out.print(getStatusHexCells(i, j) + " ");
+                System.out.print("[ " + getStatusHexCells(i, j) + " ]"+" ");
             }
             System.out.println();
         }
@@ -193,12 +196,12 @@ public class GameBoard {
     }
 
     public void buyMinionForPlayerOne(HexCell cell, Minion minion) {
-        playerOne.buyMinion(cell,minion);
+        playerOne.buyMinion(cell);
         setStatus();
     }
 
     public void buyMinionForPlayerTwo(HexCell cell,Minion minion) {
-        playerTwo.buyMinion(cell,minion);
+        playerTwo.buyMinion(cell);
         setStatus();
     }
 

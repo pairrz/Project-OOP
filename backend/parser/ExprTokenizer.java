@@ -2,15 +2,18 @@ package backend.parser;
 
 import SyntaxErrorException.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import static java.lang.Character.isWhitespace;
 import static java.lang.Character.isDigit;
 
 public class ExprTokenizer implements Tokenizer {
-    private String src, next;  private int pos;
+    private final String src;
+    private String next;
+    private int pos;
 
-    public ExprTokenizer(String src){
-        if(src == null){
+    public ExprTokenizer(String src) {
+        if (src == null) {
             throw new IllegalArgumentException("src is null");
         }
         this.src = src;
@@ -25,12 +28,13 @@ public class ExprTokenizer implements Tokenizer {
 
     public void checkNextToken() {
         if (!hasNextToken()) {
-            throw new NoSuchElementException("no more tokens");
+            throw new NoSuchElementException("No more tokens");
         }
     }
 
     @Override
     public String peek() {
+        System.out.println("Tokenizer peek: " + next);  // Debugging
         checkNextToken();
         return next;
     }
@@ -39,6 +43,7 @@ public class ExprTokenizer implements Tokenizer {
     public String consume() {
         checkNextToken();
         String result = next;
+        System.out.println("Tokenizer consume: " + result);  // Debugging
         computeNext();
         return result;
     }
@@ -48,7 +53,6 @@ public class ExprTokenizer implements Tokenizer {
             pos++;
         }
 
-        StringBuilder result = new StringBuilder();
         if (pos >= src.length()) {
             next = null;
             return;
@@ -56,39 +60,45 @@ public class ExprTokenizer implements Tokenizer {
 
         char c = src.charAt(pos);
 
-        if (Character.isDigit(c)) {
+        if (isDigit(c)) {
             int start = pos;
             while (pos < src.length() && isDigit(src.charAt(pos))) {
                 pos++;
             }
             next = src.substring(start, pos);
-        } else if (Character.isLetter(c)) {
+            return;
+        }
+
+        if (Character.isLetter(c)) {
             int start = pos;
-            while (pos < src.length() && Character.isLetterOrDigit(src.charAt(pos))) {
+            while (pos < src.length() && (Character.isLetterOrDigit(src.charAt(pos)) || src.charAt(pos) == '_')) {
                 pos++;
             }
             next = src.substring(start, pos);
-        }else if (c == '+' || c == '{' || c== '}'|| c == '(' || c == ')' || c == '-' || c == '*' || c == '/' || c == '%' || c == '='
-        || c == '^') {
+            return;
+        }
+
+        if ("+-*/%^=(){}".indexOf(c) != -1) {
             next = Character.toString(c);
             pos++;
-        } else {
-            throw new LexicalError("Unknown character: " + c);
+            return;
         }
+
+        throw new LexicalError("Unknown character: " + c + " at position " + pos);
     }
 
     @Override
     public boolean peek(String s) {
         if (!hasNextToken()) return false;
-        return peek().equals(s);
+        return next != null && next.equals(s);
     }
 
     @Override
-    public void consume(String s){
-        if (peek(s)){
+    public void consume(String s) {
+        if (next != null && peek(s)) {
             consume();
-        }else{
-            throw new SyntaxError(s + " expected");
+        } else {
+            throw new SyntaxError(s + " expected at position " + pos);
         }
     }
 }

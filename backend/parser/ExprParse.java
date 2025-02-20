@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static java.lang.Character.isDigit;
 
 public class ExprParse implements Parser {
     private final List<String> commandWords = List.of("done", "move", "shoot");
@@ -28,49 +27,80 @@ public class ExprParse implements Parser {
     }
 
     @Override
-    public Expr parse() throws IOException {
-        Expr expr = Strategy();
-        if (token.hasNextToken()) {
-            throw new IOException("Leftover token on line ");
-        }
-        return expr;
+    public Expr parse() throws Exception {
+        return Strategy();
     }
 
     private Expr Strategy() throws IOException {
-        Expr expr = null;
-        if (token.hasNextToken()) {
-            expr = Statement();
-        }
-        return expr;
+        return Statement();
     }
 
     private Expr Statement() throws IOException {
-        if (token.peek("if")) {
-            token.consume("if");
-            token.consume("(");  // Consume opening parenthesis
-            Expr expr = Expression();
-            token.consume(")");  // Consume closing parenthesis
-            token.consume("then");
-            Expr statement1 = Statement();
-            token.consume("else");
-            Expr statement2 = Statement();
-            return new IfStatementExpr(expr, statement1, statement2);
-        } else if (token.peek("while")) {
-            token.consume("while");
-            token.consume("(");  // Consume opening parenthesis
-            Expr expr = Expression();
-            token.consume(")");  // Consume closing parenthesis
-            Expr statement1 = Statement();
-            return new WhileStatementExpr(expr, statement1);
-        } else if (token.peek("{")) {
-            token.consume("{");
-            Expr expr = Statement();
-            token.consume("}");
-            return expr;
-        } else {
-            return Command();
+        String str = token.peek();
+        System.out.println("peek: " + str);  // เพิ่มการพิมพ์ดีบัก
+        switch (str) {
+            case "if" -> {
+                token.consume("if");
+                token.consume("(");
+                Expr expr = Expression();
+                token.consume(")");
+                token.consume("then");
+                Expr statement1 = Statement();
+                token.consume("else");
+                Expr statement2 = Statement();
+                return new IfStatementExpr(expr, statement1, statement2);
+            }
+            case "while" -> {
+                System.out.println("While detected");  // เพิ่มการพิมพ์ดีบัก
+
+                token.consume("while");
+                token.consume("(");  // Consume opening parenthesis
+
+                Expr expr = Expression();
+                token.consume(")");  // Consume closing parenthesis
+
+                Expr statement1 = Statement();
+                return new WhileStatementExpr(expr, statement1);
+            }
+            case "{" -> {
+                token.consume("{");
+                Expr expr = Statement();
+                token.consume("}");
+                return expr;
+            }
+            default -> {
+                return Command();
+            }
         }
     }
+
+//    private Expr Statement() throws IOException {
+//        if (token.peek("if")) {
+//            token.consume("if");
+//            token.consume("(");  // Consume opening parenthesis
+//            Expr expr = Expression();
+//            token.consume(")");  // Consume closing parenthesis
+//            token.consume("then");
+//            Expr statement1 = Statement();
+//            token.consume("else");
+//            Expr statement2 = Statement();
+//            return new IfStatementExpr(expr, statement1, statement2);
+//        } else if (token.peek("while")) {
+//            token.consume("while");
+//            token.consume("(");  // Consume opening parenthesis
+//            Expr expr = Expression();
+//            token.consume(")");  // Consume closing parenthesis
+//            Expr statement1 = Statement();
+//            return new WhileStatementExpr(expr, statement1);
+//        } else if (token.peek("{")) {
+//            token.consume("{");
+//            Expr expr = Statement();
+//            token.consume("}");
+//            return expr;
+//        } else {
+//            return Command();
+//        }
+//    }
 
     private Expr Command() throws IOException {
         String str = token.peek();
@@ -103,20 +133,19 @@ public class ExprParse implements Parser {
 
     private Expr MoveCommand() throws IOException {
         token.consume("move");
-        return new MoveExpr(minion, Direction(), board);
+        return new MoveExpr(minion, Direction());
     }
 
     private Expr AttackCommand() throws IOException {
         token.consume("shoot");
-        Expr expend = Expression();
-        return new AttackExpr(player, minion, Direction(), expend, board);
+        Expr expr = Expression();
+        return new AttackExpr(minion, Direction(), expr);
     }
 
     private String Direction() throws IOException {
         if (token.peek("up") || token.peek("down") || token.peek("upleft") || token.peek("upright") ||
                 token.peek("downleft") || token.peek("downright")) {
-            String direction = token.consume();
-            return direction;
+            return token.consume();
         } else {
             throw new IOException("Expected direction but found: " + token.peek());  // Changed to IOException
         }
@@ -150,34 +179,26 @@ public class ExprParse implements Parser {
     }
 
     private Expr Power() throws IOException {
-        // Check if it's a number
-        try {
-            if (isDigit(Integer.parseInt(token.peek()))) {
-                return new IntLit(Integer.parseInt(token.consume()));  // Convert to IntLit if it's a number
-            }
-        } catch (NumberFormatException e) {
-            // If it's not a number
-            // Check if it's a variable (letter)
-            if (Character.isLetter(token.peek().charAt(0))) {
-                return new Variable(token.consume(), player, minion, board);  // Use as variable
-            } else if (token.peek("(")) {
-                token.consume("(");
-                Expr expr = Expression();
-                token.consume(")");
-                return expr;
-            }
+        if (Character.isDigit(token.peek().charAt(0))) {  // ตรวจสอบก่อน parse
+            return new IntLit(Integer.parseInt(token.consume()));
+        } else if (Character.isLetter(token.peek().charAt(0))) {
+            return new Variable(token.consume(), minion);
+        } else if (token.peek("(")) {
+            token.consume("(");
+            Expr expr = Expression();
+            token.consume(")");
+            return expr;
         }
-
-        // Look for non-number evaluation value
         return InfoExpression();
     }
 
+
     private Expr InfoExpression() throws IOException {
         if (token.peek("ally") || token.peek("opponent")) {
-            return new InfoExpr(token.consume(), player, minion, board);
+            return new InfoExpr(token.consume(), minion);
         } else if (token.peek("nearby")) {
             token.consume("nearby");
-            return new NearbyExpr(Direction(), player, minion, board);
+            return new NearbyExpr(Direction(), minion);
         } else {
             throw new IOException("Unexpected info expression: " + token.peek());  // Changed to IOException
         }

@@ -10,10 +10,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Map;
 
-public class FileProcess {
+public class FileProcess{
+    private Map<String, Integer> playerBindings;
 
-    public void readStrategy(String fileName,Minion minion) throws IOException {
+    public void readStrategy(String fileName, Minion minion) throws IOException{
         Path path = Paths.get(fileName);
         Charset charset = StandardCharsets.UTF_8;
 
@@ -28,10 +30,12 @@ public class FileProcess {
             while ((line = reader.readLine()) != null) {
                 try {
                     Tokenizer token = new ExprTokenizer(line);
-                    Parser parser = new ExprParse(token,minion);
+                    Parser parser = new ExprParse(token, minion);
+                    Expr expr = parser.parse();
+                    expr.eval(playerBindings);
                 } catch (IllegalArgumentException x) {
                     System.out.println("Invalid operator in expression: " + line + " -> " + x.getMessage());
-                } catch (ArithmeticException x) {
+                } catch (Exception x) {
                     System.out.println("Error evaluating expression: " + line + " -> " + x.getMessage());
                 }
             }

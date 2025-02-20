@@ -13,15 +13,15 @@ public class GameBoard {
     private final int size = 8;
     private final boolean[][] isOccupied = new boolean[8][8];
 
-    private final Player playerOne;
-    private final Player playerTwo;
+    private static Player playerOne;
+    private static Player playerTwo;
     private Player currentPlayer;
     private Player opponentPlayer;
 
     private final Map<String, HexCell> player1Hexes;
     private final Map<String, HexCell> player2Hexes;
 
-    private final int spawnRemaining = GameConfig.MaxSpawns;
+    private static final int spawnRemaining = GameConfig.MaxSpawns;
 
     //Constructor
     private GameBoard(String playerOneName, String playerTwoName) {
@@ -57,6 +57,7 @@ public class GameBoard {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 getHexCell(i, j);
+                isOccupied[i][j] = false;
             }
         }
     }
@@ -70,7 +71,7 @@ public class GameBoard {
                 player1Hexes.put(i + "," + j, cell);
                 cell.setOwner(playerOne);
                 cell.setStatus("1");
-                isOccupied[i][j] = true;
+                //isOccupied[i][j] = true;
             }
             k--;
         }
@@ -82,7 +83,7 @@ public class GameBoard {
                 player2Hexes.put(i + "," + j, cell);
                 cell.setOwner(playerTwo);
                 cell.setStatus("2");
-                isOccupied[i][j] = true;
+                //isOccupied[i][j] = true;
             }
             k++;
         }
@@ -139,7 +140,7 @@ public class GameBoard {
         }
     }
 
-    public int getSpawnRemaining() {
+    public static int getSpawnRemaining() {
         return spawnRemaining - (playerOne.getNumber() + playerTwo.getNumber());
     }
 
@@ -149,8 +150,8 @@ public class GameBoard {
         return cell != null && cell.isOccupied();
     }
 
-    public boolean isValidPosition(int x, int y) {
-        return x >= 0 && y >= 0 && x < size && y < size;
+    public static boolean isValidPosition(int x, int y) {
+        return x >= 0 && y >= 0 && x < 8 && y < 8;
     }
 
     public void resetBoard() {

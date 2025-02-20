@@ -15,11 +15,10 @@ public class Player {
     protected int numMinions;
     protected final int baseR = GameConfig.InterestPct;
 
-
     public Player(String name, Map<String, HexCell> hexCells) {
         this.name = name;
         this.hexCells = hexCells;
-        this.budget = GameConfig.InitBudget;
+        this.budget = 20;
         this.minions = new ArrayList<>();
     }
 
@@ -164,12 +163,15 @@ public class Player {
         numMinions--;
     }
 
-    public void setBudget(int turn) {
+    public void calBudget(int turn) {
         if (turn > 1) {
             budget = budget * (int) getRate(turn) / 100;
         }
     }
 
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
 
     public void setSumHP(int i) {
 

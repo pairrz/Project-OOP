@@ -7,7 +7,7 @@ import backend.players.Player;
 
 import java.util.Map;
 
-public record InfoExpr(String type, Player player, Minion minion, GameBoard board) implements Expr {
+public record InfoExpr(String type, Minion minion) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
         int x = minion.getX();
@@ -20,45 +20,36 @@ public record InfoExpr(String type, Player player, Minion minion, GameBoard boar
             throw new IllegalArgumentException("Invalid info type: " + type);
         }
 
-        int[][] directions = {
-                {0, -1},
-                {-1, -1},
-                {-1, 0},
-                {1, 0},
-                {1, 1},
-                {0, 1}
-        };
-
         int minDistance = Integer.MAX_VALUE;
         int bestResult = 0;
 
-        for (int dir = 0; dir < directions.length; dir++) {
-            int dx = directions[dir][0];
-            int dy = directions[dir][1];
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                if (dx == 0 && dy == 0) continue;
 
-            int distance = 1;
-            int newX = x + dx;
-            int newY = y + dy;
+                int newX = x + dx;
+                int newY = y + dy;
+                int distance = 1;
 
-            while (board.isValidPosition(newX, newY)) {
-                Minion target = board.getHexCell(newX, newY).getMinion();
+                while (GameBoard.isValidPosition(newX, newY)) {
+                    Minion target = GameBoard.getHexCell(newX, newY).getMinion();
 
-                if (target != null) {
-                    boolean isAlly = target.getOwner() == player;
-                    boolean isOpponent = target.getOwner() != player;
+                    if (target != null) {
+                        boolean isAlly = target.getOwner() == minion.getOwner();
+                        boolean isOpponent = target.getOwner() != minion.getOwner();
 
-                    if ((findAlly && isAlly) || (findOpponent && isOpponent)) {
-                        int locationValue = distance * 10 + (dir + 1);
-                        if (distance < minDistance || (distance == minDistance && locationValue < bestResult)) {
-                            minDistance = distance;
-                            bestResult = locationValue;
+                        if ((findAlly && isAlly) || (findOpponent && isOpponent)) {
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                bestResult = 100 * target.getHP() + 10 * target.getDef() + distance;
+                            }
+                            break;
                         }
-                        break;
                     }
+                    newX += dx;
+                    newY += dy;
+                    distance++;
                 }
-                newX += dx;
-                newY += dy;
-                distance++;
             }
         }
         return bestResult;

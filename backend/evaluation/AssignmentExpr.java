@@ -8,8 +8,7 @@ public record AssignmentExpr(String var, Expr expr) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
         int result = expr.eval(bindings);
-        bindings.put(var, result); // ตรวจสอบว่า bindings อัปเดตจริง
-        System.out.println("Updated " + var + " = " + result); // Debugging
+        bindings.put(var, result);
         return result;
     }
 }

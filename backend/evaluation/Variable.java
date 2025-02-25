@@ -1,30 +1,39 @@
 package backend.evaluation;
 
 import SyntaxErrorException.EvalError;
-import backend.game.*;
-import backend.minions.*;
-import backend.parser.*;
-import backend.players.*;
+import backend.game.GameBoard;
+import backend.game.GameConfig;
+import backend.game.GameManage;
+import backend.minions.Minion;
+import backend.parser.Expr;
+import backend.players.Player;
 
 import java.util.Map;
-import java.util.Random;
 
-public record Variable(String var, Minion minion) implements Expr {
+public record Variable(String var, Player player, Minion minion, GameBoard board) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) {
-        Player player = minion.getOwner();
+        if (var.equals("row")) {
+            return minion.getY();
+        }else if(var.equals("col")) {
+            return minion.getX();
+        }else if(var.equals("budget")) {
+            return player.getBudget();
+        }else if (var.equals("int")) {
+            return player.getRate(GameManage.turn);
+        }else if(var.equals("maxbudget")){
+            return GameConfig.MaxBudget;
+        }else if(var.equals("spawnRemaining")){
+            return board.getSpawnRemaining();
+        }else if(var.equals("random")){
+            int a = (int) Math.random();
+            return (a % 1000);
+        }
 
-        return switch (var) {
-            case "row" -> minion.getY() + 1;
-            case "col" -> minion.getX() + 1;
-            case "budget" -> player.getBudget();
-            case "int" -> player.getRate(GameManage.turn);
-            case "maxbudget" -> GameConfig.MaxBudget;
-            case "spawnRemaining" -> GameBoard.getSpawnRemaining();
-            case "random" -> new Random().nextInt(1000);
-            default -> bindings.computeIfAbsent(var, k -> 0);
-        };
+        if (bindings.containsKey(var)) {
+            return bindings.get(var);
+        }
+
+        throw new EvalError("Undefined variable: " + var);
     }
 }
-
-

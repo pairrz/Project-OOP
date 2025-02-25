@@ -10,14 +10,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
 
-public class FileProcess{
-    private final Map<String, Integer> playerBindings = new HashMap<>();
+public class FileProcess {
 
-
-    public void readStrategy(String fileName, Minion minion) throws IOException {
+    public void readStrategy(String fileName,Minion minion) throws IOException {
         Path path = Paths.get(fileName);
         Charset charset = StandardCharsets.UTF_8;
 
@@ -26,35 +22,21 @@ public class FileProcess{
             return;
         }
 
-        // ✅ ใช้ StringBuilder เพื่อรวมทุกบรรทัดเป็นสตริงเดียว
-        StringBuilder strategyBuilder = new StringBuilder();
-
-        try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
+        try (BufferedReader reader = Files.newBufferedReader(path,charset)){
             String line;
+
             while ((line = reader.readLine()) != null) {
-                strategyBuilder.append(line).append(" ");  // ✅ เพิ่มช่องว่างเพื่อแยกโทเคน
+                try {
+                    Tokenizer token = new ExprTokenizer(line);
+                    Parser parser = new ExprParse(token,minion);
+                } catch (IllegalArgumentException x) {
+                    System.out.println("Invalid operator in expression: " + line + " -> " + x.getMessage());
+                } catch (ArithmeticException x) {
+                    System.out.println("Error evaluating expression: " + line + " -> " + x.getMessage());
+                }
             }
-        } catch (IOException x) {
-            System.out.println("Error reading file: " + x.getMessage());
-            return;
-        }
-
-        // ✅ สร้าง Tokenizer จากสตริงทั้งหมดของกลยุทธ์
-        String strategyCode = strategyBuilder.toString().trim();
-        if (strategyCode.isEmpty()) {
-            System.out.println("Strategy file is empty.");
-            return;
-        }
-
-        try {
-            Tokenizer token = new ExprTokenizer(strategyCode);  // ✅ Tokenizer อ่านทั้งไฟล์
-            Parser parser = new ExprParse(token, minion);
-            Expr expr = parser.parse();
-            expr.eval(playerBindings);
-        } catch (IllegalArgumentException x) {
-            System.out.println("Invalid operator in expression: " + x.getMessage());
-        } catch (Exception x) {
-            System.out.println("Error evaluating expression: " + x.getMessage());
+        }catch (IOException x){
+        System.out.println("Error reading/writing file: " + x.getMessage());
         }
     }
 

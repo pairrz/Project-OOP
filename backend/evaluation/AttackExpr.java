@@ -7,45 +7,57 @@ import backend.players.*;
 
 import java.util.Map;
 
-public record AttackExpr(Minion attacker, String direction, Expr expend) implements Expr {
+public record AttackExpr(Player player, Minion attacker, String direction, Expr expend, GameBoard board) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
-        int budget = attacker.getOwner().getBudget();
+        int budget = player.getBudget();
         int expenditure = expend.eval(bindings);
         int totalCost = expenditure + 1;
 
         if (budget < totalCost) {
             return 0;
         }
-        attacker.getOwner().setBudget(budget - totalCost);
-        bindings.put("budget", budget - totalCost);
 
         int targetX = attacker.getX();
         int targetY = attacker.getY();
 
         switch (direction) {
-            case "up" -> targetX--;
-            case "down" -> targetX++;
-            case "upleft" -> { targetX--; targetY--; }
-            case "upright" -> { targetX--; targetY++; }
-            case "downleft" -> targetY--;
-            case "downright" -> targetY++;
-            default -> throw new IllegalArgumentException("Invalid direction: " + direction);
+            case "up": targetX--; break;
+            case "down": targetX++; break;
+            case "upleft": targetX--; targetY--; break;
+            case "upright": targetX--; targetY++; break;
+            case "downleft": targetY--; break;
+            case "downright": targetY++; break;
+            default:
+                throw new IllegalArgumentException("Invalid direction: " + direction);
         }
 
-        HexCell targetCell = GameBoard.getHexCell(targetX, targetY);
-        if (targetCell == null || targetCell.hasMinion()) {
-            System.out.println("Target cell is null!");
+        HexCell targetCell = board.getHexCell(targetX, targetY);
+        if (targetCell == null) {
             return 0;
         }
 
         Minion targetMinion = targetCell.getMinion();
+
+        bindings.put("budget", budget - totalCost);
+
+        if (targetMinion == null) {
+            return 0;
+        }
+
         int hp = targetMinion.getHP();
         int defense = targetMinion.getDef();
         int damage = Math.max(1, expenditure - defense);
-        targetMinion.setHP(Math.max(0, hp - damage));
+        int newHP = Math.max(0, hp - damage);
 
-        return damage;
+        targetMinion.setHP(newHP);
+
+        if (newHP == 0) {
+            targetCell.removeMinion();
+            Player player = targetMinion.getOwner();
+            player.removeMinion(targetMinion);
+        }
+        return 0;
     }
 }
 

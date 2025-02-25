@@ -10,18 +10,23 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExprParseTest {
 
-    GameBoard board = GameBoard.getInstance("PlayerOne", "PlayerTwo");
-    Player player = board.getPlayerOne();
-    HexCell cell = GameBoard.getHexCell(1, 1);
-    Minion minion = new Minion(player, cell);
-    Map<String, Integer> bindings = new HashMap<>();
+    GameBoard board;
+    Player player;
+    HexCell cell;
+    Minion minion;
+    Map<String, Integer> bindings;
 
     ExprParseTest() throws IOException {
+        this.board = GameBoard.getInstance("one","two");
+        this.player = board.getPlayerOne();
+        this.cell = GameBoard.getHexCell(0, 0);
+        this.minion  = new Minion(player, cell);
+        //board.buyMinionForPlayerOne(cell, minion);
+        bindings = new HashMap<>();
     }
 
     @Test
@@ -120,21 +125,21 @@ class ExprParseTest {
 
     @Test
     void testNearbyExpression() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        Tokenizer tokenizer = new ExprTokenizer("x = nearby up");
-        Parser parser = new ExprParse(tokenizer, minion);
-        Expr expr = parser.parse();
+        ExprParseTest test = new ExprParseTest();
 
-        expr.eval(bindings);
-        int result = bindings.get("x");
+        // สร้าง Minion ฝ่ายตรงข้ามที่อยู่ใกล้
+        Player opponent = board.getPlayerTwo();
+        HexCell targetCell = GameBoard.getHexCell(3, 1); // อยู่ด้านบน
+        opponent.getHex(targetCell);
+        Minion targetMinion = new Minion(opponent, targetCell);
 
-        int expectedValue = 100 * 1 + 10 * 1 + 1;
-        assertEquals(expectedValue, result, "Nearby should calculate correctly");
-    }
+        System.out.println(cell.getX() + " " + cell.getY());
+        System.out.println(targetCell.getX() + " " + targetCell.getY());
 
-    @Test
-    void testNearbyExpression_NoMinion() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
+        System.out.println(minion.getX() + " " + minion.getY());
+        System.out.println(targetMinion.getX() + " " + targetMinion.getY());
+
+        // สร้าง Tokenizer สำหรับ NearbyExpr
         Tokenizer tokenizer = new ExprTokenizer("x = nearby down");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
@@ -142,7 +147,21 @@ class ExprParseTest {
         expr.eval(bindings);
         int result = bindings.get("x");
 
-        assertEquals(0, result, "Nearby should return 0 if no minion found");
+        // ตรวจสอบว่าค่าที่ได้ถูกต้อง
+        int expectedValue = 100 * targetMinion.getHP() + 10 * targetMinion.getDef() + 2;
+        assertEquals(expectedValue, result);
+    }
+
+    @Test
+    void testNearbyExpression_NoMinion() throws Exception {
+        Tokenizer tokenizer = new ExprTokenizer("x = nearby upleft");
+        Parser parser = new ExprParse(tokenizer, minion);
+        Expr expr = parser.parse();
+
+        expr.eval(bindings);
+        int result = bindings.get("x");
+
+        assertEquals(0, result, "Should return 0 when no minion is nearby");
     }
 
     @Test
@@ -153,11 +172,38 @@ class ExprParseTest {
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        Object result = bindings.get("x");
+        int result = bindings.get("x"); // ✅ ต้องไม่เป็น null
 
         assertNotNull(result, "Result should not be null");
-        assertInstanceOf(Minion.class, result, "Result should be a Minion");
-        assertEquals(player, ((Minion) result).getOwner(), "Should be the same player's minion");
+        assertTrue(result >= 0, "Result should be a valid integer");
+    }
+
+    @Test
+    void allTest() throws Exception {
+        ExprParseTest test = new ExprParseTest();
+
+        System.out.println(minion.getX() + " " + minion.getY());
+
+        Player opponent = board.getPlayerTwo();
+        HexCell targetCell = GameBoard.getHexCell(7, 7); // อยู่ด้านบน
+        Minion targetMinion = new Minion(opponent, targetCell);
+        System.out.println(targetMinion.getX() + " " + targetMinion.getY());
+
+        board.showBoard();
+
+        FileProcess file = new FileProcess();
+        file.readStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt",minion);
+
+        board.showBoard();
+    }
+
+    @Test
+    void strategyTest() throws Exception {
+        ExprParseTest test = new ExprParseTest();
+
+        System.out.println(minion.getX() + " " + minion.getY());
+
+        FileProcess file = new FileProcess();
+        file.readStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt",minion);
     }
 }
-

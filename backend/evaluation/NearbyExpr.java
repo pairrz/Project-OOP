@@ -2,7 +2,7 @@ package backend.evaluation;
 
 import backend.game.*;
 import backend.minions.*;
-import backend.parser.*;
+import backend.parser.Expr;
 
 import java.util.Map;
 
@@ -12,29 +12,38 @@ public record NearbyExpr(String direction, Minion minion) implements Expr {
         int x = minion.getX();
         int y = minion.getY();
         int distance = 1;
-
-        switch (direction) {
-            case "up" -> x--;
-            case "down" -> x++;
-            case "upleft" -> { x--; y--; }
-            case "upright" -> { x--; y++; }
-            case "downleft" -> y--;
-            case "downright" -> y++;
-            default -> throw new IllegalArgumentException("Invalid direction: " + direction);
-        }
+        int result = 0; // ✅ เก็บค่าผลลัพธ์
 
         while (GameBoard.isValidPosition(x, y)) {
-            Minion target = GameBoard.getHexCell(x, y).getMinion();
-            if (target != null) {
-                int result = 100 * target.getHP() + 10 * target.getDef() + distance;
-                bindings.put("nearby", result);
-                return result;
+            switch (direction) {
+                case "up" -> x--;
+                case "down" -> x++;
+                case "upleft" -> { x--; y--; }
+                case "upright" -> { x--; y++; }
+                case "downleft" -> { x++; y--; }
+                case "downright" -> { x++; y++; }
+                default -> throw new IllegalArgumentException("Invalid direction: " + direction);
             }
-            x += (direction.contains("up") ? -1 : 0) + (direction.contains("down") ? 1 : 0);
-            y += (direction.contains("left") ? -1 : 0) + (direction.contains("right") ? 1 : 0);
+
+            if (!GameBoard.isValidPosition(x, y)) break;
+
+            HexCell cell = GameBoard.getHexCell(x, y);
+            if (cell == null) continue;
+
+            Minion target = cell.getMinion();
+            if (target != null) {
+                int hpValue = target.getHP();
+                int defValue = target.getDef();
+                result = 100 * hpValue + 10 * defValue + distance;
+
+                result = (target.getOwner() == minion.getOwner()) ? -result : result;
+                break; // ✅ เจอมินเนียนแล้วออกจากลูป
+            }
+
             distance++;
         }
-        bindings.put("nearby", 0);
-        return 0;
+
+        bindings.put("x", result); // ✅ บันทึกค่าให้ bindings
+        return result;
     }
 }

@@ -3,7 +3,6 @@ package backend.parser;
 import backend.evaluation.*;
 import backend.minions.*;
 import backend.players.*;
-import backend.game.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -45,7 +44,7 @@ public class ExprParse implements Parser {
         }
 
         String str = token.peek();
-        System.out.println("Parsing statement, peek: " + str);  // Debugging
+        //System.out.println("Parsing statement, peek: " + str);  // Debugging
 
         switch (str) {
             case "if" -> {
@@ -87,7 +86,7 @@ public class ExprParse implements Parser {
             throw new IOException("Expected command but found end of input");
         }
         String str = token.peek();
-        System.out.println("Parsing command, peek: " + str);  // Debugging
+        //System.out.println("Parsing command, peek: " + str);  // Debugging
 
         if (checkComWord(str)) {
             return ActionCommand();
@@ -97,14 +96,22 @@ public class ExprParse implements Parser {
     }
 
     private Expr AssignmentStatement() throws IOException {
+        String var = token.consume();
+        if (!token.hasNextToken() || !token.peek().equals("=")) {
+            throw new IOException("Expected '=' after variable name but found: " + token.peek());
+        }
+        token.consume("=");
+
         if (!token.hasNextToken()) {
-            throw new IOException("Expected assignment statement but found end of input");
+            throw new IOException("Unexpected end of input after '='");
         }
 
-        String var = token.consume();
-        token.consume("=");
-        Expr expr = Expression();
-        return new AssignmentExpr(var, expr);
+        String str = token.peek();
+        if (str.equals("nearby") || str.equals("ally") | str.equals("opponent")) {
+            return InfoExpression(); // ✅ ให้ InfoExpression() จัดการ nearby
+        } else {
+            return new AssignmentExpr(var, Expression());
+        }
     }
 
     private Expr ActionCommand() throws IOException {
@@ -141,12 +148,12 @@ public class ExprParse implements Parser {
     }
 
     private String Direction() throws IOException {
-        if (token.peek("up") || token.peek("down") || token.peek("upleft") || token.peek("upright") ||
-                token.peek("downleft") || token.peek("downright")) {
-            return token.consume();
-        } else {
-            throw new IOException("Expected direction but found: " + token.peek());
+        String dir = token.peek();
+        if (!List.of("up", "down", "upleft", "upright", "downleft", "downright").contains(dir)) {
+            throw new IOException("Invalid direction: " + dir);
         }
+
+        return token.consume();
     }
 
     private Expr Expression() throws IOException {
@@ -184,22 +191,47 @@ public class ExprParse implements Parser {
         } else if (token.peek("(")) {
             token.consume("(");
             Expr expr = Expression();
+            if (!token.peek(")")) {
+                throw new IOException("Expected ')' but found: " + token.peek());
+            }
             token.consume(")");
             return expr;
         }
+
+        // ✅ ให้ InfoExpression() รองรับ nearby + ตัวดำเนินการทางคณิตศาสตร์
         return InfoExpression();
     }
 
+
     private Expr InfoExpression() throws IOException {
         if (token.peek("ally") || token.peek("opponent")) {
-            return new InfoExpr(token.consume(), minion);
+            String type = token.consume();
+            return new InfoExpr(type, minion);
         } else if (token.peek("nearby")) {
             token.consume("nearby");
-            return new NearbyExpr(Direction(), minion);
+            if (!token.hasNextToken()) {
+                throw new IOException("Unexpected end of input: Expected direction after 'nearby'");
+            }
+
+            String direction = token.consume();
+            if (!List.of("up", "down", "upleft", "upright", "downleft", "downright").contains(direction)) {
+                throw new IOException("Invalid direction for 'nearby': " + direction);
+            }
+
+            // ✅ สร้าง nearbyExpr ก่อน
+            Expr nearbyExpr = new NearbyExpr(direction, minion);
+
+            // ✅ ตรวจสอบว่ามีการดำเนินการทางคณิตศาสตร์หลัง nearby หรือไม่
+            if (token.peek("*") || token.peek("/") || token.peek("%") || token.peek("+") || token.peek("-") || token.peek("^")) {
+                return new BinaryArithExpr(nearbyExpr, token.consume(), Expression());
+            }
+
+            return nearbyExpr;
         } else {
             throw new IOException("Unexpected info expression: " + token.peek());
         }
     }
+
 
     private boolean checkComWord(String word) {
         return commandWords.contains(word);

@@ -9,4 +9,3 @@ public class Main {
         gameManage.gamePlay();
     }
 }
-2

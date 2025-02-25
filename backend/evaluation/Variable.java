@@ -14,35 +14,17 @@ public record Variable(String var, Minion minion) implements Expr {
     public int eval(Map<String, Integer> bindings) {
         Player player = minion.getOwner();
 
-        switch (var) {
-            case "row" -> {
-                return minion.getY() + 1;
-            }
-            case "col" -> {
-                return minion.getX() + 1;
-            }
-            case "budget" -> {
-                return player.getBudget();
-            }
-            case "int" -> {
-                return player.getRate(GameManage.turn);
-            }
-            case "maxbudget" -> {
-                return GameConfig.MaxBudget;
-            }
-            case "spawnRemaining" -> {
-                return GameBoard.getSpawnRemaining();
-            }
-            case "random" -> {
-                Random rand = new Random();
-                int a = rand.nextInt();
-                return (a % 1000);
-            }
-        }
-
-        if (bindings.containsKey(var)) {
-            return bindings.get(var);
-        }
-        throw new EvalError("Undefined variable: " + var);
+        return switch (var) {
+            case "row" -> minion.getY() + 1;
+            case "col" -> minion.getX() + 1;
+            case "budget" -> player.getBudget();
+            case "int" -> player.getRate(GameManage.turn);
+            case "maxbudget" -> GameConfig.MaxBudget;
+            case "spawnRemaining" -> GameBoard.getSpawnRemaining();
+            case "random" -> new Random().nextInt(1000);
+            default -> bindings.computeIfAbsent(var, k -> 0);
+        };
     }
 }
+
+

@@ -8,7 +8,8 @@ public record WhileStatementExpr(Expr condition, Expr statement) implements Expr
     public int eval(Map<String, Integer> bindings) throws Exception {
         System.out.println("Evaluating While loop...");
         System.out.println("Condition: " + condition.eval(bindings));  // พิมพ์ผลการประมวลผลของเงื่อนไข
-        System.out.println("Statement: " + statement.eval(bindings));  // พิมพ์ผลการประมวลผลของคำสั่ง
+        System.out.println("Statement: " + statement.eval(bindings));
+        // พิมพ์ผลการประมวลผลของคำสั่ง
         if (condition == null || statement == null) {
             throw new IllegalArgumentException("เงื่อนไขหรือคำสั่งว่างเปล่า!");
         }

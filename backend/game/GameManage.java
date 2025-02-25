@@ -32,15 +32,15 @@ public class GameManage {
         System.out.print("Enter the second player's name: ");
         String name2 = scanner.next();
 
-        System.out.print("Enter the strategy : ");
-        String strategy = scanner.next();
+//        System.out.print("Enter the strategy : ");
+//        String strategy = scanner.next();
 
         this.board = GameBoard.getInstance(name1, name2);
         board.showBoard();
 
         while (true) {
             System.out.println(currentName() + "'s turn (Turn: " + turn + ")\n");
-            current().takeTurn(turn,strategy);
+            current().takeTurn(turn);
             board.showBoard();
 
 //            if (isOver()) {

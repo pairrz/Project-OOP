@@ -17,6 +17,8 @@ public class Minion {
 
     public Minion(Player owner, HexCell cell) {
         this.position = GameBoard.getHexCell(cell.getX(), cell.getY());
+        this.x = cell.getX();
+        this.y = cell.getY();
         position.addMinion(this);
         this.owner = owner;
         this.hp = 10;

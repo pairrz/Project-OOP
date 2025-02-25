@@ -1,6 +1,7 @@
 package backend.evaluation;
 
 import backend.game.GameBoard;
+import backend.game.HexCell;
 import backend.minions.Minion;
 import backend.parser.Expr;
 import backend.players.Player;
@@ -32,7 +33,10 @@ public record InfoExpr(String type, Minion minion) implements Expr {
                 int distance = 1;
 
                 while (GameBoard.isValidPosition(newX, newY)) {
-                    Minion target = GameBoard.getHexCell(newX, newY).getMinion();
+                    HexCell cell = GameBoard.getHexCell(newX, newY);
+                    if (cell == null) break;
+
+                    Minion target = cell.getMinion();
 
                     if (target != null) {
                         boolean isAlly = target.getOwner() == minion.getOwner();
@@ -52,6 +56,8 @@ public record InfoExpr(String type, Minion minion) implements Expr {
                 }
             }
         }
+
+        bindings.put("x", bestResult); // ✅ บันทึกค่าให้ x
         return bestResult;
     }
 }

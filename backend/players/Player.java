@@ -5,7 +5,6 @@ import backend.minions.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Player {
@@ -23,7 +22,7 @@ public class Player {
         this.minions = new ArrayList<>();
     }
 
-    public void takeTurn(int turn,String str) throws IOException {
+    public void takeTurn(int turn) throws IOException {
         System.out.println("Turn: " + turn);
         int choice = 1;
         while (choice != 3) {
@@ -67,8 +66,9 @@ public class Player {
                     break;
             }
 
-            for (int i = 0; i < numMinions; i++) {
-                minions.get(i).minionStrategy(Objects.requireNonNullElse(str, "D:\\OOP project\\backend\\strategy\\Strategy.txt"));
+            for (Minion minion : minions) {
+                System.out.print("in strategy minion ");
+                minion.minionStrategy("D:\\OOP project\\backend\\strategy\\Strategy.txt");
             }
         }
     }
@@ -127,8 +127,7 @@ public class Player {
                 budget -= GameConfig.SpawnCost;
                 minions.add(minion); // เพิ่มมินเนียนเข้าไปใน List ของผู้เล่น
 
-                //board.setStatus(); // อัปเดตสถานะบอร์ด
-                System.out.println("มินเนียนถูกวางใน HexCell (" + (cell.getX()+1) + "," + (cell.getY()+1) + ")");
+                System.out.println("มินเนียนถูกวางใน HexCell (" + (cell.getX()) + "," + (cell.getY()) + ")");
             } else {
                 System.out.println("ไม่สามารถวางมินเนียนที่นี่ได้!");
             }
@@ -184,7 +183,13 @@ public class Player {
     public boolean isMyHex(HexCell cell, Map<String, HexCell> hexCells) {
         return this.hexCells.containsKey(cell.getX() + "," + cell.getY());
     }
+
+
+    public void getHex(HexCell cell){
+        HexCell hexCell = GameBoard.getHexCell(cell.getX(), cell.getY());
+        hexCells.put(cell.getX() + "," + cell.getY(), hexCell);
     }
+}
 
 
 

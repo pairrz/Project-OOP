@@ -6,8 +6,8 @@ import backend.players.*;
 import java.util.Objects;
 
 public class HexCell {
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
     private String status;
     /*
         - hex cell ว่าง
@@ -24,6 +24,7 @@ public class HexCell {
         this.y = y;
         this.minion = null;
         this.owner = null;
+        //System.out.println(x + " " + y);
     }
 
     @Override

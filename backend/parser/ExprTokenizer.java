@@ -1,8 +1,6 @@
 package backend.parser;
 
 import SyntaxErrorException.*;
-
-import java.util.List;
 import java.util.NoSuchElementException;
 import static java.lang.Character.isWhitespace;
 import static java.lang.Character.isDigit;
@@ -34,7 +32,7 @@ public class ExprTokenizer implements Tokenizer {
 
     @Override
     public String peek() {
-        System.out.println("Tokenizer peek: " + next);  // Debugging
+        //System.out.println("Tokenizer peek: " + next);  // Debugging
         checkNextToken();
         return next;
     }
@@ -43,7 +41,7 @@ public class ExprTokenizer implements Tokenizer {
     public String consume() {
         checkNextToken();
         String result = next;
-        System.out.println("Tokenizer consume: " + result);  // Debugging
+        //System.out.println("Tokenizer consume: " + result);  // Debugging
         computeNext();
         return result;
     }

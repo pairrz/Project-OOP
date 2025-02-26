@@ -12,8 +12,7 @@ public record InfoExpr(String type, Minion minion) implements Expr {
     public int eval(Map<String, Integer> bindings) throws Exception {
         int x = minion.getX();
         int y = minion.getY();
-
-        System.out.println("Minion Position: (" + x + ", " + y + ")");
+        //System.out.println("Minion Position: (" + x + ", " + y + ")");
 
         boolean findAlly = type.equals("ally");
         boolean findOpponent = type.equals("opponent");
@@ -22,21 +21,21 @@ public record InfoExpr(String type, Minion minion) implements Expr {
             throw new IllegalArgumentException("Invalid info type: " + type);
         }
 
-        int[][] directions = {
-                {0, -1},  // 1 - Up
-                {1, -1},  // 2 - UpRight
-                {1, 0},   // 3 - DownRight
-                {0, 1},   // 4 - Down
-                {-1, 1},  // 5 - DownLeft
-                {-1, 0}   // 6 - UpLeft
+        // **ทิศทางของ Hex Grid ตามรูป**
+        int[][] oddRowDirections = {
+                {0, -1},  {1, -1},  {1, 0},  {0, 1},  {-1, 0},  {-1, -1}  // row คี่
         };
+        int[][] evenRowDirections = {
+                {0, -1},  {1, 0},  {1, 1},  {0, 1},  {-1, 1},  {-1, 0}  // row คู่
+        };
+
+        int[][] directions = (x % 2 == 0) ? evenRowDirections : oddRowDirections;
 
         int minDistance = Integer.MAX_VALUE;
         int bestResult = 0;
-
         Player player = minion.getOwner();
 
-        for (int dir = 0; dir < directions.length; dir++) {
+        for (int dir = 0; dir < 6; dir++) {
             int dx = directions[dir][0];
             int dy = directions[dir][1];
 
@@ -46,15 +45,15 @@ public record InfoExpr(String type, Minion minion) implements Expr {
 
             while (GameBoard.isValidPosition(newX, newY)) {
                 Minion target = GameBoard.getHexCell(newX, newY).getMinion();
-                System.out.println("Checking Position: (" + newX + ", " + newY + ")");
+                //System.out.println("Checking Position: (" + newX + ", " + newY + ")");
 
-                if (target != null) {
+                if (target != null && target != minion) {
                     boolean isAlly = target.getOwner() == player;
                     boolean isOpponent = target.getOwner() != player;
 
                     if ((findAlly && isAlly) || (findOpponent && isOpponent)) {
                         int locationValue = distance * 10 + (dir + 1);
-                        System.out.println("Found target at distance " + distance + ", direction " + (dir + 1) + ", value: " + locationValue);
+                        //System.out.println("Found target at distance " + distance + ", direction " + (dir + 1) + ", value: " + locationValue);
 
                         if (distance < minDistance || (distance == minDistance && locationValue < bestResult)) {
                             minDistance = distance;
@@ -63,14 +62,16 @@ public record InfoExpr(String type, Minion minion) implements Expr {
                         break;
                     }
                 }
-                newX += dx;
-                newY += dy;
+
+                // **อัปเดตพิกัดใหม่ตาม Hex Grid**
+                newX += directions[dir][0];
+                newY += directions[dir][1];
                 distance++;
             }
         }
 
         bindings.put("x", bestResult);
-        System.out.println("Final result: " + bestResult);
+        //System.out.println("Final result: " + bestResult);
         return bestResult;
     }
 }

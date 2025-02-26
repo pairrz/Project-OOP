@@ -2,7 +2,7 @@ t = t+1
 t = t+1
 m = 0
 while (3 - m) {
-  if (budget - 100) then {} else done
+  if  (budget - 100) then {} else done
   opponentLoc = opponent
   if (opponentLoc / 10 - 1) then {
     if (opponentLoc % 10 - 5) then move downleft

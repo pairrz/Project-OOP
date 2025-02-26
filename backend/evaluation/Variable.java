@@ -1,6 +1,5 @@
 package backend.evaluation;
 
-import SyntaxErrorException.EvalError;
 import backend.game.GameBoard;
 import backend.game.GameConfig;
 import backend.game.GameManage;
@@ -34,15 +33,13 @@ public record Variable(String var, Minion minion) implements Expr {
                 return GameBoard.getSpawnRemaining();
             }
             case "random" -> {
-                int a = (int) Math.random();
-                return (a % 1000);
+                return (int) (Math.random() * 1000); // แก้ไขให้สุ่มค่าระหว่าง 0-999
+            }
+            default -> {
+                bindings.putIfAbsent(var, 0);
+                return bindings.get(var);
             }
         }
-
-        if (bindings.containsKey(var)) {
-            return bindings.get(var);
-        }
-
-        throw new EvalError("Undefined variable: " + var);
     }
 }
+

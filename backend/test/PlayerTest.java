@@ -4,10 +4,12 @@ import backend.game.*;
 import backend.minions.*;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 public class PlayerTest {
 
     @Test
-    void buyHex() {
+    void buyHex() throws IOException {
 
             GameBoard board = GameBoard.getInstance("Alice", "Bob");
             board.showBoard();
@@ -21,7 +23,7 @@ public class PlayerTest {
     }
 
     @Test
-    void buyMinion() {
+    void buyMinion() throws IOException {
         GameBoard board = GameBoard.getInstance("Alice", "Bob"); // แก้ไขตรงนี้
         HexCell testHex = GameBoard.getHexCell(1, 1);
         board.buyHexForPlayerOne(testHex);
@@ -32,7 +34,7 @@ public class PlayerTest {
     }
 
     @Test
-    void buyTwo() {
+    void buyTwo() throws IOException {
         GameBoard board = GameBoard.getInstance("first", "second"); // แก้ไขตรงนี้
         HexCell cell1 = new HexCell(0, 0);
         HexCell cell2 = new HexCell(0, 1);

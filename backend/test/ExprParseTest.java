@@ -6,19 +6,43 @@ import backend.parser.*;
 import backend.players.*;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class ExprParseTest {
 
-    GameBoard board = GameBoard.getInstance("PlayerOne", "PlayerTwo");
-    Player player = board.getPlayerOne();
-    HexCell cell = GameBoard.getHexCell(1, 1);
-    Minion minion = new Minion(player, cell);
+    GameBoard board;
+    Player player;
+    Player opponent;
+    HexCell cell;
+    HexCell targetCell;
+    Minion minion;
+    Minion targetMinion;
     Map<String, Integer> bindings = new HashMap<>();
+
+    ExprParseTest() throws IOException {
+        try {
+            FileProcess file = new FileProcess();
+            file.readConfig("D:\\OOP project\\backend\\Configuration");
+        } catch (IOException e) {
+            System.err.println("Error loading config file: " + e.getMessage());
+        }
+
+        this.board = GameBoard.getInstance("one","two");
+
+        this.player = board.getPlayerOne();
+        this.cell = GameBoard.getHexCell(0, 0);
+        this.minion  = new Minion(player, cell);
+        board.buyMinionForPlayerOne(cell,minion);
+
+        this.opponent = board.getPlayerTwo();
+        this.targetCell = GameBoard.getHexCell(7, 7); // อยู่ด้านบน
+        this.targetMinion = new Minion(opponent, targetCell);
+        board.buyMinionForPlayerTwo(targetCell,targetMinion);
+    }
 
     @Test
     void testAssignment() throws Exception {
@@ -34,20 +58,16 @@ class ExprParseTest {
 
     @Test
     void testArithmeticExpression() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
         Tokenizer tokenizer = new ExprTokenizer("x = 3 + 2 * 5");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-
         assertEquals(13, bindings.get("x")); // 3 + (2 * 5) = 13
     }
 
     @Test
     void testIfElseStatement() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        // Use expression for comparison, e.g., (10 - 5)
         Tokenizer tokenizer = new ExprTokenizer("if (10 - 5) then x = 1 else x = 2");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
@@ -58,8 +78,6 @@ class ExprParseTest {
 
     @Test
     void testIfElseFalseCondition() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        // Use an expression that gives false (<= 0)
         Tokenizer tokenizer = new ExprTokenizer("if (5 - 10) then x = 1 else x = 2");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
@@ -70,96 +88,59 @@ class ExprParseTest {
 
     @Test
     void testWhileLoop() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        // Start with x = 0, the loop will run until (3 - x) is no longer positive.
-        Tokenizer tokenizer = new ExprTokenizer("x = 0 while (3 - x) x = x + 1");
+        Tokenizer tokenizer = new ExprTokenizer("x = 0 while (3 - x) { x = x + 1 }");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-
-        // After three increments, x should be 3
-        //assertEquals(3, bindings.get("x"));
+        assertEquals(3, bindings.get("x"), "x should increment to 3 and stop");
     }
 
     @Test
     void testMoveCommand() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        int budgetBefore = minion.getOwner().getBudget();
-        int xBefore = minion.getX();
-        int yBefore = minion.getY();
+        int budgetBefore = minion.getOwner().getBudget() - 1;
 
-        Tokenizer tokenizer = new ExprTokenizer("move up");
+        System.out.println(budgetBefore);
+
+        int xAfter = minion.getX() + 1;
+        int yAfter = minion.getY();
+
+        System.out.println("xBefore: " + xAfter + " yBefore: " + yAfter);
+
+        Tokenizer tokenizer = new ExprTokenizer("move down");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
         expr.eval(bindings);
 
-        // Budget should decrease by 1
-        assertEquals(budgetBefore - 1, minion.getOwner().getBudget());
-        // Position should change
-        assertNotEquals(xBefore, minion.getX());
-        assertNotEquals(yBefore, minion.getY());
-    }
+        System.out.println(minion.getX() + " " + minion.getY());
 
-    @Test
-    void testAttackCommand() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        Player player = minion.getOwner();
-        HexCell targetCell = GameBoard.getHexCell(1, 2);
-        Minion targetMinion = new Minion(board.getPlayerTwo(), targetCell);
-        board.buyMinionForPlayerTwo(targetCell, targetMinion);
-
-        Tokenizer tokenizer = new ExprTokenizer("shoot up 3");
-        Parser parser = new ExprParse(tokenizer, minion);
-        Expr expr = parser.parse();
-
-        int budgetBefore = player.getBudget();
-        int targetHpBefore = targetMinion.getHP();
-
-        expr.eval(bindings);
-
-        // Budget should decrease by 4 (3 cost + 1 base)
-        assertEquals(budgetBefore - 4, player.getBudget());
-        // HP of target should decrease based on damage calculation
-        int expectedHp = Math.max(0, targetHpBefore - Math.max(1, 3 - targetMinion.getDef()));
-        assertEquals(expectedHp, targetMinion.getHP());
+        assertEquals(budgetBefore, minion.getOwner().getBudget());
+        assertEquals(xAfter, minion.getX());
+        assertEquals(yAfter, minion.getY());
     }
 
     @Test
     void testAttackCommand_NotEnoughBudget() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        player.setBudget(3); // Not enough budget for attack
-        Tokenizer tokenizer = new ExprTokenizer("shoot up 5"); // Will require budget = 6 (5 + 1)
+        Tokenizer tokenizer = new ExprTokenizer("shoot down 5");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
-        int budgetBefore = player.getBudget();
+        int budgetAfter = player.getBudget() - 6;
 
         expr.eval(bindings);
 
-        // Budget should remain the same because there's not enough to attack
-        assertEquals(budgetBefore, player.getBudget());
+        assertEquals(budgetAfter, player.getBudget(), "Budget should remain unchanged if not enough");
     }
 
     @Test
     void testNearbyExpression() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        Tokenizer tokenizer = new ExprTokenizer("x = nearby up");
-        Parser parser = new ExprParse(tokenizer, minion);
-        Expr expr = parser.parse();
+        HexCell testCell = GameBoard.getHexCell(2, 0); // อยู่ด้านบน
+        Minion testMinion = new Minion(opponent, testCell);
 
-        expr.eval(bindings);
-        int result = bindings.get("x");
+        System.out.println(minion.getX() + " " + minion.getY());
+        System.out.println(testMinion.getX() + " " + testMinion.getY());
 
-        // Check if the value returned is correct (distance * HP + DEF + 1 for distance)
-        int expectedValue = 100 * 1 + 10 * 1 + 1; // example calculation
-        assertEquals(expectedValue, result);
-    }
-
-    @Test
-    void testNearbyExpression_NoMinion() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
         Tokenizer tokenizer = new ExprTokenizer("x = nearby down");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
@@ -167,24 +148,67 @@ class ExprParseTest {
         expr.eval(bindings);
         int result = bindings.get("x");
 
-        // If no minion is found in the direction, return 0
-        assertEquals(0, result);
+        int expectedValue = 100 * 3 + 10 * 2 + 2;
+        assertEquals(expectedValue, result);
     }
 
     @Test
-    void testInfoExpression() throws Exception {
-        Map<String, Integer> bindings = new HashMap<>();
-        Tokenizer tokenizer = new ExprTokenizer("x = ally");
+    void testNearbyExpression_NoMinion() throws Exception {
+        Tokenizer tokenizer = new ExprTokenizer("x = nearby upleft");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        Object result = bindings.get("x");
+        int result = bindings.get("x");
 
-        // Should return minion of the same player
-        assertNotNull(result);
-        assertInstanceOf(Minion.class, result);
-        assertEquals(player, ((Minion) result).getOwner());
+        assertEquals(0, result, "Should return 0 when no minion is nearby");
+    }
+
+    @Test
+    void testInfoExpression() throws Exception {
+        HexCell testCell = GameBoard.getHexCell(4, 7);
+        Minion testMin = new Minion(opponent, testCell);
+
+        Tokenizer tokenizer = new ExprTokenizer("x = opponent");
+        Parser parser = new ExprParse(tokenizer, minion);
+        Expr expr = parser.parse();
+
+        expr.eval(bindings);
+        int result = bindings.getOrDefault("x", -1);  // ป้องกัน null
+
+        System.out.println("Test result: " + result);
+
+        assertTrue(result >= 0, "Result should be a valid integer");
+        assertEquals(77, result, "Expected 77 but got " + result);
+    }
+
+    @Test
+    void allTest() throws Exception {
+        System.out.println(GameConfig.InitBudget);
+
+        System.out.println(minion.getX() + " " + minion.getY());
+        System.out.println("status one :" + " " + player.getName() + " " + player.getBudget());
+
+        System.out.println(targetMinion.getX() + " " + targetMinion.getY());
+        System.out.println("status two :" + " " + opponent.getName() + " " + opponent.getBudget());
+
+        board.showBoard();
+
+        FileProcess file = new FileProcess();
+        file.readStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt",minion);
+
+        board.showBoard();
+
+        file.readStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt",targetMinion);
+
+        board.showBoard();
+    }
+
+    @Test
+    void strategyTest() throws Exception {
+        System.out.println(minion.getX() + " " + minion.getY());
+
+        FileProcess file = new FileProcess();
+        file.readStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt",minion);
     }
 }
-

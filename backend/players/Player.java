@@ -18,7 +18,7 @@ public class Player {
     public Player(String name, Map<String, HexCell> hexCells) {
         this.name = name;
         this.hexCells = hexCells;
-        this.budget = 20;
+        this.budget = GameConfig.InitBudget;
         this.minions = new ArrayList<>();
     }
 
@@ -163,11 +163,11 @@ public class Player {
         numMinions--;
     }
 
-    public void calBudget(int turn) {
-        if (turn > 1) {
-            budget = budget * (int) getRate(turn) / 100;
-        }
-    }
+//    public void setBudget(int turn) {
+//        if (turn > 1) {
+//            budget = budget * (int) getRate(turn) / 100;
+//        }
+//    }
 
     public void setBudget(int budget) {
         this.budget = budget;

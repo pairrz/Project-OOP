@@ -10,15 +10,14 @@ import java.util.Map;
 public record AttackExpr(Minion attacker, String direction, Expr expend) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
-        int budget = attacker.getOwner().getBudget();
+        Player player = attacker.getOwner();
+        int budget = player.getBudget();
         int expenditure = expend.eval(bindings);
         int totalCost = expenditure + 1;
 
         if (budget < totalCost) {
             return 0;
         }
-
-        bindings.put("budget", budget - totalCost);
 
         int targetX = attacker.getX();
         int targetY = attacker.getY();
@@ -33,6 +32,9 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
             default:
                 throw new IllegalArgumentException("Invalid direction: " + direction);
         }
+
+        bindings.put("budget", budget - totalCost);
+        player.setBudget(budget - totalCost);
 
         HexCell targetCell = GameBoard.getHexCell(targetX, targetY);
         if (targetCell == null) {
@@ -54,9 +56,10 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
 
         if (newHP == 0) {
             targetCell.removeMinion();
-            Player player = targetMinion.getOwner();
-            player.removeMinion(targetMinion);
+            Player opponent = targetMinion.getOwner();
+            opponent.removeMinion(targetMinion);
         }
+
         return 0;
     }
 }

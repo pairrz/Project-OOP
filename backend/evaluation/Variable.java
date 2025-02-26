@@ -1,25 +1,25 @@
 package backend.evaluation;
 
 import SyntaxErrorException.EvalError;
-import backend.game.*;
-import backend.minions.*;
-import backend.parser.*;
-import backend.players.*;
+import backend.game.GameBoard;
+import backend.game.GameConfig;
+import backend.game.GameManage;
+import backend.minions.Minion;
+import backend.parser.Expr;
+import backend.players.Player;
 
 import java.util.Map;
-import java.util.Random;
 
 public record Variable(String var, Minion minion) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) {
         Player player = minion.getOwner();
-
         switch (var) {
             case "row" -> {
-                return minion.getY() + 1;
+                return minion.getY();
             }
             case "col" -> {
-                return minion.getX() + 1;
+                return minion.getX();
             }
             case "budget" -> {
                 return player.getBudget();
@@ -34,8 +34,7 @@ public record Variable(String var, Minion minion) implements Expr {
                 return GameBoard.getSpawnRemaining();
             }
             case "random" -> {
-                Random rand = new Random();
-                int a = rand.nextInt();
+                int a = (int) Math.random();
                 return (a % 1000);
             }
         }
@@ -43,6 +42,7 @@ public record Variable(String var, Minion minion) implements Expr {
         if (bindings.containsKey(var)) {
             return bindings.get(var);
         }
+
         throw new EvalError("Undefined variable: " + var);
     }
 }

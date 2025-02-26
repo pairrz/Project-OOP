@@ -7,8 +7,7 @@ import static java.lang.Character.isWhitespace;
 import static java.lang.Character.isDigit;
 
 public class ExprTokenizer implements Tokenizer {
-    private final String src;
-    private String next;  private int pos;
+    private String src, next;  private int pos;
 
     public ExprTokenizer(String src){
         if(src == null){
@@ -81,16 +80,15 @@ public class ExprTokenizer implements Tokenizer {
     @Override
     public boolean peek(String s) {
         if (!hasNextToken()) return false;
-        return next != null && next.equals(s);
+        return peek().equals(s);
     }
 
-
     @Override
-    public void consume(String s) {
-        if (next != null && peek(s)) {
+    public void consume(String s){
+        if (peek(s)){
             consume();
-        } else {
-            throw new SyntaxError(s + " expected at position " + pos);
+        }else{
+            throw new SyntaxError(s + " expected");
         }
     }
 }

@@ -17,9 +17,12 @@ public class Minion {
 
     public Minion(Player owner, HexCell cell) {
         this.position = cell;
+        this.x = cell.getX();
+        this.y = cell.getY();
         this.owner = owner;
         this.hp = GameConfig.InitHp + bonusHP;
         this.def = bonusDef;
+        addMinion(cell);
     }
 
     public void minionStrategy(String string) throws IOException{
@@ -27,11 +30,9 @@ public class Minion {
         file.readStrategy(string, this);
     }
 
-    public void checkPosition(int newX, int newY) {
-        GameBoard board = GameBoard.getInstance(GameBoard.namePlayerOne, GameBoard.namePlayerTwo);
-
+    public void setPosition(int newX, int newY) throws IOException {
         // ตรวจสอบว่าตำแหน่งใหม่อยู่ในขอบเขตบอร์ด
-        if (!board.isValidPosition(newX, newY)) {
+        if (!GameBoard.isValidPosition(newX, newY)) {
             System.out.println("ตำแหน่งใหม่อยู่นอกบอร์ด!");
             return;
         }
@@ -51,15 +52,12 @@ public class Minion {
         }
 
         // อัปเดตพิกัดของมินเนียน
-        setPosition(newPosition);
+        position = newPosition;
+        setXY(newPosition);
 
         // เพิ่มมินเนียนเข้าไปใน HexCell ใหม่
         this.position.addMinion(this);
-
-        // อัปเดตสถานะกระดาน
-        board.setStatus();
     }
-
 
     public HexCell getPosition() {
         return position;
@@ -89,15 +87,13 @@ public class Minion {
         this.hp = hp;
     }
 
-    public void moveTo(int newX, int newY){
-        this.x = newX;
-        this.y = newY;
-        this.position = GameBoard.getHexCell(newX, newY);
-    }
-
-    public void setPosition(HexCell newPosition){
-        this.position = newPosition;
+    public void setXY(HexCell newPosition){
         this.x = newPosition.getX();
         this.y = newPosition.getY();
+    }
+
+    public void addMinion(HexCell hexCell){
+        HexCell cell = GameBoard.getHexCell(hexCell.getX(), hexCell.getY());
+        cell.addMinion(this);
     }
 }

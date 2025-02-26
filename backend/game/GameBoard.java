@@ -2,6 +2,8 @@ package backend.game;
 
 import backend.minions.Minion;
 import backend.players.*;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ public class GameBoard {
     private static final int spawnRemaining = GameConfig.MaxSpawns;
 
     //Constructor
-    private GameBoard(String playerOneName, String playerTwoName) {
+    private GameBoard(String playerOneName, String playerTwoName) throws IOException {
         namePlayerOne = playerOneName;
         namePlayerTwo = playerTwoName;
         hexCellMap = new HashMap<>();
@@ -41,7 +43,7 @@ public class GameBoard {
     }
 
     //Singleton
-    public static GameBoard getInstance(String playerOneName, String playerTwoName) {
+    public static GameBoard getInstance(String playerOneName, String playerTwoName) throws IOException {
         if (instance == null) {
             instance = new GameBoard(playerOneName, playerTwoName);
         }
@@ -176,7 +178,7 @@ public class GameBoard {
         setStatus();  //อัปเดตสถานะก่อนแสดงบอร์ด
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                System.out.print(getStatusHexCells(i, j) + " ");
+                System.out.print("[ " + getStatusHexCells(i, j) + " ]"+" ");
             }
             System.out.println();
         }

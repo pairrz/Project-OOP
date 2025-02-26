@@ -48,34 +48,34 @@ public class ExprTokenizer implements Tokenizer {
             pos++;
         }
 
-        StringBuilder result = new StringBuilder();
         if (pos >= src.length()) {
             next = null;
             return;
         }
 
+        StringBuilder result = new StringBuilder();
         char c = src.charAt(pos);
 
-        if (Character.isDigit(c)) {
-            int start = pos;
+        if (Character.isDigit(c)) { // อ่านตัวเลขทั้งหมด
             while (pos < src.length() && isDigit(src.charAt(pos))) {
+                result.append(src.charAt(pos));
                 pos++;
             }
-            next = src.substring(start, pos);
-        } else if (Character.isLetter(c)) {
-            int start = pos;
+        } else if (Character.isLetter(c)) { // อ่านตัวแปรหรือคำสั่ง
             while (pos < src.length() && Character.isLetterOrDigit(src.charAt(pos))) {
+                result.append(src.charAt(pos));
                 pos++;
             }
-            next = src.substring(start, pos);
-        }else if (c == '+' || c == '{' || c== '}'|| c == '(' || c == ')' || c == '-' || c == '*' || c == '/' || c == '%' || c == '='
-        || c == '^') {
-            next = Character.toString(c);
+        } else if ("{}()+-*/^%=;".indexOf(c) != -1) { // เครื่องหมายพิเศษ
+            result.append(c);
             pos++;
         } else {
             throw new LexicalError("Unknown character: " + c);
         }
+
+        next = result.toString();
     }
+
 
     @Override
     public boolean peek(String s) {

@@ -12,7 +12,7 @@ import java.util.Map;
 public record MoveExpr(Minion minion, String direction) implements Expr {
 
     public boolean moveDirect() throws IOException {
-        System.out.println("move eval");
+        //System.out.println("move eval");
 
         int x = minion.getX();
         int y = minion.getY();
@@ -31,14 +31,14 @@ public record MoveExpr(Minion minion, String direction) implements Expr {
 
         // ตรวจสอบว่าตำแหน่งใหม่อยู่ในขอบเขตบอร์ด
         if (!GameBoard.isValidPosition(newX, newY)) {
-            System.out.println("ตำแหน่งใหม่อยู่นอกบอร์ด!");
+            //System.out.println("ตำแหน่งใหม่อยู่นอกบอร์ด!");
             return false;
         }
 
         // ตรวจสอบว่าตำแหน่งใหม่ถูกยึดครองหรือไม่
         HexCell newCell = GameBoard.getHexCell(newX, newY);
         if (newCell.hasMinion()) {
-            System.out.println("ตำแหน่งนี้มีมินเนียนอยู่แล้ว ไม่สามารถย้ายได้!");
+            //System.out.println("ตำแหน่งนี้มีมินเนียนอยู่แล้ว ไม่สามารถย้ายได้!");
             return false;
         }
         // ใช้ setPosition เพื่ออัปเดตตำแหน่งของมินเนียน
@@ -49,7 +49,7 @@ public record MoveExpr(Minion minion, String direction) implements Expr {
 
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
-        System.out.println("eval move");
+        //System.out.println("eval move");
         Player player = minion.getOwner();
         int budget = player.getBudget();
 

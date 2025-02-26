@@ -15,36 +15,96 @@ import java.util.Map;
 
 public class FileProcess {
     Map<String,Integer> bindings = new HashMap<>();
-    public void readStrategy(String fileName,Minion minion) throws IOException {
+
+    public void readStrategy(String fileName, Minion minion) throws IOException {
         Path path = Paths.get(fileName);
         Charset charset = StandardCharsets.UTF_8;
-        System.out.println("reading strategy");
+        //System.out.println("reading strategy");
+
         if (!Files.exists(path)) {
             System.err.println("Input file does not exist: " + fileName);
             return;
         }
 
-        try (BufferedReader reader = Files.newBufferedReader(path,charset)){
+        StringBuilder fullContent = new StringBuilder();
+
+        try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                try {
-                    Tokenizer token = new ExprTokenizer(line);
-                    Parser parser = new ExprParse(token,minion);
-                    Expr expr = parser.parse();
-                    expr.eval(bindings);
-                } catch (IllegalArgumentException x) {
-                    System.out.println("Invalid operator in expression: " + line + " -> " + x.getMessage());
-                } catch (ArithmeticException x) {
-                    System.out.println("Error evaluating expression: " + line + " -> " + x.getMessage());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                line = line.trim();
+                if (!line.isEmpty()) {
+                    fullContent.append(line).append(" "); // รวมบรรทัดเข้าด้วยกัน
                 }
             }
-        }catch (IOException x){
-        System.out.println("Error reading/writing file: " + x.getMessage());
+        }
+
+        if (fullContent.isEmpty()) {
+            System.err.println("Strategy file is empty or only contains whitespace.");
+            return;
+        }
+
+        try {
+            //System.out.println("Parsing strategy: " + fullContent);
+
+            Tokenizer token = new ExprTokenizer(fullContent.toString());
+            if (!token.hasNextToken()) {
+                //System.out.println("No valid tokens in strategy.");
+                return;
+            }
+            Parser parser = new ExprParse(token, minion);
+            Expr expr = parser.parse();
+            expr.eval(bindings);
+        } catch (IllegalArgumentException x) {
+            System.out.println("Invalid operator in strategy: " + x.getMessage());
+        } catch (ArithmeticException x) {
+            System.out.println("Error evaluating strategy: " + x.getMessage());
+        } catch (Exception x) {
+            System.out.println("Error processing strategy: " + x.getMessage());
         }
     }
+
+
+//    public void readStrategy(String fileName, Minion minion) throws IOException {
+//        Path path = Paths.get(fileName);
+//        Charset charset = StandardCharsets.UTF_8;
+//        System.out.println("reading strategy");
+//
+//        if (!Files.exists(path)) {
+//            System.err.println("Input file does not exist: " + fileName);
+//            return;
+//        }
+//
+//        try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
+//            String line;
+//
+//            while ((line = reader.readLine()) != null) {
+//                line = line.trim();
+//                if (line.isEmpty()) continue; // ข้ามบรรทัดว่าง
+//
+//                try {
+//                    System.out.println("Parsing line: " + line);
+//
+//                    Tokenizer token = new ExprTokenizer(line);
+//                    if (!token.hasNextToken()) {
+//                        System.out.println("Skipping empty tokenized line: " + line);
+//                        continue;
+//                    }
+//
+//                    Parser parser = new ExprParse(token, minion);
+//                    Expr expr = parser.parse();
+//                    expr.eval(bindings);
+//                } catch (IllegalArgumentException x) {
+//                    System.out.println("Invalid operator in expression: " + line + " -> " + x.getMessage());
+//                } catch (ArithmeticException x) {
+//                    System.out.println("Error evaluating expression: " + line + " -> " + x.getMessage());
+//                }
+//            }
+//        } catch (Exception x) {
+//            System.out.println("Error reading/writing file: " + x.getMessage());
+//        }
+//    }
+
 
     public void readConfig(String filename) throws IOException {
         Path path = Paths.get(filename);

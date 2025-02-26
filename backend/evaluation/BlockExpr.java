@@ -9,8 +9,8 @@ public record BlockExpr(List<Expr> statements) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
         int result = 0;
-        for (Expr stmt : statements) {
-            result = stmt.eval(bindings);
+        for (Expr statement : statements) {
+            result = statement.eval(bindings);
         }
         return result;
     }

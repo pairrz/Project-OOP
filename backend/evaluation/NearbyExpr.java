@@ -3,11 +3,10 @@ package backend.evaluation;
 import backend.game.GameBoard;
 import backend.minions.Minion;
 import backend.parser.Expr;
-import backend.players.Player;
 
 import java.util.Map;
 
-public record NearbyExpr(String direction, Player player, Minion minion, GameBoard board) implements Expr {
+public record NearbyExpr(String direction, Minion minion) implements Expr {
 
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
@@ -15,21 +14,30 @@ public record NearbyExpr(String direction, Player player, Minion minion, GameBoa
         int y = minion.getY();
         int distance = 0;
 
-        while (board.isValidPosition(x, y)) {
-            Minion target = board.getHexCell(x, y).getMinion();
+        System.out.println("เริ่มค้นหามินเนียนในทิศทาง: " + direction);
+        System.out.println("ตำแหน่งเริ่มต้น: (" + x + ", " + y + ")");
 
-            if (target != null) {
+        // ลูปค้นหาตามทิศทางจนกว่าหลุดจากกระดาน
+        while (GameBoard.isValidPosition(x, y) && (x < 8 && y < 8 && y >= 0 && x >= 0)) {
+            Minion target = GameBoard.getHexCell(x, y).getMinion();
+
+            System.out.println("ตรวจสอบที่: (" + x + ", " + y + ") -> " + (target != null ? "พบมินเนียน" : "ว่าง"));
+
+            // ถ้าพบมินเนียนและไม่ใช่ตัวเอง
+            if (target != null && target != minion) {
                 int hpLength = String.valueOf(target.getHP()).length();
-                int defenseLength = String.valueOf(target.getDef()).length();
-                int minionDistance = distance;
+                int defLength = String.valueOf(target.getDef()).length();
 
-                if (target.getOwner() == player) {
-                    return -(100 * hpLength + 10 * defenseLength + minionDistance);
+                System.out.println("พบมินเนียนที่ระยะ: " + distance);
+
+                if (target.getOwner() == minion.getOwner()) {
+                    return -(100 * hpLength + 10 * defLength + distance);
                 } else {
-                    return (100 * hpLength + 10 * defenseLength + minionDistance);
+                    return (100 * hpLength + 10 * defLength + distance);
                 }
             }
 
+            // อัปเดตค่าพิกัดตามทิศทาง
             switch (direction) {
                 case "up":
                     x--;
@@ -58,6 +66,9 @@ public record NearbyExpr(String direction, Player player, Minion minion, GameBoa
             }
             distance++;
         }
+
+        System.out.println("ไม่พบมินเนียนในทิศทาง: " + direction);
         return 0;
     }
+
 }

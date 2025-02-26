@@ -7,11 +7,13 @@ import backend.players.Player;
 
 import java.util.Map;
 
-public record InfoExpr(String type, Player player, Minion minion, GameBoard board) implements Expr {
+public record InfoExpr(String type, Minion minion) implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
         int x = minion.getX();
         int y = minion.getY();
+
+        System.out.println("Minion Position: (" + x + ", " + y + ")");
 
         boolean findAlly = type.equals("ally");
         boolean findOpponent = type.equals("opponent");
@@ -21,16 +23,18 @@ public record InfoExpr(String type, Player player, Minion minion, GameBoard boar
         }
 
         int[][] directions = {
-                {0, -1},
-                {-1, -1},
-                {-1, 0},
-                {1, 0},
-                {1, 1},
-                {0, 1}
+                {0, -1},  // 1 - Up
+                {1, -1},  // 2 - UpRight
+                {1, 0},   // 3 - DownRight
+                {0, 1},   // 4 - Down
+                {-1, 1},  // 5 - DownLeft
+                {-1, 0}   // 6 - UpLeft
         };
 
         int minDistance = Integer.MAX_VALUE;
         int bestResult = 0;
+
+        Player player = minion.getOwner();
 
         for (int dir = 0; dir < directions.length; dir++) {
             int dx = directions[dir][0];
@@ -40,8 +44,9 @@ public record InfoExpr(String type, Player player, Minion minion, GameBoard boar
             int newX = x + dx;
             int newY = y + dy;
 
-            while (board.isValidPosition(newX, newY)) {
-                Minion target = board.getHexCell(newX, newY).getMinion();
+            while (GameBoard.isValidPosition(newX, newY)) {
+                Minion target = GameBoard.getHexCell(newX, newY).getMinion();
+                System.out.println("Checking Position: (" + newX + ", " + newY + ")");
 
                 if (target != null) {
                     boolean isAlly = target.getOwner() == player;
@@ -49,6 +54,8 @@ public record InfoExpr(String type, Player player, Minion minion, GameBoard boar
 
                     if ((findAlly && isAlly) || (findOpponent && isOpponent)) {
                         int locationValue = distance * 10 + (dir + 1);
+                        System.out.println("Found target at distance " + distance + ", direction " + (dir + 1) + ", value: " + locationValue);
+
                         if (distance < minDistance || (distance == minDistance && locationValue < bestResult)) {
                             minDistance = distance;
                             bestResult = locationValue;
@@ -61,6 +68,9 @@ public record InfoExpr(String type, Player player, Minion minion, GameBoard boar
                 distance++;
             }
         }
+
+        bindings.put("x", bestResult);
+        System.out.println("Final result: " + bestResult);
         return bestResult;
     }
 }

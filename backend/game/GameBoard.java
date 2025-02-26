@@ -196,12 +196,12 @@ public class GameBoard {
     }
 
     public void buyMinionForPlayerOne(HexCell cell, Minion minion) {
-        playerOne.buyMinion(cell);
+        playerOne.buyMinion(cell,minion);
         setStatus();
     }
 
     public void buyMinionForPlayerTwo(HexCell cell,Minion minion) {
-        playerTwo.buyMinion(cell);
+        playerTwo.buyMinion(cell,minion);
         setStatus();
     }
 

@@ -40,7 +40,7 @@ public class MinionTest {
     void testMinionMoveValid() throws IOException {
         HexCell targetCell = GameBoard.getHexCell(1,1);
 
-        minion.checkPosition(1, 1);
+        minion.setPosition(1, 1);
 
         assertEquals(1, minion.getX());
         assertEquals(1, minion.getY());
@@ -57,13 +57,13 @@ public class MinionTest {
 
         HexCell targetCell = GameBoard.getHexCell(1,1);
 
-        minion.checkPosition(1, 1);
+        minion.setPosition(1, 1);
 
         assertEquals(1, minion.getX());
         assertEquals(1, minion.getY());
 
         // พยายามย้ายมินเนียนไปที่ (1,2) ซึ่งถูกยึดครองอยู่
-        minion.checkPosition(1, 2);
+        minion.setPosition(1, 2);
 
         // ควรยังอยู่ที่ตำแหน่งเดิม (1,1)
         assertEquals(1, minion.getX());
@@ -74,12 +74,12 @@ public class MinionTest {
     void testMinionMoveOutOfBounds() throws IOException {
         HexCell targetCell = GameBoard.getHexCell(1,1);
 
-        minion.checkPosition(1, 1);
+        minion.setPosition(1, 1);
 
         assertEquals(1, minion.getX());
         assertEquals(1, minion.getY());
 
-        minion.checkPosition(-1, 2); // ตำแหน่งนี้ไม่ควรอยู่บนบอร์ด
+        minion.setPosition(-1, 2); // ตำแหน่งนี้ไม่ควรอยู่บนบอร์ด
 
         assertEquals(1, minion.getX());
         assertEquals(1, minion.getY());

@@ -11,10 +11,10 @@ public class GameConfig {
     public static int MaxTurns;
     public static int MaxSpawns;
 
-    public void assign(String variable,int x){
+    public static void assign(String variable,int x){
         switch (variable) {
             case "spawn_cost" -> SpawnCost = x;
-            case "hex_purchase" -> HexPurchase = x;
+            case "hex_purchase_cost" -> HexPurchase = x;
             case "init_budget" -> InitBudget = x;
             case "init_hp" -> InitHp = x;
             case "turn_budget" -> TurnBudget = x;

@@ -19,7 +19,7 @@ public class ExprParse implements Parser {
     protected Map<String, Integer> playerBindings = new HashMap<>();
     protected Minion minion;
 
-    public ExprParse(Tokenizer token, Minion minion) {
+    public ExprParse(Tokenizer token, Minion minion) throws IOException {
         this.token = token;
         this.player = GameBoard.getInstance(GameBoard.namePlayerOne,GameBoard.namePlayerTwo).getCurrentPlayer();
         this.minion = minion;
@@ -38,13 +38,28 @@ public class ExprParse implements Parser {
 
     private Expr Strategy() throws IOException {
         Expr expr = null;
-        if (token.hasNextToken()) {
-            expr = Statement();
+
+        while (token.hasNextToken()) {  // Loop ไปจนกว่าหมด token
+            Expr nextExpr = Statement();
+
+            if (expr == null) {
+                expr = nextExpr;  // ถ้าเป็น statement แรก ให้กำหนด expr เป็นค่าแรก
+            } else {
+                Expr finalExpr = expr;
+                expr = new Expr() {  // ใช้ Anonymous Class เพื่อรวม Statement
+                    @Override
+                    public int eval(Map<String, Integer> bindings) throws Exception {
+                        finalExpr.eval(bindings);  // ประมวลผล statement ก่อนหน้า
+                        return nextExpr.eval(bindings);  // ประมวลผล statement ปัจจุบัน
+                    }
+                };
+            }
         }
         return expr;
     }
 
     private Expr Statement() throws IOException {
+        System.out.println("in statement");
         if (token.peek("if")) {
             token.consume("if");
             token.consume("(");  // Consume opening parenthesis
@@ -73,6 +88,7 @@ public class ExprParse implements Parser {
     }
 
     private Expr Command() throws IOException {
+        System.out.println("in command");
         String str = token.peek();
         if (checkComWord(str)) {
             return ActionCommand();
@@ -82,6 +98,7 @@ public class ExprParse implements Parser {
     }
 
     private Expr AssignmentStatement() throws IOException {
+        System.out.println("in assignment");
         String var = token.consume();
         token.consume("=");
         Expr expr = Expression();
@@ -89,6 +106,7 @@ public class ExprParse implements Parser {
     }
 
     private Expr ActionCommand() throws IOException {
+        System.out.println("in action");
         if (token.peek("done")) {
             token.consume("done");
             return new DoneExpr();
@@ -102,27 +120,31 @@ public class ExprParse implements Parser {
     }
 
     private Expr MoveCommand() throws IOException {
+        System.out.println("in move");
         token.consume("move");
-        return new MoveExpr(minion, Direction(), board);
+        return new MoveExpr(minion, Direction());
     }
 
     private Expr AttackCommand() throws IOException {
+        System.out.println("in attack");
         token.consume("shoot");
+        String direction = Direction();
         Expr expend = Expression();
-        return new AttackExpr(player, minion, Direction(), expend, board);
+        return new AttackExpr(minion, direction, expend);
     }
 
     private String Direction() throws IOException {
+        System.out.println("in direction");
         if (token.peek("up") || token.peek("down") || token.peek("upleft") || token.peek("upright") ||
                 token.peek("downleft") || token.peek("downright")) {
-            String direction = token.consume();
-            return direction;
+            return token.consume();
         } else {
             throw new IOException("Expected direction but found: " + token.peek());  // Changed to IOException
         }
     }
 
     private Expr Expression() throws IOException {
+        System.out.println("in expression");
         Expr expr = Term();
         while (token.peek("+") || token.peek("-")) {
             String op = token.consume();
@@ -132,6 +154,7 @@ public class ExprParse implements Parser {
     }
 
     private Expr Term() throws IOException {
+        System.out.println("in term");
         Expr expr = Factor();
         while (token.peek("*") || token.peek("/") || token.peek("%")) {
             String op = token.consume();
@@ -141,6 +164,7 @@ public class ExprParse implements Parser {
     }
 
     private Expr Factor() throws IOException {
+        System.out.println("in factor");
         Expr expr = Power();
         while (token.peek("^")) {
             token.consume("^");
@@ -150,38 +174,39 @@ public class ExprParse implements Parser {
     }
 
     private Expr Power() throws IOException {
-        // Check if it's a number
-        try {
-            if (isDigit(Integer.parseInt(token.peek()))) {
-                return new IntLit(Integer.parseInt(token.consume()));  // Convert to IntLit if it's a number
-            }
-        } catch (NumberFormatException e) {
-            // If it's not a number
-            // Check if it's a variable (letter)
-            if (Character.isLetter(token.peek().charAt(0))) {
-                return new Variable(token.consume(), player, minion, board);  // Use as variable
-            } else if (token.peek("(")) {
-                token.consume("(");
-                Expr expr = Expression();
-                token.consume(")");
-                return expr;
-            }
+        System.out.println("in power");
+
+        if (token.peek().matches("\\d+")) {
+            return new IntLit(Integer.parseInt(token.consume()));
+        }else if (token.peek("nearby") || token.peek("ally") || token.peek("opponent")) {
+            return InfoExpression();
+        }else if (Character.isLetter(token.peek().charAt(0))) {
+            return new Variable(token.consume(), minion);
+        }else if (token.peek("(")) {
+            token.consume("(");
+            Expr expr = Expression();
+            token.consume(")");
+            return expr;
         }
 
-        // Look for non-number evaluation value
-        return InfoExpression();
+        throw new IOException("Unexpected token in Power(): " + token.peek());
     }
+
 
     private Expr InfoExpression() throws IOException {
+        System.out.println("in info expression: ");
+
         if (token.peek("ally") || token.peek("opponent")) {
-            return new InfoExpr(token.consume(), player, minion, board);
+            return new InfoExpr(token.consume(), minion);
         } else if (token.peek("nearby")) {
             token.consume("nearby");
-            return new NearbyExpr(Direction(), player, minion, board);
+            String direction = Direction();  // ตรวจสอบว่า direction ถูกรับมาอย่างถูกต้อง
+            return new NearbyExpr(direction, minion);
         } else {
-            throw new IOException("Unexpected info expression: " + token.peek());  // Changed to IOException
+            throw new IOException("Unexpected info expression: " + token.peek());
         }
     }
+
 
     private boolean checkComWord(String word) {
         return commandWords.contains(word);

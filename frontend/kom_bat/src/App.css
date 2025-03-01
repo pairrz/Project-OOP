@@ -20,24 +20,10 @@ body {
 
 h1 {
   font-size: 50px;
-
 }
 
-.hover-image {
-  width: 300px;
-  transition: opacity 5s ease-in-out;
-}
 
-.hover-image:hover {
-  content: url("./image/ปุ่ม/3.png"); /* เปลี่ยนรูปเมื่อ hover */
-  /*opacity: 0.5*/
-}
-.hover-image2 {
-  width: 300px;
-  transition: opacity 5s ease-in-out;
-}
 
-.hover-image2:hover {
-  content: url("./image/ปุ่ม/4.png"); /* เปลี่ยนรูปเมื่อ hover */
-  /*opacity: 0.1*/
-}
+
+
+

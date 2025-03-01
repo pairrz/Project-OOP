@@ -46,7 +46,7 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
         if (targetMinion == null) {
             return 0;
         }
-
+        System.out.println("minion in " + targetMinion.getPosition().print() + " was attacked");
         int hp = targetMinion.getHP();
         int defense = targetMinion.getDef();
         int damage = Math.max(1, expenditure - defense);
@@ -55,6 +55,7 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
         targetMinion.setHP(newHP);
 
         if (newHP == 0) {
+            System.out.println("minion in " + targetMinion.getPosition().print() + " die.");
             targetCell.removeMinion();
             Player opponent = targetMinion.getOwner();
             opponent.removeMinion(targetMinion);

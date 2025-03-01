@@ -31,7 +31,7 @@ public class Minion {
     }
 
     public void setPosition(int newX, int newY) throws IOException {
-        // ตรวจสอบว่าตำแหน่งใหม่อยู่ในขอบเขตบอร์ด
+        // ตรวจสอบตำแหน่งใหม่อยู่ในบอร์ด
         if (!GameBoard.isValidPosition(newX, newY)) {
             System.out.println("ตำแหน่งใหม่อยู่นอกบอร์ด!");
             return;
@@ -52,7 +52,7 @@ public class Minion {
         }
 
         // อัปเดตพิกัดของมินเนียน
-        position = newPosition;
+        this.position = newPosition;
         setXY(newPosition);
 
         // เพิ่มมินเนียนเข้าไปใน HexCell ใหม่

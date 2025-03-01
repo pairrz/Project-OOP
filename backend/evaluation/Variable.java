@@ -24,7 +24,7 @@ public record Variable(String var, Minion minion) implements Expr {
                 return player.getBudget();
             }
             case "int" -> {
-                return player.getRate(GameManage.turn);
+                return (int) player.getRate(GameManage.turn);
             }
             case "maxbudget" -> {
                 return GameConfig.MaxBudget;
@@ -33,7 +33,7 @@ public record Variable(String var, Minion minion) implements Expr {
                 return GameBoard.getSpawnRemaining();
             }
             case "random" -> {
-                return (int) (Math.random() * 1000); // แก้ไขให้สุ่มค่าระหว่าง 0-999
+                return (int) (Math.random() * 1000); //สุ่มค่าระหว่าง 0-999
             }
             default -> {
                 bindings.putIfAbsent(var, 0);

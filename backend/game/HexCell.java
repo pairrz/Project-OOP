@@ -93,6 +93,10 @@ public class HexCell {
         return this.minion != null;
     }
 
+    public String print(){
+        return (this.x + "," + this.y);
+    }
+
 //    // ฟังก์ชันนี้ตั้งค่าให้เซลล์ถูกยึดครองหรือไม่ (โดยตั้งค่าเจ้าของ)
 //    public void setOccupied(boolean occupied) {
 //        if (occupied) {

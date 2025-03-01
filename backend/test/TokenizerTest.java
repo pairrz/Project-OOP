@@ -2,12 +2,8 @@ package backend.test;
 
 import backend.parser.ExprTokenizer;
 import backend.parser.Tokenizer;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 import java.util.NoSuchElementException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TokenizerTest {

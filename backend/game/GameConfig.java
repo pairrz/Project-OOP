@@ -11,7 +11,7 @@ public class GameConfig {
     public static int MaxTurns;
     public static int MaxSpawns;
 
-    public static void assign(String variable,int x){
+    public static void assign(String variable, int x) {
         switch (variable) {
             case "spawn_cost" -> SpawnCost = x;
             case "hex_purchase_cost" -> HexPurchase = x;
@@ -22,6 +22,20 @@ public class GameConfig {
             case "interest_pct" -> InterestPct = x;
             case "max_turns" -> MaxTurns = x;
             case "max_spawns" -> MaxSpawns = x;
+            default -> System.out.println("Unknown config key: " + variable);
         }
+    }
+
+
+    public static void printVar(){
+        System.out.println("Spawn Cost: " + SpawnCost);
+        System.out.println("Hex Purchase: " + HexPurchase);
+        System.out.println("InitBudget: " + InitBudget);
+        System.out.println("InitHp: " + InitHp);
+        System.out.println("TurnBudget: " + TurnBudget);
+        System.out.println("MaxBudget: " + MaxBudget);
+        System.out.println("InterestPct: " + InterestPct);
+        System.out.println("MaxTurns: " + MaxTurns);
+        System.out.println("MaxSpawns: " + MaxSpawns);
     }
 }

@@ -12,11 +12,7 @@ import java.util.Map;
 public record MoveExpr(Minion minion, String direction) implements Expr {
 
     public boolean moveDirect() throws IOException {
-        //System.out.println("move eval");
-
-        int x = minion.getX();
-        int y = minion.getY();
-        int newX = x, newY = y;
+        int newX = minion.getX(), newY = minion.getY();
 
         switch (direction) {
             case "up": newX--; break;
@@ -49,7 +45,6 @@ public record MoveExpr(Minion minion, String direction) implements Expr {
 
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
-        //System.out.println("eval move");
         Player player = minion.getOwner();
         int budget = player.getBudget();
 

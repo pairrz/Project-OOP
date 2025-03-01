@@ -10,7 +10,6 @@ public class PlayerTest {
 
     @Test
     void buyHex() throws IOException {
-
             GameBoard board = GameBoard.getInstance("Alice", "Bob");
             board.showBoard();
 
@@ -19,7 +18,6 @@ public class PlayerTest {
 
             board.showBoard();
             board.showHexOne();
-
     }
 
     @Test
@@ -27,8 +25,9 @@ public class PlayerTest {
         GameBoard board = GameBoard.getInstance("Alice", "Bob"); // แก้ไขตรงนี้
         HexCell testHex = GameBoard.getHexCell(1, 1);
         board.buyHexForPlayerOne(testHex);
+
         Minion minion = new Minion(board.getPlayerOne(), testHex);
-        board.buyMinionForPlayerOne(testHex,minion);
+        board.buyMinionForPlayerOne(testHex);
 
         board.showBoard();
     }
@@ -46,26 +45,20 @@ public class PlayerTest {
         HexCell cell7 = new HexCell(6, 5);
         HexCell cell8 = new HexCell(6, 4);
 
-        board.showBoard();
+        board.showBoard(); //คนละ 5
 
-        board.buyHexForPlayerOne(cell5);
-        board.buyHexForPlayerOne(cell6);
-        board.buyHexForPlayerOne(cell7);
-        board.buyHexForPlayerTwo(cell8);
+        board.buyHexForPlayerOne(cell5); //ture
+        board.buyHexForPlayerOne(cell6); //true
+        board.buyHexForPlayerOne(cell7); //false
+        board.buyHexForPlayerTwo(cell8); //true
 
-        board.showBoard();
+        board.showBoard(); // one +2 , two +1
 
-        Minion minion1 = new Minion(board.getPlayerOne(), cell1);
-        Minion minion2 = new Minion(board.getPlayerOne(), cell2);
-        Minion minion3 = new Minion(board.getPlayerOne(), cell3);
-        Minion minion4 = new Minion(board.getPlayerTwo(), cell4);
+        board.buyMinionForPlayerOne(cell1); //true
+        board.buyMinionForPlayerOne(cell2); //true
+        board.buyMinionForPlayerOne(cell3); //false
+        board.buyMinionForPlayerTwo(cell4); //true
 
-        board.buyMinionForPlayerOne(cell1,minion1);
-        board.buyMinionForPlayerOne(cell2,minion2);
-        board.buyMinionForPlayerOne(cell3,minion3);
-        board.buyMinionForPlayerTwo(cell4,minion4);
-
-        board.showBoard();
+        board.showBoard(); // one +2 , two +1
     }
-
 }

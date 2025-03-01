@@ -19,7 +19,6 @@ public class FileProcess {
     public void readStrategy(String fileName, Minion minion) throws IOException {
         Path path = Paths.get(fileName);
         Charset charset = StandardCharsets.UTF_8;
-        //System.out.println("reading strategy");
 
         if (!Files.exists(path)) {
             System.err.println("Input file does not exist: " + fileName);
@@ -63,7 +62,6 @@ public class FileProcess {
             System.out.println("Error processing strategy: " + x.getMessage());
         }
     }
-
 
 //    public void readStrategy(String fileName, Minion minion) throws IOException {
 //        Path path = Paths.get(fileName);
@@ -113,20 +111,31 @@ public class FileProcess {
         try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
             String line;
             while ((line = reader.readLine()) != null) {
-                String[] parts = line.trim().split("=");
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("#")) continue;
+
+                String[] parts = line.split("=");
 
                 if (parts.length == 2) {
-                    String var = parts[0].trim();
+                    String var = parts[0].trim().toLowerCase().replaceAll("\\s", ""); // Normalize
+                    String val = parts[1].trim();
+
                     try {
-                        int value = Integer.parseInt(parts[1].trim());
+                        int value = Integer.parseInt(val);
                         GameConfig.assign(var, value);
+                        //System.out.println("Config Loaded: " + var + " = " + value); // Debug Log
                     } catch (NumberFormatException e) {
                         System.out.println("Invalid number format in config: " + line);
                     }
+                } else {
+                    System.out.println("Invalid config line: " + line);
                 }
             }
         } catch (IOException e) {
             System.out.println("Error reading config file: " + e.getMessage());
         }
+
+        //GameConfig.printVar();
     }
+
 }

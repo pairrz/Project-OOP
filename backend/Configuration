@@ -5,5 +5,5 @@ init_hp = 100
 turn_budget = 80
 max_budget = 20000
 interest_pct = 5
-max_turns = 50
+max_turns = 20
 max_spawns = 45

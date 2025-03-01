@@ -1,7 +1,6 @@
 package backend.game;
 
 import backend.players.*;
-
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -11,81 +10,118 @@ public class GameManage {
     private int maxTurn;
 
     public void gamePlay() throws IOException {
-        try {
-            FileProcess file = new FileProcess();
-            file.readConfig("D:\\OOP project\\Configuration");
-        } catch (IOException e) {
-            System.err.println("Error loading config file: " + e.getMessage());
-        }
+        FileProcess file = new FileProcess();
+        file.readConfig("D:\\OOP project\\backend\\Configuration");
 
         maxTurn = GameConfig.MaxTurns;
 
-        System.out.println("1.Duel Mode\n2.Solitaire Mode\n3.Auto Mode");
-        System.out.print("Select game mode: ");
+        System.out.println("-----Select game mode-----\n1.Duel Mode\n2.Solitaire Mode\n3.Auto Mode");
+        System.out.print("your answer : ");
 
         Scanner scanner = new Scanner(System.in);
         int mode = scanner.nextInt();
 
-        System.out.print("Enter the first player's name: ");
-        String name1 = scanner.next();
-
-        System.out.print("Enter the second player's name: ");
-        String name2 = scanner.next();
+        switch (mode) {
+            case 1:
+                String name1 = askName();
+                String name2 = askName();
+                this.board = GameBoard.getInstance(name1, name2);
+                break;
+            case 2:
+                String name3 = askName();
+                this.board = GameBoard.getInstance(name3);
+                break;
+            case 3:
+                this.board = GameBoard.getInstance();
+                break;
+            default:
+                break;
+        }
 
 //        System.out.print("Enter the strategy : ");
 //        String strategy = scanner.next();
 
-        this.board = GameBoard.getInstance(name1, name2);
         board.showBoard();
 
-        while (true) {
-            System.out.println(currentName() + "'s turn (Turn: " + turn + ")\n");
+        while (turn <= maxTurn) {
+            System.out.println("\n" + currentName() + "'s turn (Turn: " + turn + ")\n");
+
+            if (isOver()) {
+                System.out.println("Congratulations! " + currentName() + " won!");
+                break;
+            }
+
             current().takeTurn(turn);
             board.showBoard();
 
-//            if (isOver()) {
-//                System.out.println("Congratulations! " + currentName() + " won!");
-//                break;
-//            }
-
+            System.out.println("-----End " + currentName() + "'s turn-----");
             board.switchPlayers();
             turn++;
         }
 
-        //board.resetBoard();
-        //gameOver();
+        board.resetBoard();
+        gameOver();
     }
 
     private boolean isOver() {
-        if (turn > maxTurn) {
-            return determineWinner();
+        // ตรวจสอบว่าเกมจบเมื่อผู้เล่นไม่มีมินเนียนในพื้นที่ (แต่ต้องเป็นหลังจากเทิร์นแรกๆ)
+        if (turn > 10 && (opponentMin() == 0 || currentMin() == 0)) {
+            System.out.println("Game over! A player has no minions left in the territory.");
+            determineWinner();
         }
-        return (opponentMin() == 0 || currentMin() == 0) && turn > 10;
+
+        // เกมจบเมื่อถึงจำนวนเทิร์นสูงสุดที่กำหนดไว้ในไฟล์ config
+        if (turn >= maxTurn) {
+            System.out.println("Game over! Reached the maximum number of turns.");
+            determineWinner();
+        }
+
+        return false;
     }
 
-    private boolean determineWinner() {
-        if (currentMin() > opponentMin()) {
+    private void determineWinner() {
+        int currentMinions = currentMin();
+        int opponentMinions = opponentMin();
+
+        // ผู้เล่นที่มีมินเนียนมากกว่าชนะ
+        if (currentMinions > opponentMinions) {
             System.out.println("Congratulations! " + currentName() + " won!");
-            return true;
-        } else if (currentMin() < opponentMin()) {
+            return;
+        } else if (currentMinions < opponentMinions) {
             System.out.println("Congratulations! " + opponentName() + " won!");
-            return true;
-        } else {
-            if (currentHP() > opponentHP()) {
-                System.out.println("Congratulations! " + currentName() + " won!");
-                return true;
-            } else if (currentHP() < opponentHP()) {
-                System.out.println("Congratulations! " + opponentName() + " won!");
-                return true;
-            } else {
-                if (currentBudget() > opponentBudget()) {
-                    System.out.println("Congratulations! " + currentName() + " won!");
-                } else {
-                    System.out.println("Congratulations! " + opponentName() + " won!");
-                }
-                return true;
-            }
+            return;
         }
+
+        // ถ้ามีจำนวนมินเนียนเท่ากัน ให้ดูที่ HP รวมของมินเนียน
+        int currentTotalHP = currentHP();
+        int opponentTotalHP = opponentHP();
+
+        if (currentTotalHP > opponentTotalHP) {
+            System.out.println("Congratulations! " + currentName() + " won!");
+            return;
+        } else if (currentTotalHP < opponentTotalHP) {
+            System.out.println("Congratulations! " + opponentName() + " won!");
+            return;
+        }
+
+        // ถ้า HP รวมเท่ากัน ให้ดูที่งบประมาณที่เหลืออยู่
+        int currentRemainingBudget = currentBudget();
+        int opponentRemainingBudget = opponentBudget();
+
+        if (currentRemainingBudget > opponentRemainingBudget) {
+            System.out.println("Congratulations! " + currentName() + " won!");
+        } else if (currentRemainingBudget < opponentRemainingBudget) {
+            System.out.println("Congratulations! " + opponentName() + " won!");
+        } else {
+            System.out.println("The game is a tie!");
+        }
+    }
+
+    private String askName(){
+        System.out.print("Enter the player's name: ");
+        Scanner scanner = new Scanner(System.in);
+
+        return scanner.next();
     }
 
     private void gameOver() {
@@ -105,11 +141,11 @@ public class GameManage {
     }
 
     private int currentMin() {
-        return board.getCurrentPlayer().getNumber();
+        return board.getCurrentPlayer().getNumMinions();
     }
 
     private int opponentMin() {
-        return board.getOpponentPlayer().getNumber();
+        return board.getOpponentPlayer().getNumMinions();
     }
 
     private int currentHP() {

@@ -36,17 +36,17 @@ class ExprParseTest {
         this.player = board.getPlayerOne();
         this.cell = GameBoard.getHexCell(0, 0);
         this.minion  = new Minion(player, cell);
-        board.buyMinionForPlayerOne(cell,minion);
+        board.buyMinionForPlayerOne(cell);
 
         this.opponent = board.getPlayerTwo();
         this.targetCell = GameBoard.getHexCell(7, 7); // อยู่ด้านบน
         this.targetMinion = new Minion(opponent, targetCell);
-        board.buyMinionForPlayerTwo(targetCell,targetMinion);
+        board.buyMinionForPlayerTwo(targetCell);
     }
 
     @Test
     void testAssignment() throws Exception {
-        board.buyMinionForPlayerOne(cell, minion);
+        board.buyMinionForPlayerOne(cell);
         Tokenizer tokenizer = new ExprTokenizer("x = 5");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();

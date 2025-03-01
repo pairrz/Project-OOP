@@ -4,9 +4,7 @@ import backend.game.*;
 import backend.minions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MinionTest {
@@ -16,15 +14,12 @@ public class MinionTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        // สร้างกระดานเกมจำลอง
         board = GameBoard.getInstance("PlayerOne", "PlayerTwo");
 
-        // สร้าง HexCell สำหรับผู้เล่น
         cell = GameBoard.getHexCell(1,0);
 
-        // สร้างมินเนียนที่ตำแหน่งเริ่มต้น
         minion = new Minion(board.getPlayerOne(), cell);
-        board.buyMinionForPlayerOne(cell,minion);
+        board.buyMinionForPlayerOne(cell);
     }
 
     @Test
@@ -32,8 +27,8 @@ public class MinionTest {
         assertNotNull(minion);
         assertEquals(board.getPlayerOne(), minion.getOwner());
         assertEquals(cell, minion.getPosition());
-        assertEquals(GameConfig.InitHp + 10, minion.getHP()); // HP เริ่มต้น + Bonus
-        assertEquals(10, minion.getDef()); // ค่า def ควรเป็น 10
+        assertEquals(GameConfig.InitHp + 10, minion.getHP());
+        assertEquals(10, minion.getDef());
     }
 
     @Test

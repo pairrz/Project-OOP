@@ -1,19 +1,17 @@
 package backend.game;
 
-import backend.minions.Minion;
 import backend.players.*;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class GameBoard {
-    public static GameBoard instance;
-    public static String namePlayerOne, namePlayerTwo;
+    private static GameBoard instance;
     private static Map<String, HexCell> hexCellMap;
+    private static String namePlayerOne, namePlayerTwo;
 
     private final int size = 8;
-    private final boolean[][] isOccupied = new boolean[8][8];
+    private final boolean[][] isOccupied = new boolean[size][size];
 
     private static Player playerOne;
     private static Player playerTwo;
@@ -25,16 +23,17 @@ public class GameBoard {
 
     private static final int spawnRemaining = GameConfig.MaxSpawns;
 
-    //Constructor
-    private GameBoard(String playerOneName, String playerTwoName) throws IOException {
-        namePlayerOne = playerOneName;
-        namePlayerTwo = playerTwoName;
+    //main constructor
+    private GameBoard(String playerOneName, String playerTwoName,boolean isBotOne,boolean isBotTwo) throws IOException {
         hexCellMap = new HashMap<>();
         player1Hexes = new HashMap<>();
         player2Hexes = new HashMap<>();
 
-        playerOne = new Player(playerOneName, player1Hexes);
-        playerTwo = new Player(playerTwoName, player2Hexes);
+        initializePlayers(playerOneName, playerTwoName,isBotOne,isBotTwo);
+
+        namePlayerOne = playerOneName;
+        namePlayerTwo = playerTwoName;
+
         currentPlayer = playerOne;
         opponentPlayer = playerTwo;
 
@@ -42,10 +41,39 @@ public class GameBoard {
         setupPlayerHexes();
     }
 
-    //Singleton
+    //player va bot
+    private GameBoard(String playerOneName) throws IOException {
+        this(playerOneName, "Bot",false,true);
+    }
+
+    //bot vs bot
+    private GameBoard() throws IOException {
+        this("Bot1", "Bot2",true,true);
+    }
+
+    private void initializePlayers(String playerOneName, String playerTwoName,boolean isBotOne, boolean isBotTwo) {
+        playerOne = isBotOne ? new BotPlayer(playerOneName, player1Hexes) : new Player(playerOneName, player1Hexes);
+        playerTwo = isBotTwo ? new BotPlayer(playerTwoName, player2Hexes) : new Player(playerTwoName, player2Hexes);
+    }
+
+    //singleton
     public static GameBoard getInstance(String playerOneName, String playerTwoName) throws IOException {
         if (instance == null) {
-            instance = new GameBoard(playerOneName, playerTwoName);
+            instance = new GameBoard(playerOneName, playerTwoName,false, false);
+        }
+        return instance;
+    }
+
+    public static GameBoard getInstance(String playerOneName) throws IOException {
+        if (instance == null) {
+            instance = new GameBoard(playerOneName);
+        }
+        return instance;
+    }
+
+    public static GameBoard getInstance() throws IOException {
+        if (instance == null) {
+            instance = new GameBoard();
         }
         return instance;
     }
@@ -143,7 +171,7 @@ public class GameBoard {
     }
 
     public static int getSpawnRemaining() {
-        return spawnRemaining - (playerOne.getNumber() + playerTwo.getNumber());
+        return spawnRemaining - (playerOne.getNumMinions() + playerTwo.getNumMinions());
     }
 
     public boolean isOccupied(int x, int y) {
@@ -162,20 +190,27 @@ public class GameBoard {
 
     public void setStatus() {
         for (HexCell cell : hexCellMap.values()) {
-            if (cell.getOwner() != null) {
-                if (cell.getMinion() != null) {
-                    cell.setStatus(cell.getOwner().equals(playerOne) ? "*" : "#");
+            if (cell.hasMinion()) {
+                if (cell.getMinion().getOwner() == playerOne) {
+                    cell.setStatus("*");
                 } else {
-                    cell.setStatus(cell.getOwner().equals(playerOne) ? "1" : "2");
+                    cell.setStatus("#");
                 }
             } else {
-                cell.setStatus("-");
+                if(cell.getOwner() == playerOne){
+                    cell.setStatus("1");
+                }else if(cell.getOwner() == playerTwo){
+                    cell.setStatus("2");
+                }else {
+                    cell.setStatus("-");
+                }
             }
         }
     }
 
     public void showBoard() {
         setStatus();  //อัปเดตสถานะก่อนแสดงบอร์ด
+        System.out.println();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 System.out.print( getStatusHexCells(i, j) + " ");
@@ -195,13 +230,13 @@ public class GameBoard {
         setStatus();
     }
 
-    public void buyMinionForPlayerOne(HexCell cell, Minion minion) {
-        playerOne.buyMinion(cell,minion);
+    public void buyMinionForPlayerOne(HexCell cell) {
+        playerOne.buyMinion(cell);
         setStatus();
     }
 
-    public void buyMinionForPlayerTwo(HexCell cell,Minion minion) {
-        playerTwo.buyMinion(cell,minion);
+    public void buyMinionForPlayerTwo(HexCell cell) {
+        playerTwo.buyMinion(cell);
         setStatus();
     }
 

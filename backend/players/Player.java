@@ -8,11 +8,11 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class Player {
+    protected static final Scanner scanner = new Scanner(System.in);
     protected final String name;
     protected final Map<String, HexCell> hexCells;
     protected final ArrayList<Minion> minions;
     protected int budget;
-    protected int numMinions;
     protected final int baseR = GameConfig.InterestPct;
 
     public Player(String name, Map<String, HexCell> hexCells) {
@@ -23,76 +23,132 @@ public class Player {
     }
 
     public void takeTurn(int turn) throws IOException {
-        int choice = 1;
+        printStatus();
+
+        boolean boughtHex = false;
+        boolean boughtMinion = false;
+
+        int choice = 0;
+
         while (choice != 3) {
-            System.out.print("1.buy hex cell\n2.buy minion\n3.end turn\n");
+            System.out.print("\n1.buy hex cell\n2.buy minion\n3.end turn\n");
             System.out.print("Enter your choice: ");
 
-            Scanner scanner = new Scanner(System.in);
             choice = scanner.nextInt();
+            scanner.nextLine();
 
             switch (choice) {
                 case 1:
-                    //รอ
+                    if (!boughtHex) {
+                        HexCell cell = askHexcell();
+                        buyHexCell(cell);
+                        boughtHex = true;
+                    } else {
+                        System.out.println("You have already bought a hex cell this turn.");
+                    }
                     break;
                 case 2:
-//                    if(canBuyMinion()){
-////                        System.out.print("enter hex cell position (x y): ");
-////
-////                        Scanner scanner1 = new Scanner(System.in);
-////                        String input = scanner1.nextLine();
-////
-////                        // แยกค่าพิกัด x และ y ด้วยช่องว่าง
-////                        String[] parts = input.split(" ");
-////                        int x = Integer.parseInt(parts[0]);  // พิกัด x
-////                        int y = Integer.parseInt(parts[1]);  // พิกัด y
-////
-////                        HexCell cell2 = new HexCell(x, y);
-//                        if(isMyHexCell(cell2)){
-//                            buyMinion(cell2);
-//                        }
-//                    }else{
-//                        break;
-//                    }
+                    if (boughtMinion) {
+                        System.out.println("You have already bought a minion this turn.");
+                        break;
+                    }
+                    if (!canBuyMinion()) {
+                        System.out.println("Not enough money!!!");
+                        break;
+                    }
+
+                    HexCell cell = askHexcell();
+                    if (isMyHex(cell)) {
+                        buyMinion(cell);
+                        boughtMinion = true;
+                    } else {
+                        System.out.println("Invalid cell! You can only buy minions on your own hex.");
+                    }
+                    break;
                 case 3:
                     break;
             }
         }
 
-        for (int i = 0; i < numMinions; i++) {
-            minions.get(i).minionStrategy("D:\\OOP project\\backend\\strategy\\Strategy.txt");
-        }
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getBudget() {
-        return budget;
-    }
-
-    public int getNumber() {
-        return numMinions;
-    }
-
-    public int getSumHP() {
-        int sum = 0;
         for (Minion minion : minions) {
-            sum += minion.getHP();
+            minion.minionStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt");
         }
-        return sum;
+
+        printStatus();
+
+        resetBudget(turn);
     }
 
-    public int getRate(int turn) {
-        return (int) (baseR * Math.log10((double) budget) * Math.log((double) turn));
+    public void buyMinion(HexCell cell) {
+        if (budget >= GameConfig.SpawnCost) {
+            HexCell hexCell = GameBoard.getHexCell(cell.getX(), cell.getY());
+
+            if (isMyHex(hexCell) && !hexCell.hasMinion()) {
+                Minion minion = new Minion(this, hexCell);
+                hexCell.addMinion(minion);
+
+                budget -= GameConfig.SpawnCost;
+                minions.add(minion); // เพิ่มมินเนียนเข้าไปใน List ของผู้เล่น
+
+                System.out.println("มินเนียนถูกวางใน HexCell (" + cell.getX() + "," + cell.getY() + ")");
+            } else {
+                System.out.println("ไม่สามารถวางมินเนียนที่นี่ได้!");
+            }
+        } else {
+            System.out.println("งบประมาณไม่พอ!");
+        }
     }
 
-    public ArrayList<Minion> getMinions() {
-        return minions;
+    public void buyHexCell(HexCell cell) {
+        if (budget >= GameConfig.HexPurchase) {
+            HexCell hexCell = GameBoard.getHexCell(cell.getX(), cell.getY());
+
+            if (isAdjacent(hexCell)) {
+                budget -= GameConfig.HexPurchase;
+                hexCell.setOwner(this);
+
+                hexCells.put(cell.getX() + "," + cell.getY(), hexCell);
+                System.out.println("HexCell (" + cell.getX() + "," + cell.getY() + ") ถูกซื้อสำเร็จ!");
+            } else {
+                System.out.println("HexCell นี้ซื้อไม่ได้!");
+            }
+        } else {
+            System.out.println("งบประมาณไม่พอ!");
+        }
     }
 
-    private boolean isAdjacent(HexCell cell) {
+    public void removeMinion(Minion minion) {
+        minions.remove(minion);
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
+
+    public boolean canBuyMinion() {
+        return (budget >= GameConfig.SpawnCost);
+    }
+
+    private HexCell askHexcell() {
+        System.out.print("Enter hex cell position (x y): ");
+        String input = scanner.nextLine();
+        String[] parts = input.split(" ");
+
+        try {
+            int x = Integer.parseInt(parts[0]);
+            int y = Integer.parseInt(parts[1]);
+            return GameBoard.getHexCell(x, y);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input! Please enter numbers.");
+            return askHexcell();
+        }
+    }
+
+    public boolean isMyHex(HexCell cell) {
+        return this.hexCells.containsKey(cell.getX() + "," + cell.getY());
+    }
+
+    public boolean isAdjacent(HexCell cell) {
         int x = cell.getX();
         int y = cell.getY();
         int[][] directions = {{-1, 0}, {-1, 1}, {0, 1}, {1, 0}, {0, -1}, {-1, -1}};
@@ -107,82 +163,45 @@ public class Player {
         return false;
     }
 
-    public void buyMinion(HexCell cell,Minion minion) {
-        if (budget >= GameConfig.SpawnCost) {
-            HexCell hexCell = GameBoard.getHexCell(cell.getX(), cell.getY());
+    public void printStatus() {
+        System.out.println(name + "'s status :");
+        System.out.println(budget + " coins");
+        System.out.println(minions.size() + " minions");
+    }
 
-            if (isMyHex(hexCell, hexCells) && !hexCell.hasMinion()) {
-                hexCell.addMinion(minion);
+    public String getName() {
+        return name;
+    }
 
-                budget -= GameConfig.SpawnCost;
-                minions.add(minion); // เพิ่มมินเนียนเข้าไปใน List ของผู้เล่น
+    public int getBudget() {
+        return budget;
+    }
 
-                //board.setStatus(); // อัปเดตสถานะบอร์ด
-                System.out.println("มินเนียนถูกวางใน HexCell (" + cell.getX() + "," + cell.getY() + ")");
-            } else {
-                System.out.println("ไม่สามารถวางมินเนียนที่นี่ได้!");
-            }
-        } else {
-            System.out.println("งบประมาณไม่พอ!");
+    public int getNumMinions() {
+        return minions.size();
+    }
+
+    public ArrayList<Minion> getMinions() {
+        return minions;
+    }
+
+    public void resetBudget(int turn) {
+        if (turn > 1) {
+            double rate = getRate(turn) / 100.0; // คำนวณเป็นอัตราส่วน
+            budget = (int) Math.floor(budget + (budget * rate)); // ปัดเศษลงเพื่อความแม่นยำ
         }
     }
 
-    //            System.out.print("enter hex cell position (x y): ");
-//
-//            Scanner scanner1 = new Scanner(System.in);
-//            String input = scanner1.nextLine();
-//
-//            // แยกค่าพิกัด x และ y ด้วยช่องว่าง
-//            String[] parts = input.split(" ");
-//            int x = Integer.parseInt(parts[0]);  // พิกัด x
-//            int y = Integer.parseInt(parts[1]);  // พิกัด y
-//
-//            HexCell cell = new HexCell(x, y);
+    public double getRate(int turn) {
+        if (budget <= 0 || turn <= 1) return 0; // ป้องกันข้อผิดพลาดทางคณิตศาสตร์
+        return baseR * Math.log10(budget) * Math.log(turn);
+    }
 
-    public void buyHexCell(HexCell cell) {
-        if (budget >= GameConfig.HexPurchase) {
-            HexCell hexCell = GameBoard.getHexCell(cell.getX(), cell.getY());
-
-            if (isAdjacent(hexCell)) {
-                budget -= GameConfig.HexPurchase;
-                hexCell.setOwner(this);
-
-                hexCells.put(cell.getX() + "," + cell.getY(), hexCell);
-                //board.setStatus();
-                System.out.println("HexCell (" + cell.getX() + "," + cell.getY() + ") ถูกซื้อสำเร็จ!");
-            } else {
-                System.out.println("HexCell นี้ซื้อไม่ได้!");
-            }
-        } else {
-            System.out.println("งบประมาณไม่พอ!");
+    public int getSumHP() {
+        int sum = 0;
+        for (Minion minion : minions) {
+            sum += minion.getHP();
         }
-    }
-
-    public void removeMinion(Minion minion) {
-        minions.remove(minion);
-        numMinions--;
-    }
-
-//    public void setBudget(int turn) {
-//        if (turn > 1) {
-//            budget = budget * (int) getRate(turn) / 100;
-//        }
-//    }
-
-    public void setBudget(int budget) {
-        this.budget = budget;
-    }
-
-    public void setSumHP(int i) {
-
-    }
-
-    public boolean canBuyMinion(HexCell cell, Map<String, HexCell> hexCells) {
-        return (budget >= GameConfig.SpawnCost) && isMyHex(cell, hexCells); // ตรวจสอบว่าเป็น hex ของผู้เล่น
-    }
-
-    public boolean isMyHex(HexCell cell, Map<String, HexCell> hexCells) {
-        return this.hexCells.containsKey(cell.getX() + "," + cell.getY());
+        return sum;
     }
 }
-

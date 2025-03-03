@@ -58,12 +58,12 @@ class ExprParseTest {
 
     @Test
     void testArithmeticExpression() throws Exception {
-        Tokenizer tokenizer = new ExprTokenizer("x = 3 + 2 * 5");
+        Tokenizer tokenizer = new ExprTokenizer("x = 3 ^ 2 % 5");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(13, bindings.get("x")); // 3 + (2 * 5) = 13
+        assertEquals(4, bindings.get("x")); // 3 + (2 * 5) = 13
     }
 
     @Test
@@ -111,20 +111,21 @@ class ExprParseTest {
 
     @Test
     void testNearbyExpression() throws Exception {
-        HexCell testCell = GameBoard.getHexCell(2, 0); // อยู่ด้านบน
+        System.out.println(opponent.getName());
+        HexCell testCell = GameBoard.getHexCell(4, 7); // อยู่ด้านบน
         Minion testMinion = new Minion(opponent, testCell);
 
         System.out.println(minion.getX() + " " + minion.getY());
         System.out.println(testMinion.getX() + " " + testMinion.getY());
 
-        Tokenizer tokenizer = new ExprTokenizer("x = nearby down");
+        Tokenizer tokenizer = new ExprTokenizer("x = nearby downright");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
         expr.eval(bindings);
         int result = bindings.get("x");
 
-        int expectedValue = 100 * 3 + 10 * 2 + 2;
+        int expectedValue = 100 * 3 + 10 * 2 + 7;
         assertEquals(expectedValue, result);
     }
 

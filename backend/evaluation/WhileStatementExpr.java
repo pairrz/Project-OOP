@@ -13,6 +13,7 @@ public record WhileStatementExpr(Expr condition, Expr statement) implements Expr
             result = statement.eval(bindings);
             count++;
         }
+        //System.out.println("while");
         return result;
     }
 }

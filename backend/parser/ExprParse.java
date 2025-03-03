@@ -110,7 +110,6 @@ public class ExprParse implements Parser {
         }
     }
 
-
     private Expr BlockStatement() throws IOException {
         token.consume("{");
 
@@ -158,7 +157,7 @@ public class ExprParse implements Parser {
             token.consume("done");
             return new DoneExpr();
         } else if (token.peek("move")) {
-            return MoveCommand();  // MoveCommand() ถูกต้อง
+            return MoveCommand();
         } else if (token.peek("shoot")) {
             return AttackCommand();
         } else {

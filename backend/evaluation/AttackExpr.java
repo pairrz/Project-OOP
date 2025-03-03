@@ -15,6 +15,8 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
         int expenditure = expend.eval(bindings);
         int totalCost = expenditure + 1;
 
+        //System.out.println("attack");
+
         if (budget < totalCost) {
             return 0;
         }
@@ -33,6 +35,7 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
                 throw new IllegalArgumentException("Invalid direction: " + direction);
         }
 
+        System.out.println("att" +budget + "-" + totalCost + "=" + (budget - totalCost));
         bindings.put("budget", budget - totalCost);
         player.setBudget(budget - totalCost);
 
@@ -54,7 +57,7 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
 
         targetMinion.setHP(newHP);
 
-        if (newHP == 0) {
+        if (newHP <= 0) {
             System.out.println("minion in " + targetMinion.getPosition().print() + " die.");
             targetCell.removeMinion();
             Player opponent = targetMinion.getOwner();

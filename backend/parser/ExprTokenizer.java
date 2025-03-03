@@ -76,7 +76,6 @@ public class ExprTokenizer implements Tokenizer {
         next = result.toString();
     }
 
-
     @Override
     public boolean peek(String s) {
         if (!hasNextToken()) return false;

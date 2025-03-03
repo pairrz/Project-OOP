@@ -66,7 +66,9 @@ public class BotPlayer extends Player {
     }
 
     public void buyHexCell(HexCell targetCell) {
+        System.out.println(budget + " -" + GameConfig.HexPurchase);
          budget -= GameConfig.HexPurchase;
+         System.out.println(budget);
          HexCell cell = GameBoard.getHexCell(targetCell.getX(), targetCell.getY());
          cell.setOwner(this);
 

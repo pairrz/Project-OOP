@@ -13,13 +13,14 @@ public class Player {
     protected final Map<String, HexCell> hexCells;
     protected final ArrayList<Minion> minions;
     protected int budget;
-    protected final int baseR = GameConfig.InterestPct;
+    protected final int baseR;
 
     public Player(String name, Map<String, HexCell> hexCells) {
         this.name = name;
         this.hexCells = hexCells;
         this.budget = GameConfig.InitBudget;
         this.minions = new ArrayList<>();
+        this.baseR = GameConfig.InterestPct;
     }
 
     public void takeTurn(int turn) throws IOException {
@@ -87,12 +88,14 @@ public class Player {
                 Minion minion = new Minion(this, hexCell);
                 hexCell.addMinion(minion);
 
+                System.out.println(budget + " -" + GameConfig.SpawnCost);
                 budget -= GameConfig.SpawnCost;
+                System.out.println(budget);
                 minions.add(minion); // เพิ่มมินเนียนเข้าไปใน List ของผู้เล่น
 
                 System.out.println("มินเนียนถูกวางใน HexCell (" + cell.getX() + "," + cell.getY() + ")");
             } else {
-                System.out.println("ไม่สามารถวางมินเนียนที่นี่ได้!");
+                System.out.println("ไม่สามารถวางมินเนียนที่นี่ได้!" + cell.getX() + "," + cell.getY());
             }
         } else {
             System.out.println("งบประมาณไม่พอ!");
@@ -187,13 +190,15 @@ public class Player {
 
     public void resetBudget(int turn) {
         if (turn > 1) {
+            budget += GameConfig.TurnBudget;
             double rate = getRate(turn) / 100.0; // คำนวณเป็นอัตราส่วน
             budget = (int) Math.floor(budget + (budget * rate)); // ปัดเศษลงเพื่อความแม่นยำ
+            budget =  Math.min(budget, GameConfig.MaxBudget);
         }
     }
 
     public double getRate(int turn) {
-        if (budget <= 0 || turn <= 1) return 0; // ป้องกันข้อผิดพลาดทางคณิตศาสตร์
+        if (budget <= 0 || turn <= 1) return 0;
         return baseR * Math.log10(budget) * Math.log(turn);
     }
 

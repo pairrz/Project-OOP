@@ -55,6 +55,7 @@ public record MoveExpr(Minion minion, String direction) implements Expr {
         if (moveDirect()) {
             player.setBudget(budget - 1);  // อัปเดต budget ของ Player จริง
             bindings.put("budget", budget - 1); // อัปเดต bindings เพื่อให้ตรงกับค่าปัจจุบัน
+            System.out.println("move" + (budget - 1));
         }
 
         return 0;

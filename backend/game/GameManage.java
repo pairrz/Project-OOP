@@ -43,14 +43,8 @@ public class GameManage {
 
         board.showBoard();
 
-        while (turn <= maxTurn) {
+        while (!isOver()) {
             System.out.println("\n" + currentName() + "'s turn (Turn: " + turn + ")\n");
-
-            if (isOver()) {
-                System.out.println("Congratulations! " + currentName() + " won!");
-                break;
-            }
-
             current().takeTurn(turn);
             board.showBoard();
 
@@ -59,21 +53,22 @@ public class GameManage {
             turn++;
         }
 
+
         board.resetBoard();
         gameOver();
     }
 
     private boolean isOver() {
-        // ตรวจสอบว่าเกมจบเมื่อผู้เล่นไม่มีมินเนียนในพื้นที่ (แต่ต้องเป็นหลังจากเทิร์นแรกๆ)
         if (turn > 10 && (opponentMin() == 0 || currentMin() == 0)) {
             System.out.println("Game over! A player has no minions left in the territory.");
             determineWinner();
+            return true;
         }
 
-        // เกมจบเมื่อถึงจำนวนเทิร์นสูงสุดที่กำหนดไว้ในไฟล์ config
         if (turn >= maxTurn) {
             System.out.println("Game over! Reached the maximum number of turns.");
             determineWinner();
+            return true;
         }
 
         return false;

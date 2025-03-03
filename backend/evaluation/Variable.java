@@ -11,7 +11,7 @@ import java.util.Map;
 
 public record Variable(String var, Minion minion) implements Expr {
     @Override
-    public int eval(Map<String, Integer> bindings) {
+    public int eval(Map<String, Integer> bindings) throws Exception {
         Player player = minion.getOwner();
         switch (var) {
             case "row" -> {

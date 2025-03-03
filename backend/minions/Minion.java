@@ -13,13 +13,13 @@ public class Minion {
     protected int bonusHP = 10;
     protected int bonusDef = 10;
     protected Player owner;
-    protected HexCell cell;
 
     public Minion(Player owner, HexCell cell) {
         this.position = cell;
         this.x = cell.getX();
         this.y = cell.getY();
         this.owner = owner;
+        System.out.println(owner.getName());
         this.hp = GameConfig.InitHp + bonusHP;
         this.def = bonusDef;
         addMinion(cell);

@@ -11,6 +11,8 @@ public record BinaryArithExpr(Expr left, String op, Expr right) implements Expr 
         int lv = left.eval(bindings);
         int rv = right.eval(bindings);
 
+        //System.out.println("binary");
+
         if ("/".equals(op) || "%".equals(op)) {
             if (rv == 0) throw new EvalError("Division by zero");
         }

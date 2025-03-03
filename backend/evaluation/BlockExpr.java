@@ -12,6 +12,7 @@ public record BlockExpr(List<Expr> statements) implements Expr {
         for (Expr statement : statements) {
             result = statement.eval(bindings);
         }
+        //System.out.println("blockExpr");
         return result;
     }
 }

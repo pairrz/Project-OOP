@@ -27,7 +27,7 @@ public class BotPlayer extends Player {
         }
 
         // ซื้อ Minion ถ้ามีเงินพอ
-        if(budget >= GameConfig.SpawnCost) {
+        if(budget >= GameConfig.SpawnCost && minions.size() < 5) {
             HexCell spawnCell = findSpawnCell();
             if (spawnCell != null) {
                 buyMinion(spawnCell);
@@ -125,5 +125,4 @@ public class BotPlayer extends Player {
     public int getSumHP() {
         return super.getSumHP();
     }
-
 }

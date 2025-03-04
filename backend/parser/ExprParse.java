@@ -1,5 +1,6 @@
 package backend.parser;
 
+import SyntaxErrorException.DoneException;
 import backend.evaluation.*;
 import backend.minions.*;
 import backend.players.*;
@@ -38,25 +39,50 @@ public class ExprParse implements Parser {
 
     private Expr Strategy() throws IOException {
         Expr expr = null;
-
-        while (token.hasNextToken()) {  // Loop ไปจนกว่าหมด token
+        while (token.hasNextToken()) {
             Expr nextExpr = Statement();
-
             if (expr == null) {
-                expr = nextExpr;  // ถ้าเป็น statement แรก ให้กำหนด expr เป็นค่าแรก
+                expr = nextExpr;
             } else {
                 Expr finalExpr = expr;
-                expr = new Expr() {  // ใช้ Anonymous Class เพื่อรวม Statement
+                expr = new Expr() {
                     @Override
                     public int eval(Map<String, Integer> bindings) throws Exception {
-                        finalExpr.eval(bindings);  // ประมวลผล statement ก่อนหน้า
-                        return nextExpr.eval(bindings);  // ประมวลผล statement ปัจจุบัน
+                        try {
+                            finalExpr.eval(bindings);
+                            return nextExpr.eval(bindings);
+                        } catch (DoneException e) {
+                            System.out.println("Strategy execution stopped due to 'done'.");
+                            throw e;
+                        }
                     }
                 };
             }
         }
         return expr;
     }
+
+//    private Expr Strategy() throws IOException {
+//        Expr expr = null;
+//
+//        while (token.hasNextToken()) {  // Loop ไปจนกว่าหมด token
+//            Expr nextExpr = Statement();
+//
+//            if (expr == null) {
+//                expr = nextExpr;  // ถ้าเป็น statement แรก ให้กำหนด expr เป็นค่าแรก
+//            } else {
+//                Expr finalExpr = expr;
+//                expr = new Expr() {  // ใช้ Anonymous Class เพื่อรวม Statement
+//                    @Override
+//                    public int eval(Map<String, Integer> bindings) throws Exception {
+//                        finalExpr.eval(bindings);  // ประมวลผล statement ก่อนหน้า
+//                        return nextExpr.eval(bindings);  // ประมวลผล statement ปัจจุบัน
+//                    }
+//                };
+//            }
+//        }
+//        return expr;
+//    }
 
     private Expr Statement() throws IOException {
         //System.out.println("in statement");
@@ -101,7 +127,6 @@ public class ExprParse implements Parser {
             }
 
             return new WhileStatementExpr(condition, BlockStatement());
-
         } else if (token.peek("{")) {
             return BlockStatement();
 
@@ -114,7 +139,7 @@ public class ExprParse implements Parser {
         token.consume("{");
 
         List<Expr> statements = new ArrayList<>();
-        while (token.hasNextToken() && !token.peek("}")) { // อ่านจนกว่าจะเจอ }
+        while (token.hasNextToken() && !token.peek("}")) {
             statements.add(Statement());
         }
 

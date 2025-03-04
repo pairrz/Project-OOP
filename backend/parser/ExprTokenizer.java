@@ -87,7 +87,7 @@ public class ExprTokenizer implements Tokenizer {
         if (peek(s)){
             consume();
         }else{
-            throw new SyntaxError(s + " expected");
+            throw new SyntaxError(s + " expected" + pos + peek());
         }
     }
 }

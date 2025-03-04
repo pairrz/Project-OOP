@@ -87,6 +87,65 @@ class ExprParseTest {
     }
 
     @Test
+    void testNestedIfElseStatement() throws Exception {
+        Tokenizer tokenizer = new ExprTokenizer(
+                "if (10 - 5) then " +
+                        "   if (20 - 15) then " +
+                        "       x = 1 " +
+                        "   else " +
+                        "       x = 2 " +
+                        "else " +
+                        "   x = 3"
+        );
+        Parser parser = new ExprParse(tokenizer, minion);
+        Expr expr = parser.parse();
+
+        expr.eval(bindings);
+        assertEquals(1, bindings.get("x")); // (10 - 5) และ (20 - 15) เป็นจริง, x ควรเป็น 1
+    }
+
+    @Test
+    void testDeepNestedIfElse() throws Exception {
+        Tokenizer tokenizer = new ExprTokenizer(
+                "if (10 - 5) then " +
+                        "   if (20 - 10) then " +
+                        "       if (30 - 30) then " +
+                        "           x = 1 " +
+                        "       else " +
+                        "           x = 2 " +
+                        "   else " +
+                        "       x = 3 " +
+                        "else " +
+                        "   x = 4"
+        );
+        Parser parser = new ExprParse(tokenizer, minion);
+        Expr expr = parser.parse();
+
+        expr.eval(bindings);
+        assertEquals(2, bindings.get("x")); // (10-5) และ (20-10) เป็นจริง, (30-30) เป็น false → x ควรเป็น 2
+    }
+
+    @Test
+    void testIfElseWithVariable() throws Exception {
+        Tokenizer tokenizer = new ExprTokenizer(
+                "x = 5 " +
+                        "if (x - 3) then " +
+                        "   if (x - 5) then " +
+                        "       y = 1 " +
+                        "   else " +
+                        "       y = 2 " +
+                        "else " +
+                        "   y = 3"
+        );
+        Parser parser = new ExprParse(tokenizer, minion);
+        Expr expr = parser.parse();
+
+        expr.eval(bindings);
+        assertEquals(2, bindings.get("y")); // x = 5 → (x - 3) เป็น true → (x - 5) เป็น false → y ควรเป็น 2
+    }
+
+
+    @Test
     void testWhileLoop() throws Exception {
         Tokenizer tokenizer = new ExprTokenizer("x = 0 while (3 - x) { x = x + 1 }");
         Parser parser = new ExprParse(tokenizer, minion);

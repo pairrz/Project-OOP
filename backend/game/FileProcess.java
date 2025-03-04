@@ -1,5 +1,6 @@
 package backend.game;
 
+import SyntaxErrorException.DoneException;
 import backend.minions.*;
 import backend.parser.*;
 

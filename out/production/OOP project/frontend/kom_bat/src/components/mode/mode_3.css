@@ -1,0 +1,12 @@
+.image3 {
+    width: 300px;
+    transition: opacity 5s ease-in-out, box-shadow 0.3s ease-in-out;
+   
+  }
+  
+  .image3:hover {
+    content: url('./ปุ่ม/Button_\ 3.2.png'); /* เปลี่ยนรูปเมื่อ hover */
+    /*opacity: 0.5*/
+    filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 3));
+  }
+  

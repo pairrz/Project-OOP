@@ -27,7 +27,7 @@ public class BotPlayer extends Player {
         }
 
         // ซื้อ Minion ถ้ามีเงินพอ
-        if(budget >= GameConfig.SpawnCost) {
+        if(budget >= GameConfig.SpawnCost && minions.size() < 5) {
             HexCell spawnCell = findSpawnCell();
             if (spawnCell != null) {
                 buyMinion(spawnCell);
@@ -66,7 +66,9 @@ public class BotPlayer extends Player {
     }
 
     public void buyHexCell(HexCell targetCell) {
+        System.out.println(budget + " -" + GameConfig.HexPurchase);
          budget -= GameConfig.HexPurchase;
+         System.out.println(budget);
          HexCell cell = GameBoard.getHexCell(targetCell.getX(), targetCell.getY());
          cell.setOwner(this);
 
@@ -123,5 +125,4 @@ public class BotPlayer extends Player {
     public int getSumHP() {
         return super.getSumHP();
     }
-
 }

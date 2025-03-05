@@ -58,12 +58,12 @@ class ExprParseTest {
 
     @Test
     void testArithmeticExpression() throws Exception {
-        Tokenizer tokenizer = new ExprTokenizer("x = 3 + 2 * 5");
+        Tokenizer tokenizer = new ExprTokenizer("x = 3 ^ 2 % 5");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(13, bindings.get("x")); // 3 + (2 * 5) = 13
+        assertEquals(4, bindings.get("x")); // 3 + (2 * 5) = 13
     }
 
     @Test
@@ -85,6 +85,65 @@ class ExprParseTest {
         expr.eval(bindings);
         assertEquals(2, bindings.get("x")); // (5 - 10) gives -5, so x = 2
     }
+
+    @Test
+    void testNestedIfElseStatement() throws Exception {
+        Tokenizer tokenizer = new ExprTokenizer(
+                "if (10 - 5) then " +
+                        "   if (20 - 15) then " +
+                        "       x = 1 " +
+                        "   else " +
+                        "       x = 2 " +
+                        "else " +
+                        "   x = 3"
+        );
+        Parser parser = new ExprParse(tokenizer, minion);
+        Expr expr = parser.parse();
+
+        expr.eval(bindings);
+        assertEquals(1, bindings.get("x")); // (10 - 5) และ (20 - 15) เป็นจริง, x ควรเป็น 1
+    }
+
+    @Test
+    void testDeepNestedIfElse() throws Exception {
+        Tokenizer tokenizer = new ExprTokenizer(
+                "if (10 - 5) then " +
+                        "   if (20 - 10) then " +
+                        "       if (30 - 30) then " +
+                        "           x = 1 " +
+                        "       else " +
+                        "           x = 2 " +
+                        "   else " +
+                        "       x = 3 " +
+                        "else " +
+                        "   x = 4"
+        );
+        Parser parser = new ExprParse(tokenizer, minion);
+        Expr expr = parser.parse();
+
+        expr.eval(bindings);
+        assertEquals(2, bindings.get("x")); // (10-5) และ (20-10) เป็นจริง, (30-30) เป็น false → x ควรเป็น 2
+    }
+
+    @Test
+    void testIfElseWithVariable() throws Exception {
+        Tokenizer tokenizer = new ExprTokenizer(
+                "x = 5 " +
+                        "if (x - 3) then " +
+                        "   if (x - 5) then " +
+                        "       y = 1 " +
+                        "   else " +
+                        "       y = 2 " +
+                        "else " +
+                        "   y = 3"
+        );
+        Parser parser = new ExprParse(tokenizer, minion);
+        Expr expr = parser.parse();
+
+        expr.eval(bindings);
+        assertEquals(2, bindings.get("y")); // x = 5 → (x - 3) เป็น true → (x - 5) เป็น false → y ควรเป็น 2
+    }
+
 
     @Test
     void testWhileLoop() throws Exception {
@@ -111,20 +170,21 @@ class ExprParseTest {
 
     @Test
     void testNearbyExpression() throws Exception {
-        HexCell testCell = GameBoard.getHexCell(2, 0); // อยู่ด้านบน
+        System.out.println(opponent.getName());
+        HexCell testCell = GameBoard.getHexCell(4, 7); // อยู่ด้านบน
         Minion testMinion = new Minion(opponent, testCell);
 
         System.out.println(minion.getX() + " " + minion.getY());
         System.out.println(testMinion.getX() + " " + testMinion.getY());
 
-        Tokenizer tokenizer = new ExprTokenizer("x = nearby down");
+        Tokenizer tokenizer = new ExprTokenizer("x = nearby downright");
         Parser parser = new ExprParse(tokenizer, minion);
         Expr expr = parser.parse();
 
         expr.eval(bindings);
         int result = bindings.get("x");
 
-        int expectedValue = 100 * 3 + 10 * 2 + 2;
+        int expectedValue = 100 * 3 + 10 * 2 + 7;
         assertEquals(expectedValue, result);
     }
 

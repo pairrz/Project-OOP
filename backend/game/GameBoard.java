@@ -38,7 +38,8 @@ public class GameBoard {
         opponentPlayer = playerTwo;
 
         setBoard();
-        setupPlayerHexes();
+        setupPlayerOneHexes();
+        setupPlayerTwoHexes();
     }
 
     //player va bot
@@ -51,9 +52,9 @@ public class GameBoard {
         this("Bot1", "Bot2",true,true);
     }
 
-    private void initializePlayers(String playerOneName, String playerTwoName,boolean isBotOne, boolean isBotTwo) {
-        playerOne = isBotOne ? new BotPlayer(playerOneName, player1Hexes) : new Player(playerOneName, player1Hexes);
-        playerTwo = isBotTwo ? new BotPlayer(playerTwoName, player2Hexes) : new Player(playerTwoName, player2Hexes);
+    private void initializePlayers(String playerOneName, String playerTwoName,boolean isBotOne, boolean isBotTwo) throws IOException {
+        playerOne = isBotOne ? new BotPlayer(playerOneName, setupPlayerOneHexes()) : new Player(playerOneName, setupPlayerOneHexes());
+        playerTwo = isBotTwo ? new BotPlayer(playerTwoName, setupPlayerTwoHexes()) : new Player(playerTwoName, setupPlayerTwoHexes());
     }
 
     //singleton
@@ -87,13 +88,39 @@ public class GameBoard {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 getHexCell(i, j);
-                isOccupied[i][j] = false;
+//                isOccupied[i][j] = false;
             }
         }
     }
 
     //Setup player hexes
-    private void setupPlayerHexes() {
+//    private void setupPlayerHexes() {
+//        int k = 3;
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < k; j++) {
+//                HexCell cell = getHexCell(i, j);
+//                player1Hexes.put(i + "," + j, cell);
+//                cell.setOwner(playerOne);
+//                cell.setStatus("1");
+//                //isOccupied[i][j] = true;
+//            }
+//            k--;
+//        }
+//
+//        k = 5;
+//        for (int i = 7; i >= 6; i--) {
+//            for (int j = k; j < size; j++) {
+//                HexCell cell = getHexCell(i, j);
+//                player2Hexes.put(i + "," + j, cell);
+//                cell.setOwner(playerTwo);
+//                cell.setStatus("2");
+//                //isOccupied[i][j] = true;
+//            }
+//            k++;
+//        }
+//    }
+
+    public Map<String, HexCell> setupPlayerOneHexes() throws IOException {
         int k = 3;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < k; j++) {
@@ -105,8 +132,11 @@ public class GameBoard {
             }
             k--;
         }
+        return player1Hexes;
+    }
 
-        k = 5;
+    public Map<String, HexCell> setupPlayerTwoHexes() throws IOException {
+        int k = 5;
         for (int i = 7; i >= 6; i--) {
             for (int j = k; j < size; j++) {
                 HexCell cell = getHexCell(i, j);
@@ -117,6 +147,7 @@ public class GameBoard {
             }
             k++;
         }
+        return player2Hexes;
     }
 
     public Map<String, HexCell> getPlayer1Hexes() {

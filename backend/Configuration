@@ -1,9 +1,9 @@
 spawn_cost = 100
-hex_purchase_cost = 1000
-init_budget = 10000
+hex_purchase_cost = 200
+init_budget = 150
 init_hp = 100
-turn_budget = 80
-max_budget = 20000
+turn_budget = 5
+max_budget = 2000
 interest_pct = 5
 max_turns = 20
-max_spawns = 45
+max_spawns = 20

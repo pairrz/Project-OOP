@@ -12,51 +12,56 @@ import java.util.Map;
 public record MoveExpr(Minion minion, String direction) implements Expr {
 
     public boolean moveDirect() throws IOException {
-        int newX = minion.getX(), newY = minion.getY();
+        try {
+            int newX = minion.getX(), newY = minion.getY();
 
-        switch (direction) {
-            case "up": newX--; break;
-            case "down": newX++; break;
-            case "upleft": newX--; newY--; break;
-            case "upright": newX--; newY++; break;
-            case "downleft": newY--; break;
-            case "downright": newY++; break;
-            default:
-                throw new IllegalArgumentException("Invalid direction: " + direction);
+            switch (direction) {
+                case "up": newX--; break;
+                case "down": newX++; break;
+                case "upleft": newX--; newY--; break;
+                case "upright": newX--; newY++; break;
+                case "downleft": newY--; break;
+                case "downright": newY++; break;
+                default:
+                    throw new IllegalArgumentException("Invalid direction: " + direction);
+            }
+
+            if (!GameBoard.isValidPosition(newX, newY)) {
+                return false;
+            }
+
+            HexCell newCell = GameBoard.getHexCell(newX, newY);
+            if (newCell.hasMinion()) {
+                return false;
+            }
+
+            minion.setPosition(newX, newY);
+            return true;
+        } catch (Exception e) {
+            throw new IOException("Error in MoveExpr.moveDirect: " + e.getMessage(), e);
         }
-
-        // ตรวจสอบว่าตำแหน่งใหม่อยู่ในขอบเขตบอร์ด
-        if (!GameBoard.isValidPosition(newX, newY)) {
-            //System.out.println("ตำแหน่งใหม่อยู่นอกบอร์ด!");
-            return false;
-        }
-
-        // ตรวจสอบว่าตำแหน่งใหม่ถูกยึดครองหรือไม่
-        HexCell newCell = GameBoard.getHexCell(newX, newY);
-        if (newCell.hasMinion()) {
-            //System.out.println("ตำแหน่งนี้มีมินเนียนอยู่แล้ว ไม่สามารถย้ายได้!");
-            return false;
-        }
-        // ใช้ setPosition เพื่ออัปเดตตำแหน่งของมินเนียน
-        minion.setPosition(newX, newY);
-
-        return true;
     }
 
     @Override
     public int eval(Map<String, Integer> bindings) throws Exception {
-        Player player = minion.getOwner();
-        int budget = player.getBudget();
+        try {
+            Player player = minion.getOwner();
+            int budget = player.getBudget();
 
-        if (budget < 1) {
+            if (budget < 1) {
+                return 0;
+            }
+
+            if (moveDirect()) {
+                player.setBudget(budget - 1);
+                bindings.put("budget", budget - 1);
+                System.out.println("bindings[budget] = " + (budget - 1));
+
+            }
+
             return 0;
+        } catch (Exception e) {
+            throw new Exception("Error in MoveExpr.eval: " + e.getMessage(), e);
         }
-
-        if (moveDirect()) {
-            player.setBudget(budget - 1);  // อัปเดต budget ของ Player จริง
-            bindings.put("budget", budget - 1); // อัปเดต bindings เพื่อให้ตรงกับค่าปัจจุบัน
-        }
-
-        return 0;
     }
 }

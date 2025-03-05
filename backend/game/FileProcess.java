@@ -1,5 +1,6 @@
 package backend.game;
 
+import SyntaxErrorException.DoneException;
 import backend.minions.*;
 import backend.parser.*;
 
@@ -62,47 +63,6 @@ public class FileProcess {
             System.out.println("Error processing strategy: " + x.getMessage());
         }
     }
-
-//    public void readStrategy(String fileName, Minion minion) throws IOException {
-//        Path path = Paths.get(fileName);
-//        Charset charset = StandardCharsets.UTF_8;
-//        System.out.println("reading strategy");
-//
-//        if (!Files.exists(path)) {
-//            System.err.println("Input file does not exist: " + fileName);
-//            return;
-//        }
-//
-//        try (BufferedReader reader = Files.newBufferedReader(path, charset)) {
-//            String line;
-//
-//            while ((line = reader.readLine()) != null) {
-//                line = line.trim();
-//                if (line.isEmpty()) continue; // ข้ามบรรทัดว่าง
-//
-//                try {
-//                    System.out.println("Parsing line: " + line);
-//
-//                    Tokenizer token = new ExprTokenizer(line);
-//                    if (!token.hasNextToken()) {
-//                        System.out.println("Skipping empty tokenized line: " + line);
-//                        continue;
-//                    }
-//
-//                    Parser parser = new ExprParse(token, minion);
-//                    Expr expr = parser.parse();
-//                    expr.eval(bindings);
-//                } catch (IllegalArgumentException x) {
-//                    System.out.println("Invalid operator in expression: " + line + " -> " + x.getMessage());
-//                } catch (ArithmeticException x) {
-//                    System.out.println("Error evaluating expression: " + line + " -> " + x.getMessage());
-//                }
-//            }
-//        } catch (Exception x) {
-//            System.out.println("Error reading/writing file: " + x.getMessage());
-//        }
-//    }
-
 
     public void readConfig(String filename) throws IOException {
         Path path = Paths.get(filename);

@@ -5,9 +5,13 @@ import H from './H.js';
 const Home = () => {  
     return(
       <div>
+        <body>
         <H/>
         <Start/>
         <How_to_play/>
+
+        </body>
+        
       </div>
     );
   };

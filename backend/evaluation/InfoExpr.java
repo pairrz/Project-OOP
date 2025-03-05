@@ -74,4 +74,21 @@ public record InfoExpr(String type, Minion minion) implements Expr {
         //System.out.println("Final result: " + bestResult);
         return bestResult;
     }
+
+    private int[][] getInts(boolean findAlly, boolean findOpponent, int x) {
+        if (!findAlly && !findOpponent) {
+            throw new IllegalArgumentException("Invalid info type: " + type);
+        }
+
+        // **ทิศทางของ Hex Grid ตามรูป**
+        int[][] oddRowDirections = {
+                {0, -1},  {1, -1},  {1, 0},  {0, 1},  {-1, 0},  {-1, -1}  // row คี่
+        };
+        int[][] evenRowDirections = {
+                {0, -1},  {1, 0},  {1, 1},  {0, 1},  {-1, 1},  {-1, 0}  // row คู่
+        };
+
+        int[][] directions = (x % 2 == 0) ? evenRowDirections : oddRowDirections;
+        return directions;
+    }
 }

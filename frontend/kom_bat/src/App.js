@@ -10,7 +10,11 @@ import Select from './components/select/select.js';
 function App() {
   return(
    
+<<<<<<< HEAD
       <Mode/>
+=======
+      <Select/>
+>>>>>>> 74ab090e9ce4517133f6065393ee290f2d0c7287
       
    
   );

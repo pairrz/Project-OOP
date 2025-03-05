@@ -1,5 +1,9 @@
 body {
+<<<<<<< HEAD
     background-image: url('./พื้นหลัง/BG2.webp');
+=======
+    background-image: url('./พื้นหลัง/BG1.webp');
+>>>>>>> 74ab090e9ce4517133f6065393ee290f2d0c7287
     background-size: cover; /* ทำให้ภาพพอดีกับหน้าจอ */
     background-position: center; /* จัดภาพให้อยู่ตรงกลาง */
     background-repeat: no-repeat; /* ไม่ให้ภาพซ้ำ */

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import logo from './ตกแต่ง/logo.png';
+import logo from ''
 
 const H = () => {
   const [currentImage, setCurrentImage] = useState(logo);

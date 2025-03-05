@@ -1,5 +1,5 @@
 body {
-    background-image: url('../../image/พื้นหลัง/BG1.webp');
+    background-image: url('./พื้นหลัง/BG1.webp');
     background-size: cover; /* ทำให้ภาพพอดีกับหน้าจอ */
     background-position: center; /* จัดภาพให้อยู่ตรงกลาง */
     background-repeat: no-repeat; /* ไม่ให้ภาพซ้ำ */

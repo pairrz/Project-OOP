@@ -1,4 +1,4 @@
-import B2 from '../../image/ปุ่ม/B2.png';
+import B2 from './ปุ่ม/B2.png';
 import './How_to_play.css';
 const  How_to_play= () => (
     <h1>

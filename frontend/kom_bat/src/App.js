@@ -1,7 +1,7 @@
 
 
 import Home from './components/Home/Home.js';
-import Mode from './components/mode/mode.js';
+import Mode from './components/mode/gamemode.js';
 import Select from './components/select/select.js';
 
 

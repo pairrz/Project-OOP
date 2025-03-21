@@ -5,7 +5,7 @@ import Mode_3 from "./mode_3";
 import './gamemode.css'
 function gamemode() {
   return(
-    <body>
+    
       <div className="mode" >
         <H2/>
         <Mode_1/>
@@ -14,8 +14,6 @@ function gamemode() {
         <h2>ออก</h2>
 
       </div>
-
-    </body>
    
   );
     

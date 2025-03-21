@@ -4,13 +4,13 @@ import Start from './Start.js';
 import H from './H.js';
 const Home = () => {  
     return(
-      <div>
-        <body>
+      <div >
+        <div className="Home">
         <H/>
         <Start/>
         <How_to_play/>
 
-        </body>
+        </div>
         
       </div>
     );

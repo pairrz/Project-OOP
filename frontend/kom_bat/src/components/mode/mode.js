@@ -4,11 +4,11 @@ import Gamemode from "./gamemode";
 const Mode = ()=> {
     return(
       <div>
-        <body>
-         <Gamemode/> 
-        </body>
-        
+        <div className="mode">
+         <Gamemode/>   
       </div>
+      </div>
+      
     );
   };
 

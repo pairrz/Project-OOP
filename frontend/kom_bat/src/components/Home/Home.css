@@ -1,4 +1,4 @@
-body {
+.Home{
     background-image: url('./พื้นหลัง/BG1.webp');
     background-size: cover; /* ทำให้ภาพพอดีกับหน้าจอ */
     background-position: center; /* จัดภาพให้อยู่ตรงกลาง */

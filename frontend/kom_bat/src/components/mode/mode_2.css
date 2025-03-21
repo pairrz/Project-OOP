@@ -1,8 +1,12 @@
 .image2 {
-    width: 300px;
-    transition: opacity 5s ease-in-out, box-shadow 0.3s ease-in-out;
-   
-  }
+  width: 500px;  /* ปรับขนาดความกว้าง */
+  height: auto;  /* รักษาอัตราส่วนของรูป */
+  transition: transform 0.3s ease; /* เพิ่มเอฟเฟกต์เมื่อโฮเวอร์ */
+}
+
+.image2:hover {
+  transform: scale(1.1); /* ทำให้รูปขยายขึ้น 10% เมื่อโฮเวอร์ */
+}
   
   .image2:hover {
     content: url('./ปุ่ม/Button_\ 2.2.png'); /* เปลี่ยนรูปเมื่อ hover */

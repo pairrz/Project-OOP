@@ -16,7 +16,7 @@ console.log('test')
     <h1>
       <img 
         src={currentImage} 
-        width="200" 
+        width="500" 
       />
     </h1>
   );

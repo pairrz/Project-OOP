@@ -1,11 +1,11 @@
-import H from "./H_select";
+import React from 'react';
+import BackBotton from '../BackBotton/BackBotton';
 
-const select  = ()=>{
-    return(
-        <div>
-            <H/>
-        </div>
-    );
+export default function Select() {
+  return (
+    <div style={{ textAlign: 'center', padding: '50px', backgroundColor: '#333', color: 'white', minHeight: '100vh' }}>
+      <h1>หน้านี้คือ Select (กำลังพัฒนา)</h1>
+      <BackBotton />
+    </div>
+  );
 }
-
-export default select;

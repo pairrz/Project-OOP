@@ -6,16 +6,16 @@ const BackBotton = () => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
-    navigate('/');
+    navigate(-1);
   };
 
   return (
     <img
-  src={process.env.PUBLIC_URL + '/BB2.png'} 
-  alt="Back Button"
-  className="back-image-button"
-  onClick={handleBackClick}
-/>
+      src={process.env.PUBLIC_URL + '/BB2.png'}
+      alt="Back Button"
+      className="back-image-button"
+      onClick={handleBackClick}
+    />
   );
 };
 

@@ -1,12 +1,61 @@
 .hover-image2 {
-    width: 300px;
-    transition: opacity 5s ease-in-out;
-    transition: opacity 5s ease-in-out, box-shadow 0.3s ease-in-out;
-    
+  width: 300px;
+  transition: opacity 0.5s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.hover-image2:hover {
+  content: url('./ปุ่ม/B4.png');
+  box-shadow: 0px 8px 16px rgba(5, 5, 5, 0.5);
+}
+
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.5s ease forwards;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .hover-image2:hover {
-    content: url('./ปุ่ม/B4.png'); /* เปลี่ยนรูปเมื่อ hover */
-    /*opacity: 0.1*/
-    box-shadow: 0px 8px 16px rgba(5, 5, 5, 5);
+  to {
+    opacity: 1;
   }
+}
+
+/* Popup เป็นรูปภาพ */
+.popup-image {
+  width: 900px !important;
+  height: 650px !important;
+  max-width: none !important;
+  display: block;
+}
+
+/* ปุ่มกากบาท */
+.close-btn-img {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+}
+
+/* ✅ ข้อความซ้อนบนรูป popup */
+.popup-text {
+  position: absolute;
+  top: 50px;        /* ปรับตำแหน่งลงมาได้ */
+  left: 330px;        /* ปรับตำแหน่งซ้ายขวาได้ */
+  color: #fff;
+  font-size: 22px;
+  width: 600px;      /* ปรับความกว้าง */
+  line-height: 1.6;
+  text-shadow: 2px 2px 4px #000;  /* ให้ข้อความอ่านง่ายขึ้น */
+}

@@ -1,0 +1,20 @@
+.title-container {
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  .title-logo {
+    width: 800px;
+    filter: drop-shadow(2px 2px 4px black);
+    animation: blink 1.5s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    70% {
+      opacity: 3;
+    }
+  }
+  

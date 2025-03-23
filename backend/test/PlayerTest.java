@@ -17,7 +17,6 @@ public class PlayerTest {
             board.getPlayerOne().buyHexCell(testHex);
 
             board.showBoard();
-            board.showHexOne();
     }
 
     @Test

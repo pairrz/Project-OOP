@@ -25,17 +25,4 @@ public class GameConfig {
             default -> System.out.println("Unknown config key: " + variable);
         }
     }
-
-
-    public static void printVar(){
-        System.out.println("Spawn Cost: " + SpawnCost);
-        System.out.println("Hex Purchase: " + HexPurchase);
-        System.out.println("InitBudget: " + InitBudget);
-        System.out.println("InitHp: " + InitHp);
-        System.out.println("TurnBudget: " + TurnBudget);
-        System.out.println("MaxBudget: " + MaxBudget);
-        System.out.println("InterestPct: " + InterestPct);
-        System.out.println("MaxTurns: " + MaxTurns);
-        System.out.println("MaxSpawns: " + MaxSpawns);
-    }
 }

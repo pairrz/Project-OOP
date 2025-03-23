@@ -2,6 +2,7 @@ package backend.parser;
 
 import SyntaxErrorException.*;
 
+import java.io.IOException;
 import java.util.NoSuchElementException;
 import static java.lang.Character.isWhitespace;
 import static java.lang.Character.isDigit;
@@ -9,7 +10,7 @@ import static java.lang.Character.isDigit;
 public class ExprTokenizer implements Tokenizer {
     private String src, next;  private int pos;
 
-    public ExprTokenizer(String src){
+    public ExprTokenizer(String src) throws IOException {
         if(src == null){
             throw new IllegalArgumentException("src is null");
         }
@@ -36,14 +37,14 @@ public class ExprTokenizer implements Tokenizer {
     }
 
     @Override
-    public String consume() {
+    public String consume() throws IOException {
         checkNextToken();
         String result = next;
         computeNext();
         return result;
     }
 
-    private void computeNext() {
+    private void computeNext() throws IOException {
         while (pos < src.length() && isWhitespace(src.charAt(pos))) {
             pos++;
         }
@@ -70,7 +71,7 @@ public class ExprTokenizer implements Tokenizer {
             result.append(c);
             pos++;
         } else {
-            throw new LexicalError("Unknown character: " + c);
+            throw new IOException("Unknown character: " + c);
         }
 
         next = result.toString();
@@ -83,7 +84,7 @@ public class ExprTokenizer implements Tokenizer {
     }
 
     @Override
-    public void consume(String s){
+    public void consume(String s) throws IOException {
         if (peek(s)){
             consume();
         }else{

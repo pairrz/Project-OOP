@@ -23,12 +23,12 @@ public class GameManage {
 
         switch (mode) {
             case 1:
-                String name1 = askName();
-                String name2 = askName();
+                String name1 = setName();
+                String name2 = setName();
                 this.board = GameBoard.getInstance(name1, name2);
                 break;
             case 2:
-                String name3 = askName();
+                String name3 = setName();
                 this.board = GameBoard.getInstance(name3);
                 break;
             case 3:
@@ -37,10 +37,7 @@ public class GameManage {
             default:
                 break;
         }
-
-//        System.out.print("Enter the strategy : ");
-//        String strategy = scanner.next();
-
+        setStrategy();
         board.showBoard();
 
         while (!isOver()) {
@@ -52,71 +49,105 @@ public class GameManage {
             board.switchPlayers();
             turn++;
         }
-
-
         board.resetBoard();
         gameOver();
     }
 
     private boolean isOver() {
-        if (turn > 10 && (opponentMin() == 0 || currentMin() == 0)) {
+        if (turn > 10 && (playerOneMin() == 0 || playerTwoMin() == 0)) {
             System.out.println("Game over! A player has no minions left in the territory.");
             determineWinner();
+            showStatusPlayer();
             return true;
         }
 
-        if (turn >= maxTurn) {
+        if (turn > maxTurn) {
             System.out.println("Game over! Reached the maximum number of turns.");
             determineWinner();
+            showStatusPlayer();
             return true;
         }
 
         return false;
     }
 
-    private void determineWinner() {
-        int currentMinions = currentMin();
-        int opponentMinions = opponentMin();
+    private void showStatusPlayer() {
+        System.out.println("Player 1 " + playerOne().getName() + "  |  Player 2 " + playerTwo().getName());
+        System.out.println("budgets: " + playerOne().getBudget() + "  |  budgets: " + playerTwo().getBudget());
+        System.out.println("minions: " + playerOne().getMinions().size() + "  |  minions: " + playerTwo().getMinions().size());
+        System.out.println("sum HP: " + playerOne().getSumHP() + "  |  sum HP: " + playerTwo().getSumHP());
+    }
 
-        // ผู้เล่นที่มีมินเนียนมากกว่าชนะ
+    private void determineWinner() {
+        int currentMinions = playerOneMin();
+        int opponentMinions = playerTwoMin();
+
+        //check num of minions
         if (currentMinions > opponentMinions) {
-            System.out.println("Congratulations! " + currentName() + " won!");
+            System.out.println("Congratulations! " + playerOneName() + " won!");
             return;
         } else if (currentMinions < opponentMinions) {
-            System.out.println("Congratulations! " + opponentName() + " won!");
+            System.out.println("Congratulations! " + playerTwoName() + " won!");
             return;
         }
 
-        // ถ้ามีจำนวนมินเนียนเท่ากัน ให้ดูที่ HP รวมของมินเนียน
-        int currentTotalHP = currentHP();
-        int opponentTotalHP = opponentHP();
+        //check sum hp of minions
+        int currentTotalHP = playerOneHP();
+        int opponentTotalHP = playerTwoHP();
 
         if (currentTotalHP > opponentTotalHP) {
-            System.out.println("Congratulations! " + currentName() + " won!");
+            System.out.println("Congratulations! " + playerOneName() + " won!");
             return;
         } else if (currentTotalHP < opponentTotalHP) {
-            System.out.println("Congratulations! " + opponentName() + " won!");
+            System.out.println("Congratulations! " + playerTwoName() + " won!");
             return;
         }
 
-        // ถ้า HP รวมเท่ากัน ให้ดูที่งบประมาณที่เหลืออยู่
-        int currentRemainingBudget = currentBudget();
-        int opponentRemainingBudget = opponentBudget();
+        //check budget
+        int currentRemainingBudget = playerOneBudget();
+        int opponentRemainingBudget = playerTwoBudget();
 
         if (currentRemainingBudget > opponentRemainingBudget) {
-            System.out.println("Congratulations! " + currentName() + " won!");
+            System.out.println("Congratulations! " + playerOneName() + " won!");
         } else if (currentRemainingBudget < opponentRemainingBudget) {
-            System.out.println("Congratulations! " + opponentName() + " won!");
+            System.out.println("Congratulations! " + playerTwoName() + " won!");
         } else {
             System.out.println("The game is a tie!");
         }
     }
 
-    private String askName(){
+    private String setName(){
         System.out.print("Enter the player's name: ");
         Scanner scanner = new Scanner(System.in);
 
         return scanner.next();
+    }
+
+    private void setStrategy() {
+        System.out.print("Do you want to write your strategy? (Y/N): ");
+        Scanner scanner = new Scanner(System.in);
+        String ans = scanner.next();
+
+        if(ans.equalsIgnoreCase("Y")) {
+            System.out.println("Enter your strategy (type 'END' on a new line to finish): ");
+            scanner = new Scanner(System.in);
+            StringBuilder strategy = new StringBuilder();
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if (line.equalsIgnoreCase("END")) {
+                    break;
+                }
+                strategy.append(line).append(" ");
+            }
+            GameBoard.Strategy = strategy.toString();
+            GameBoard.HaveStrategy = true;
+        }else if(ans.equalsIgnoreCase("N")) {
+            GameBoard.HaveStrategy = false;
+            GameBoard.Strategy = "D:\\OOP project\\backend\\strategy\\Strategy3.txt";
+        }else {
+            System.out.println("Invalid strategy");
+        }
     }
 
     private void gameOver() {
@@ -131,31 +162,43 @@ public class GameManage {
         return board.getCurrentPlayer().getName();
     }
 
-    private String opponentName() {
-        return board.getOpponentPlayer().getName();
+    private String playerOneName() {
+        return board.getPlayerOne().getName();
     }
 
-    private int currentMin() {
-        return board.getCurrentPlayer().getNumMinions();
+    private String playerTwoName() {
+        return board.getPlayerTwo().getName();
     }
 
-    private int opponentMin() {
-        return board.getOpponentPlayer().getNumMinions();
+    private int playerOneMin() {
+        return board.getPlayerOne().getNumMinions();
     }
 
-    private int currentHP() {
-        return board.getCurrentPlayer().getSumHP();
+    private int playerTwoMin() {
+        return board.getPlayerTwo().getNumMinions();
     }
 
-    private int opponentHP() {
-        return board.getOpponentPlayer().getSumHP();
+    private int playerOneHP() {
+        return board.getPlayerOne().getSumHP();
     }
 
-    private int currentBudget() {
-        return board.getCurrentPlayer().getBudget();
+    private int playerTwoHP() {
+        return board.getPlayerTwo().getSumHP();
     }
 
-    private int opponentBudget() {
-        return board.getOpponentPlayer().getBudget();
+    private int playerOneBudget() {
+        return board.getPlayerOne().getBudget();
+    }
+
+    private int playerTwoBudget() {
+        return board.getPlayerTwo().getBudget();
+    }
+
+    private Player playerOne(){
+        return board.getPlayerOne();
+    }
+
+    private Player playerTwo(){
+        return board.getPlayerTwo();
     }
 }

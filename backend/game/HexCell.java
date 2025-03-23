@@ -2,7 +2,6 @@ package backend.game;
 
 import backend.minions.*;
 import backend.players.*;
-
 import java.util.Objects;
 
 public class HexCell {
@@ -24,7 +23,6 @@ public class HexCell {
         this.y = y;
         this.minion = null;
         this.owner = null;
-        //System.out.println(x + " " + y);
     }
 
     @Override
@@ -40,7 +38,6 @@ public class HexCell {
         return Objects.hash(x, y);
     }
 
-    // ตั้งค่าเจ้าของเซลล์
     public void setOwner(Player player) {
         this.owner = player;
     }
@@ -49,7 +46,6 @@ public class HexCell {
         return status;
     }
 
-    // ตั้งค่า backend.minions.Minion ในเซลล์
     public void addMinion(Minion minion) {
         this.minion = minion;
     }
@@ -58,19 +54,8 @@ public class HexCell {
         this.status = status;
     }
 
-    // ลบ backend.minions.Minion ออกจากเซลล์
     public void removeMinion() {
         this.minion = null;
-    }
-
-    // เช็คว่าเซลล์ถูกยึดครองหรือไม่
-    public boolean isOccupied() {
-        return owner != null || minion != null;
-    }
-
-    // เช็คว่าเซลล์ว่างหรือไม่ (ไม่มี backend.minions.Minion)
-    public boolean isEmpty() {
-        return minion == null;
     }
 
     public int getX() {
@@ -93,17 +78,7 @@ public class HexCell {
         return this.minion != null;
     }
 
-    public String print(){
-        return (this.x + "," + this.y);
+    public String getKey() {
+        return x + "," + y;
     }
-
-//    // ฟังก์ชันนี้ตั้งค่าให้เซลล์ถูกยึดครองหรือไม่ (โดยตั้งค่าเจ้าของ)
-//    public void setOccupied(boolean occupied) {
-//        if (occupied) {
-//
-//        } else {
-//            // ถ้าต้องการให้เซลล์ว่าง ให้ลบเจ้าของ
-//            this.owner = null;
-//        }
-//    }
 }

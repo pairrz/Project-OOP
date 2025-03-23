@@ -252,13 +252,14 @@ class ExprParseTest {
         System.out.println("status two :" + " " + opponent.getName() + " " + opponent.getBudget());
 
         board.showBoard();
+        StrategyReader str = new StrategyReader();
 
         FileProcess file = new FileProcess();
-        file.readStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt",minion);
+        str.readStrategyFromFile("D:\\OOP project\\backend\\strategy\\Strategy3.txt",minion);
 
         board.showBoard();
 
-        file.readStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt",targetMinion);
+        str.readStrategyFromFile("D:\\OOP project\\backend\\strategy\\Strategy3.txt",targetMinion);
 
         board.showBoard();
     }

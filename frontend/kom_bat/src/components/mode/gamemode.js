@@ -9,11 +9,13 @@ import './gamemode.css'
 function gamemode() {
   return(
     <div className="mode">
-      <BackBotton /> {/* ปุ่มย้อนกลับใหม่ */}
-      <H2/>          {/* ของเก่า */}
-      <Mode_1/>      {/* ของเก่า */}
-      <Mode_2/>      {/* ของเก่า */}
-      <Mode_3/>      {/* ของเก่า */}
+      <BackBotton /> 
+      <H2/>          
+      <div className="mode-group">
+        <Mode_1/>    
+        <Mode_2/>    
+        <Mode_3/>    
+      </div>
     </div>
   );
 }

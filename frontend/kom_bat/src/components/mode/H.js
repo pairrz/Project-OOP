@@ -13,12 +13,13 @@ const H2= () => {
   }, []);
 console.log('test')
   return (
-    <h1>
-      <img 
-        src={currentImage} 
-        width="500" 
-      />
-    </h1>
+    <h1 className="logo-container">
+  <img 
+    src={currentImage} 
+    width="500" 
+    alt="Logo"
+  />
+</h1>
   );
 };
 

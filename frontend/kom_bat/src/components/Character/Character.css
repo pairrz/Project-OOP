@@ -93,7 +93,7 @@
   }
 
   .name-img {
-    width: 100px;
-    height: auto;
+    width: 120px;   /* บังคับขนาดภาพชื่อ */
+    height: auto;   /* ให้สูงสัมพันธ์กับความกว้าง */
     margin-top: 5px;
   }

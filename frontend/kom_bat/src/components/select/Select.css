@@ -1,0 +1,32 @@
+.select-container {
+    padding: 30px;
+    background-color: #333;
+    color: white;
+    min-height: 100vh;
+  }
+  
+  .character-box {
+    border: 1px solid #fff;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .character-img {
+    width: 100px;
+  }
+  
+  .auto-btn {
+    background-color: gray;
+    color: white;
+    padding: 5px 15px;
+    cursor: pointer;
+  }
+  
+  .confirm-btn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: gold;
+    color: black;
+    cursor: pointer;
+  }
+  

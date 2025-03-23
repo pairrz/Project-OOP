@@ -1,0 +1,16 @@
+/* kom_bat/src/components/mode/BackBotton.css */
+
+.back-image-button {
+    width: 80px;              /* ขนาดภาพ ปรับตามต้องการ */
+    position: absolute;       /* กำหนดตำแหน่งอิสระ */
+    top: 20px;                /* ระยะจากด้านบน */
+    left: 20px;               /* ระยะจากด้านซ้าย */
+    cursor: pointer;          /* เปลี่ยน cursor เวลา hover */
+    transition: opacity 0.2s ease-in-out;
+    z-index: 10;
+  }
+  
+  .back-image-button:hover {
+    opacity: 0.7;
+  }
+  

@@ -1,5 +1,5 @@
-body {
-    background-image: url('../../image/พื้นหลัง/BG1.webp');
+.Home{
+    background-image: url('./พื้นหลัง/BG1.webp');
     background-size: cover; /* ทำให้ภาพพอดีกับหน้าจอ */
     background-position: center; /* จัดภาพให้อยู่ตรงกลาง */
     background-repeat: no-repeat; /* ไม่ให้ภาพซ้ำ */
@@ -14,4 +14,15 @@ body {
     justify-content: center; /* จัดแนวนอนให้ตรงกลาง */
     align-items: center; /* จัดแนวตั้งให้ตรงกลาง */
     flex-direction: column; /* ถ้าต้องการให้เนื้อหาจัดเรียงในแนวตั้ง */
+  }
+  .game-title {
+    margin-bottom: 45px;  /* ✅ ลดระยะห่างหัวข้อกับปุ่ม */
+  }
+  
+  .title-logo {
+    width: 800px;
+    filter: drop-shadow(2px 2px 4px black);
+  }
+  .logo-container {
+    margin-top: -120px;   /* ✅ ระยะห่างจากบน */
   }

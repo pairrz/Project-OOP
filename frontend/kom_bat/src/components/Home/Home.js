@@ -4,10 +4,17 @@ import Start from './Start.js';
 import H from './H.js';
 const Home = () => {  
     return(
-      <div>
-        <H/>
+      <div >
+        
+        <div className="Home">
+          <div className="logo-container">
+            <H />
+          </div>
         <Start/>
         <How_to_play/>
+
+        </div>
+        
       </div>
     );
   };

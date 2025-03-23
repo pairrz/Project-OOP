@@ -21,6 +21,7 @@
   z-index: 1000;
   animation: fadeIn 0.5s ease forwards;
 }
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -36,6 +37,7 @@
   height: 650px !important;
   max-width: none !important;
   display: block;
+  position: relative;
 }
 
 /* ปุ่มกากบาท */
@@ -48,14 +50,23 @@
   cursor: pointer;
 }
 
-/* ✅ ข้อความซ้อนบนรูป popup */
+/* ✅ ข้อความซ้อนบนรูป popup ให้อยู่กลาง */
 .popup-text {
   position: absolute;
-  top: 50px;        /* ปรับตำแหน่งลงมาได้ */
-  left: 330px;        /* ปรับตำแหน่งซ้ายขวาได้ */
+  top: 50%;    
+  left: 50%;   
+  transform: translate(-50%, -50%);
   color: #fff;
-  font-size: 22px;
-  width: 600px;      /* ปรับความกว้าง */
-  line-height: 1.6;
-  text-shadow: 2px 2px 4px #000;  /* ให้ข้อความอ่านง่ายขึ้น */
+  font-size: 36px;
+  width: 80%;
+  line-height: 1.5;
+  text-align: center;
+  text-shadow: 2px 2px 4px #000;
+  z-index: 20;
+  font-family: 'MaxSomsin', sans-serif;  /* ✅ เพิ่มฟอนต์ไทยตรงนี้ */
+}
+
+@font-face {
+  font-family: 'MaxSomsin';
+  src: url('../../assets/fonts/MAX\ somsin.ttf') format('truetype');
 }

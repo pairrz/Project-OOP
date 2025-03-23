@@ -5,8 +5,11 @@ import H from './H.js';
 const Home = () => {  
     return(
       <div >
+        
         <div className="Home">
-        <H/>
+          <div className="logo-container">
+            <H />
+          </div>
         <Start/>
         <How_to_play/>
 

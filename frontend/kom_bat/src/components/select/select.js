@@ -17,6 +17,7 @@ export default function Select() {
   const [hp, setHp] = useState('');
   const [def, setDef] = useState('');
   const [formData, setFormData] = useState([]);
+  const [lockedChars, setLockedChars] = useState([]);
   const [activeCharId, setActiveCharId] = useState(null);
 
   const characterData = [
@@ -31,6 +32,11 @@ export default function Select() {
     const selected = JSON.parse(localStorage.getItem('selectedCharacters')) || [];
     const selectedInfo = selected.map(id => characterData.find(c => c.id === id));
     setCharacters(selectedInfo);
+
+    if (selectedInfo.length > 0) {
+      setActiveCharId(selectedInfo[0].id);
+      setSelectedChar(selectedInfo[0]);
+    }
   }, []);
 
   const handleOK = () => {
@@ -38,12 +44,14 @@ export default function Select() {
       alert('กรุณากรอก Strategy, HP, DEF หรือกด Auto');
       return;
     }
+
     const existing = formData.find(f => f.id === selectedChar.id);
     const updated = existing
       ? formData.map(f => (f.id === selectedChar.id ? { ...f, strategy, hp, def } : f))
       : [...formData, { ...selectedChar, strategy, hp, def }];
+    
     setFormData(updated);
-
+    setLockedChars([...lockedChars, selectedChar.id]); // 🔒 ล็อกค่าหลังจากกด OK
     alert(`บันทึก ${selectedChar.name} สำเร็จ!`);
   };
 
@@ -53,10 +61,19 @@ export default function Select() {
     setDef(50);
   };
 
+  const handleCancel = () => {
+  setLockedChars(lockedChars.filter(id => id !== selectedChar.id)); // 🔓 ปลดล็อก
+  setFormData(formData.filter(f => f.id !== selectedChar.id));      // ❌ ลบข้อมูลตัวนี้ออก
+};
+
+
   const handleConfirm = () => {
     localStorage.setItem('finalCharacters', JSON.stringify(formData));
     navigate('/play');
   };
+
+  const isLocked = selectedChar && lockedChars.includes(selectedChar.id);
+  const isCompleted = (id) => formData.some(f => f.id === id);
 
   return (
     <div className="select-container">
@@ -70,7 +87,7 @@ export default function Select() {
                 key={char.id}
                 src={char.img}
                 alt={char.name}
-                className="character-icon"
+                className={`character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
                 onClick={() => {
                   setActiveCharId(char.id);
                   setSelectedChar(char);
@@ -87,11 +104,12 @@ export default function Select() {
         {selectedChar && (
           <div className="center-box">
             <img src={selectedChar.img} alt={selectedChar.name} className="selected-char-img" />
-            <textarea placeholder="Strategy" value={strategy} onChange={e => setStrategy(e.target.value)} />
-            <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} />
-            <input type="number" placeholder="DEF" value={def} onChange={e => setDef(e.target.value)} />
-            <button className="auto-btn" onClick={handleAuto}>Auto</button>
-            <button className="ok-btn" onClick={handleOK}>OK</button>
+            <textarea placeholder="Strategy" value={strategy} onChange={e => setStrategy(e.target.value)} disabled={isLocked} />
+            <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} disabled={isLocked} />
+            <input type="number" placeholder="DEF" value={def} onChange={e => setDef(e.target.value)} disabled={isLocked} />
+            <button className="auto-btn" onClick={handleAuto} disabled={isLocked}>Auto</button>
+            <button className="ok-btn" onClick={handleOK} disabled={isLocked}>OK</button>
+            {isLocked && <button className="cancel-btn" onClick={handleCancel}>ยกเลิก</button>}
           </div>
         )}
 
@@ -102,7 +120,7 @@ export default function Select() {
                 key={char.id}
                 src={char.img}
                 alt={char.name}
-                className="character-icon"
+                className={`character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
                 onClick={() => {
                   setActiveCharId(char.id);
                   setSelectedChar(char);
@@ -118,10 +136,11 @@ export default function Select() {
       </div>
 
       {formData.length === characters.length && (
-        <button className="select-confirm-btn" onClick={handleConfirm}>
-          ยืนยันทั้งหมด
-        </button>
-      )}
+  <button className="select-confirm-btn" onClick={handleConfirm}>
+    ยืนยันทั้งหมด
+  </button>
+)}
+
 
       <BackBotton />
     </div>

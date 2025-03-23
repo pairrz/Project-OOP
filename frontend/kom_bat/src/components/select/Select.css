@@ -4,13 +4,13 @@
   background-image: url('./พื้นหลัง/SelectBG.webp');
   background-size: cover;
   background-position: center;
-  min-height: 100vh;
+  min-height: 91vh;
   color: white;
   text-align: center;
 }
 
 .select-title {
-  width: 500px;
+  width: 300px;
   margin: 0 auto 50px;
 }
 
@@ -43,7 +43,15 @@
   width: 500px;
   max-width: 90%;
   text-align: center;
+  
+
+  top: 100%;
+  left: 100%;
+  transform: none;
+  
+ 
 }
+
 
 .selected-char-img {
   width: 100px;         /* ✅ ลดจาก 280px เหลือ 220px */
@@ -118,4 +126,11 @@ input {
 
 .select-confirm-btn:hover {
   background-color: #e6c300;
+}
+.completed {
+  opacity: 0.;
+}
+.character-icon.completed {
+  opacity: 0.9;            /* จางลง */
+  filter: grayscale(100%); /* ขาวดำ */
 }

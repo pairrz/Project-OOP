@@ -3,33 +3,40 @@
     background-color: #222;
     color: white;
     min-height: 100vh;
+    text-align: center;
+    position: relative;    /* ✅ เพื่อรองรับ absolute ด้านใน */
   }
   
   .hex-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-  
-  .hex-row {
-    display: flex;
-  }
-  
-  .hex-row.even {
-    margin-left: 32px; /* ครึ่ง hex width */
+    position: absolute;
+    left: 2.5%;
+    top: 0px;                   /* ✅ แนว Y ปรับตรงนี้ */
+    transform: translateX(-50%) translateX(30px);  /* ✅ ขยับ X เพิ่มได้ */
   }
   
   .hex-cell {
-    width: 64px;
-    height: 64px;
-    background-size: cover;
+    position: absolute;
+    width: 65px;
+    height: 75px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     background-position: center;
-    clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
     cursor: pointer;
-    transition: 0.3s;
+    color: white;
+    font-size: 12px;
+  }
+  
+  .hex-coord {
+    position: absolute;
+    width: 100%;
+    top: 30%;
+    text-align: center;
+    font-size: 10px;
+    color: white;
   }
   
   .control-panel button {
     margin-right: 10px;
     padding: 10px 20px;
   }
+  

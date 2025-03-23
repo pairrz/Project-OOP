@@ -1,45 +1,52 @@
 .select-container {
   padding: 30px;
-  background-image: url('./พื้นหลัง/SelectBG.webp');
+  background-image: url('./พื้นหลัง/SelectBG.webp');  /* ✅ ภาพพื้นหลัง */
   background-size: cover;
-  color: white;
+  background-position: center;
   min-height: 100vh;
+  color: white;
   text-align: center;
 }
 
 .select-container h1 {
-  font-size: 40px;
+  font-size: 50px;
   color: #ffd700;
   text-shadow: 2px 2px 5px black;
-  margin-bottom: 50px;  /* ✅ ห่างจากตัวละคร */
+  margin-bottom: 50px;
+  margin-top: 50px;  /* ✅ ดันหัวข้อให้ลงมา */
 }
-
-/* กล่องตัวละครจัดเรียงแนวนอน */
+/* ✅ กล่องตัวละครเรียงแนวนอน + ขึ้นบรรทัดใหม่ถ้าเต็ม */
 .character-list {
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 30px;
-  margin-bottom: 50px;  /* ✅ เพิ่มระยะห่างจากปุ่มยืนยัน */
+  justify-content: center;
+  gap: 40px;
+  max-width: 1200px;   /* ✅ จำกัดความกว้างไม่ให้กินจอ */
+  margin: 0 auto 50px auto;
 }
 
+/* ✅ กล่องแต่ละตัวละคร */
 .character-box {
   border: 2px solid #ffd700;
-  padding: 20px;
-  background-color: rgba(0,0,0,0.6);
   border-radius: 10px;
-  width: 220px;
+  padding: 20px;
+  width: 250px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
+/* ✅ ภาพตัวละคร */
 .character-img {
   width: 150px;
 }
 
+/* ✅ ชื่อผี */
 .character-box p {
   margin: 10px 0;
   font-size: 18px;
 }
 
+/* ✅ input ทุกช่อง */
 input {
   display: block;
   margin: 5px auto;
@@ -47,6 +54,7 @@ input {
   width: 80%;
 }
 
+/* ✅ ปุ่ม Auto */
 .auto-btn {
   background-color: crimson;
   color: white;
@@ -56,8 +64,10 @@ input {
   border-radius: 5px;
 }
 
+/* ✅ ปุ่มยืนยัน */
 .confirm-btn {
   margin-top: 20px;
+  margin-bottom: 20px;   /* ✅ ลดจาก 50px */
   padding: 12px 25px;
   font-size: 20px;
   background-color: gold;

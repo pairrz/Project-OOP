@@ -65,43 +65,48 @@ export default function Select() {
   };
 
   return (
+    
     <div className="select-container">
-      <h1>ปลุกเสกวิญญาณ</h1>
-      {characters.map((charId, index) => {
-        const charInfo = characterData.find((c) => c.id === charId);
-        return (
-          <div className="character-box" key={index}>
-            {charInfo && <img src={charInfo.img} alt={charInfo.name} className="character-img" />}
-            <p>{charInfo?.name}</p>
+  <h1>ปลุกเสกวิญญาณ</h1>
+<div className="character-list">   {/* ✅ ใส่ครอบตัวละคร */}
+  {characters.map((charId, index) => {
+      const charInfo = characterData.find((c) => c.id === charId);
+      return (
+        <div className="character-box" key={index}>
+          {charInfo && <img src={charInfo.img} alt={charInfo.name} className="character-img" />}
+          <p>{charInfo?.name}</p>
+          <input
+            type="text"
+            placeholder="Strategy"
+            value={formData[index]?.strategy}
+            onChange={(e) => handleChange(index, 'strategy', e.target.value)}
+            disabled={formData[index]?.isAuto}
+          />
+          <input
+            type="number"
+            placeholder="HP"
+            value={formData[index]?.hp}
+            onChange={(e) => handleChange(index, 'hp', e.target.value)}
+            disabled={formData[index]?.isAuto}
+          />
+          <input
+            type="number"
+            placeholder="DEF"
+            value={formData[index]?.def}
+            onChange={(e) => handleChange(index, 'def', e.target.value)}
+            disabled={formData[index]?.isAuto}
+          />
+          <button className="auto-btn" onClick={() => handleAuto(index)}>Auto</button>
+        </div>
+      );
+    })}
+  </div>
 
-            <input
-              type="text"
-              placeholder="Strategy"
-              value={formData[index]?.strategy}
-              onChange={(e) => handleChange(index, 'strategy', e.target.value)}
-              disabled={formData[index]?.isAuto}
-            />
-            <input
-              type="number"
-              placeholder="HP"
-              value={formData[index]?.hp}
-              onChange={(e) => handleChange(index, 'hp', e.target.value)}
-              disabled={formData[index]?.isAuto}
-            />
-            <input
-              type="number"
-              placeholder="DEF"
-              value={formData[index]?.def}
-              onChange={(e) => handleChange(index, 'def', e.target.value)}
-              disabled={formData[index]?.isAuto}
-            />
-            <button className="auto-btn" onClick={() => handleAuto(index)}>Auto</button>
-          </div>
-        );
-      })}
+  <button className="confirm-btn" onClick={handleConfirm}>ยืนยัน</button>
+  <BackBotton />
+</div>
 
-      <button className="confirm-btn" onClick={handleConfirm}>ยืนยัน</button>
-      <BackBotton />
-    </div>
+
+
   );
 }

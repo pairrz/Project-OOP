@@ -19,15 +19,18 @@ public class Minion {
         this.x = cell.getX();
         this.y = cell.getY();
         this.owner = owner;
-        System.out.println(owner.getName());
         this.hp = GameConfig.InitHp + bonusHP;
         this.def = bonusDef;
         addMinion(cell);
     }
 
-    public void minionStrategy(String string) throws IOException{
-        FileProcess file = new FileProcess();
-        file.readStrategy(string, this);
+    public void minionStrategy(String strategy) throws IOException{
+        StrategyReader str = new StrategyReader();
+        if(GameBoard.HaveStrategy){
+            str.readStrategyFromString(strategy,this);
+        }else{
+            str.readStrategyFromFile(strategy,this);
+        }
     }
 
     public void setPosition(int newX, int newY) throws IOException {

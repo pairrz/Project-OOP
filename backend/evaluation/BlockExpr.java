@@ -2,7 +2,6 @@ package backend.evaluation;
 
 import SyntaxErrorException.DoneException;
 import backend.parser.Expr;
-
 import java.util.List;
 import java.util.Map;
 
@@ -16,8 +15,8 @@ public record BlockExpr(List<Expr> statements) implements Expr {
             }
             return result;
         } catch (DoneException e) {
-            System.out.println("Block execution stopped due to 'done' command.");
-            throw e; // ส่ง Exception ออกไปเพื่อให้ Strategy หยุดทันที
+            //System.out.println("Block execution stopped due to 'done' command.");
+            throw e;
         }
     }
 }

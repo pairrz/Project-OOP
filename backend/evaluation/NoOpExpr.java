@@ -6,6 +6,6 @@ import java.util.Map;
 public record NoOpExpr() implements Expr {
     @Override
     public int eval(Map<String, Integer> bindings) {
-        return 0;  // ไม่ทำอะไรเลย
+        return 0;
     }
 }

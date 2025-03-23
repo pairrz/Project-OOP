@@ -18,15 +18,15 @@ public class BotPlayer extends Player {
     public void takeTurn(int turn) throws IOException {
         printStatus();
 
-        // ซื้อ HexCell ถ้ามีเงินพอ
+        //buy Hex cell
         if (budget >= GameConfig.HexPurchase) {
-            HexCell targetCell = findHexCell();
+            HexCell targetCell = findHexCell(turn);
             if (targetCell != null) {
                 buyHexCell(targetCell);
             }
         }
 
-        // ซื้อ Minion ถ้ามีเงินพอ
+        //buy Minion
         if(budget >= GameConfig.SpawnCost && minions.size() < 5) {
             HexCell spawnCell = findSpawnCell();
             if (spawnCell != null) {
@@ -34,8 +34,9 @@ public class BotPlayer extends Player {
             }
         }
 
+        //minion strategy
         for (Minion minion : minions) {
-            minion.minionStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt");
+            minion.minionStrategy("D:\\OOP project\\backend\\strategy\\Strategy3.txt");
         }
 
         printStatus();
@@ -43,12 +44,23 @@ public class BotPlayer extends Player {
         resetBudget(turn);
     }
 
-    private HexCell findHexCell() {
-        for(int i = 0; i < 8; i++){
-            for(int j = 0; j < 8; j++){
-                HexCell cell = GameBoard.getHexCell(i,j);
-                if(isAdjacent(cell)){
-                    return cell;
+    private HexCell findHexCell(int turn) {
+        if(turn % 2 == 0){
+            for(int i = 0; i < 8; i++){
+                for(int j = 0; j < 8; j++){
+                    HexCell cell = GameBoard.getHexCell(i,j);
+                    if(isAdjacent(cell) && !GameBoard.isOccupied(i, j)){
+                        return cell;
+                    }
+                }
+            }
+        }else{
+            for(int i = 7; i >= 0; i--){
+                for(int j = 7; j >= 0; j--){
+                    HexCell cell = GameBoard.getHexCell(i,j);
+                    if(isAdjacent(cell) && !GameBoard.isOccupied(i, j)){
+                        return cell;
+                    }
                 }
             }
         }
@@ -62,18 +74,19 @@ public class BotPlayer extends Player {
 
         List<HexCell> cellList = new ArrayList<>(hexCells.values());
         Random random = new Random();
-        return cellList.get(random.nextInt(cellList.size())); // เลือกเซลล์แบบสุ่มจาก List
+        HexCell cell = cellList.get(random.nextInt(cellList.size()));
+        if(!cell.hasMinion()) return cell;
+        else return null;
     }
 
     public void buyHexCell(HexCell targetCell) {
-        System.out.println(budget + " -" + GameConfig.HexPurchase);
-         budget -= GameConfig.HexPurchase;
-         System.out.println(budget);
-         HexCell cell = GameBoard.getHexCell(targetCell.getX(), targetCell.getY());
-         cell.setOwner(this);
+        budget -= GameConfig.HexPurchase;
 
-         hexCells.put(targetCell.getX() + "," + targetCell.getY(), cell);
-         System.out.println("HexCell (" + cell.getX() + "," + cell.getY() + ") ถูกซื้อสำเร็จ!");
+        HexCell cell = GameBoard.getHexCell(targetCell.getX(), targetCell.getY());
+        cell.setOwner(this);
+
+        hexCells.put(targetCell.getX() + "," + targetCell.getY(), cell);
+        System.out.println("HexCell (" + cell.getX() + "," + cell.getY() + ") ถูกซื้อสำเร็จ!");
     }
 
     @Override
@@ -89,6 +102,11 @@ public class BotPlayer extends Player {
     @Override
     public void printStatus() {
         super.printStatus();
+    }
+
+    @Override
+    public Map<String, HexCell> getHexCells() {
+        return super.getHexCells();
     }
 
     @Override

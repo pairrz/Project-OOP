@@ -2,7 +2,7 @@
     text-align: center;
     background-color: #222;
     color: #fff;
-    min-height: 100vh;
+    min-height: 94vh;
     padding: 20px;
   }
   
@@ -11,21 +11,28 @@
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
-    margin-top: 30px;
+    margin-top: -120px;    /* ดันตัวละครขึ้น ให้ชิดโลโก้ */
   }
   
   .character-card {
-    width: 200px;
-    height: 300px;
+    width: 200px;            /* ความกว้างกล่อง */
+    height: 250px;           /* ความสูงกล่อง */
+    background-color: rgba(0, 0, 0, 0.3);  /* พื้นหลังโปร่งใส */
+    border-radius: 10px;     /* มุมโค้ง */
+    padding: 10px;
+    text-align: center;
     cursor: pointer;
-    position: relative;
     transition: transform 0.3s;
   }
   
+  .character-card:hover {
+    transform: scale(1.05);  /* เอฟเฟกต์ขยายเวลาชี้ */
+  }
+  
   .character-card img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    width: 100%;             /* ให้รูปเต็มกรอบ */
+    height: auto;
+    object-fit: cover;
   }
   
   .character-card p {
@@ -39,13 +46,13 @@
   }
   
   .confirm-btn {
-    margin-top: 30px;
-    padding: 10px 30px;
-    font-size: 20px;
     background-color: #ffc107;
-    border: none;
+    padding: 10px 30px;
     border-radius: 10px;
+    border: none;
+    font-size: 18px;
     cursor: pointer;
+    margin-bottom: -50px;  /* ดันขึ้นจากขอบล่าง */
   }
   
   .confirm-btn:hover {
@@ -66,4 +73,27 @@
   .back-btn:hover {
     background-color: #333;
   }
+  .character-logo {
+    width: 600px;
+    margin-bottom: -20px;   /* ลดระยะให้ชิดที่สุด */
+    position: relative;
+    top: -50px;           /* ดันโลโก้ขึ้นเล็กน้อย (ปรับได้) */
+  }
+
+  .fire-container {
+    display: flex;
+    justify-content: center;
+    gap: 0px;        /* ระยะห่างแต่ละดวงไฟ */
+    margin: 50px 0;   /* ด้านบน-ล่างห่าง 30px */
+  }
   
+  .fire-img {
+    width: 50px;
+    height: auto;
+  }
+
+  .name-img {
+    width: 100px;
+    height: auto;
+    margin-top: 5px;
+  }

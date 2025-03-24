@@ -1,5 +1,5 @@
 .Home{
-    background-image: url('./พื้นหลัง/BG1.webp');
+    background-image: url('./พื้นหลัง/moving_background.gif');
     background-size: cover; /* ทำให้ภาพพอดีกับหน้าจอ */
     background-position: center; /* จัดภาพให้อยู่ตรงกลาง */
     background-repeat: no-repeat; /* ไม่ให้ภาพซ้ำ */

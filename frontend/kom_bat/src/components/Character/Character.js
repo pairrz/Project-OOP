@@ -42,24 +42,25 @@ export default function Character() {
 
     const handleConfirm = async () => {
         // ส่งข้อมูลมินเนียนที่เลือกไปที่ API
-        try {
-            const response = await fetch('http://localhost:8080/api/game/selectMinions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    selectedMinions: selected,  // ส่ง ID ของมินเนียนที่เลือก
-                })
-            });
+            navigate('/select');
 
-            if (response.ok) {
-                // หากส่งข้อมูลสำเร็จ, ไปที่หน้า Select
-                navigate('/select');
-            } else {
-                console.error("Failed to assign minions");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
+        //     const response = fetch('http://localhost:8080/api/game/selectMinions', {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify({
+        //             selectedMinions: selected,  // ส่ง ID ของมินเนียนที่เลือก
+        //         })
+        //     });
+        //
+        //     if (response.ok) {
+        //         // หากส่งข้อมูลสำเร็จ, ไปที่หน้า Select
+
+        //     } else {
+        //         console.error("Failed to assign minions");
+        //     }
+        // } catch (error) {
+        //     console.error("Error:", error);
+        // }
     };
 
     return (

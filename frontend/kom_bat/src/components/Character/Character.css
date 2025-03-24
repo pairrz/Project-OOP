@@ -1,5 +1,5 @@
 .character-container {
-    background-image: url("./พื้นหลัง/bg.webp");
+    background-image: url("./พื้นหลัง/bg_animation.gif");
     text-align: center;
     background-color: #222;
     color: #fff;
@@ -50,15 +50,18 @@
   }
   
   .confirm-btn {
+    position: fixed;   /* ให้ปุ่มอยู่คงที่ */
+    bottom: 30px;      /* กำหนดระยะห่างจากด้านล่าง */
+    left: 50%;         /* ให้อยู่กลาง */
+    transform: translateX(-50%); /* ย้ายให้กลาง */
+    z-index: 1000;     /* ให้ปุ่มอยู่ด้านหน้าทุกอย่าง */
     transition: transform 0.2s ease-in-out;
     width: 150px;
     cursor: pointer;
-    position: relative;
-    top: -80px; /* ย้ายปุ่มขึ้น 20px */
   }
   
   .confirm-btn:hover {
-    transform: scale(1.1); /* ขยายเล็กน้อยเมื่อโฮเวอร์ */
+    transform: scale(1.1);  /* ขยายเล็กน้อยเมื่อโฮเวอร์ */
   }
   
   .back-btn {
@@ -90,7 +93,7 @@
   }
   
   .fire-img {
-    width: 50px;
+    width: 70px;
     height: auto;
   }
 

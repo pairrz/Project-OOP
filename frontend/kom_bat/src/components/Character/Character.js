@@ -13,11 +13,11 @@ import logo from './ตกแต่ง/logo2.png';
 import fire from './ตกแต่ง/fire_animation.gif';
 import confirmBtn from './ปุ่ม/button.png';
 
-import name1 from './ตกแต่ง/ผี (1).png';
-import name2 from './ตกแต่ง/ผี (2).png';
-import name3 from './ตกแต่ง/ผี (3).png';
-import name4 from './ตกแต่ง/ผี (4).png';
-import name5 from './ตกแต่ง/ผี (5).png';
+import name1 from './ตกแต่ง/Cr_เวตาล.png'; 
+import name2 from './ตกแต่ง/Cr_กุมารทอง.png';
+import name3 from './ตกแต่ง/Cr_เปรต.png';
+import name4 from './ตกแต่ง/Cr_ผีนางรำ.png';
+import name5 from './ตกแต่ง/Cr_ผีตายโหง.png';
 
 
 const characters = [

@@ -9,7 +9,7 @@ import ghost3 from './รูป/G3.png';
 import ghost4 from './รูป/G4.png';
 import ghost5 from './รูป/G5.png';
 
-import logo from './ตกแต่ง/logo.png';
+import logo from './ตกแต่ง/logo2.png';
 import fire from './ตกแต่ง/fire.png';
 
 import name1 from './ตกแต่ง/ผี (1).png';

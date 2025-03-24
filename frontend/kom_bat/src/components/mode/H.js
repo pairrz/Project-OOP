@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import logo from './ตกแต่ง/mlogo.png';
+import logo from './ตกแต่ง/logo_mode.png';
 
 const H2= () => {
   const [currentImage, setCurrentImage] = useState(logo);

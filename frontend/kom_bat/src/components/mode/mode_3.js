@@ -7,21 +7,21 @@ const Mode_3 = () => {
 
   const handleClick = async () => {
     try {
-      const response = await fetch('http://localhost:8080/create', {
+      // ส่งข้อมูลไปที่ API แต่ไม่สนใจผลตอบกลับ
+      fetch('http://localhost:8080/api/game/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           playerOneName: "Bot1",
           playerTwoName: "Bot2",
-          gameMode: "AUTO_MODE"  // 👈 ส่งค่าโหมด
+          gameMode: "AUTO_MODE"
         })
+      }).catch((error) => {
+        console.error("Error:", error); // แค่จับข้อผิดพลาด
       });
 
-      if (response.ok) {
-        navigate('/Character');
-      } else {
-        console.error("Failed to create game");
-      }
+      // ไปที่หน้า Character ทันที
+      navigate('/character');
     } catch (error) {
       console.error("Error:", error);
     }

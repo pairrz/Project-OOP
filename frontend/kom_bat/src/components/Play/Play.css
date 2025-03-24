@@ -1,61 +1,92 @@
 .play-container {
-    padding: 30px;
-    background-color: #222;
-    color: white;
-    min-height: 100vh;
-    text-align: center;
-    position: relative; /* ✅ ให้ player-info อิง */
-  }
-  
-  .hex-grid {
-    margin: 0 auto;
-    width: 600px;
-    height: 500px;
-    position: relative;
-  }
-  
-  .hex-cell {
-    position: absolute;
-    width: 65px;
-    height: 75px;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-position: center;
-    cursor: pointer;
-    color: white;
-    font-size: 12px;
-  }
-  
-  .button-group {
-    position: absolute;
-    bottom: 150px;
-    left: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .player-info {
-    width: 180px;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 10px;
-    color: white;
-    position: absolute;
-    border-radius: 10px;
-  }
-  
-  .player1 {
-    bottom: 130px;
-    right: 120px;
-  }
-  
-  .player-info img {
-    width: 100%;
-    height: auto;
-    border-radius: 5px;
-  }
-  .player2 {
-    top: 20px;
-    left: 150px;
-  }
-  
+  padding: 30px;
+  background-color: #222;
+  color: white;
+  min-height: 100vh;
+  text-align: center;
+  position: relative; /* ✅ ให้ player-info อิง */
+}
+
+.hex-grid {
+  margin: 0 auto;
+  width: 600px;
+  height: 500px;
+  position: relative;
+}
+
+.hex-cell {
+  position: absolute;
+  width: 65px;
+  height: 75px;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  color: white;
+  font-size: 12px;
+}
+
+.button-group {
+  position: absolute;
+  bottom: 150px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.player-info {
+  width: 180px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px;
+  color: white;
+  position: absolute;
+  border-radius: 10px;
+}
+
+/* ปรับให้ Player 1 และ Player 2 อยู่ภายในกรอบ */
+.player1 {
+  bottom: 130px;
+  right: 120px;
+}
+
+.player2 {
+  top: 130px;
+  left: 120px;
+}
+
+/* เพิ่มข้อความ Player 1 และ Player 2 ภายในกรอบ */
+.player1-text, .player2-text {
+  color: white;  /* สีเริ่มต้น */
+}
+
+/* เพิ่มสีเหลืองเมื่อถึงเทิร์นของผู้เล่น */
+.player1-text.active {
+  color: yellow;
+}
+
+.player2-text.active {
+  color: yellow;
+}.minion-selector {
+  width: 200px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: 20px;
+  position: absolute;
+  right: 20px;
+  top: 100px;
+}
+
+.minion-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.minion-image {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+}
+

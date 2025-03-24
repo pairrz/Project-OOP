@@ -31,6 +31,7 @@
   width: 120px;
   cursor: pointer;
   transition: transform 0.3s;
+  
 }
 .character-icon:hover {
   transform: scale(1.1);
@@ -43,13 +44,12 @@
   width: 500px;
   max-width: 90%;
   text-align: center;
+  position: relative;
+  top: 200px;  
+  left: 270px;
+  transform: translate(-50%, -50%);
+  z-index: 1050;  /* เพิ่ม z-index ให้กล่องอยู่ด้านบนสุด */
   
-
-  top: 100%;
-  left: 100%;
-  transform: none;
-  
- 
 }
 
 
@@ -115,7 +115,7 @@ input {
 
 /* ปุ่มยืนยัน */
 .select-confirm-btn {
-  margin-top: 30px;
+  margin-top:-10px;
   padding: 14px 35px;
   font-size: 20px;
   background-color: gold;

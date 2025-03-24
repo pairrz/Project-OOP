@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BackBotton from '../BackBotton/BackBotton';
 import './Select.css';
-import ghost1 from '../Character/รูป/G1.png';
-import ghost2 from '../Character/รูป/G2.png';
-import ghost3 from '../Character/รูป/G3.png';
-import ghost4 from '../Character/รูป/G4.png';
-import ghost5 from '../Character/รูป/G5.png';
+import ghost1 from '../Character/รูป/GG1.png';
+import ghost2 from '../Character/รูป/GG2.png';
+import ghost3 from '../Character/รูป/GG3.png';
+import ghost4 from '../Character/รูป/GG4.png';
+import ghost5 from '../Character/รูป/GG5.png';
 import selectTitle from './ตกแต่ง/select_title.png';
 
 export default function Select() {

@@ -1,9 +1,23 @@
 import B1 from './ปุ่ม/Button_ 1.png';
-import './mode_1.css'
-const Mode_1 =() =>{
-    return(
-        <img className="image1" src={B1} alt="Hover Image" />
-    )
+import './mode_1.css';
+import { useNavigate } from 'react-router-dom';
+
+const Mode_1 = () => {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate('/waitingroom'); // ✅ กดแล้วไป waitingroom
+    };
+
+    return (
+        <img 
+            className="image1" 
+            src={B1} 
+            alt="Hover Image" 
+            onClick={handleClick} 
+            style={{ cursor: 'pointer' }} 
+        />
+    );
 };
 
 export default Mode_1;

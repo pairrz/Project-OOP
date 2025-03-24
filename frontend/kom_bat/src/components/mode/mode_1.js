@@ -7,20 +7,16 @@ const Mode_1 = () => {
 
     const handleClick = async () => {
         try {
-            const response = await fetch('http://localhost:8080/create', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    playerOneName: "Player1",
-                    playerTwoName: "",
-                    gameMode: "DUEL_MODE"  // 👈 ส่งค่าโหมด
-                })
+            const response = await fetch('http://localhost:8080/waiting-room/create?playerName=Player1', {
+                method: 'POST'
             });
 
             if (response.ok) {
-                navigate('/WaitingRoom'); // ✅ กดแล้วไป waitingroom
+                const data = await response.json();
+                console.log("Room Created:", data.roomCode); // ✅ Debug
+                navigate('/WaitingRoom');
             } else {
-                console.error("Failed to create game");
+                console.error("Failed to create room");
             }
         } catch (error) {
             console.error("Error:", error);

@@ -19,72 +19,81 @@ import name3 from './ตกแต่ง/Cr_เปรต.png';
 import name4 from './ตกแต่ง/Cr_ผีนางรำ.png';
 import name5 from './ตกแต่ง/Cr_ผีตายโหง.png';
 
-
 const characters = [
-  { id: 1, name: "ผีเวตาล", img: ghost1, nameImg: name1 },
-  { id: 2, name: "ผีกุมาร", img: ghost2, nameImg: name2 },
-  { id: 3, name: "ผีเปรต", img: ghost3, nameImg: name3 },
-  { id: 4, name: "ผีนางรำ", img: ghost4, nameImg: name4 },
-  { id: 5, name: "ผีตายโหง", img: ghost5, nameImg: name5 },
+    { id: 1, name: "ผีเวตาล", img: "path_to_ghost1_image", nameImg: "path_to_name1_image" },
+    { id: 2, name: "ผีกุมาร", img: "path_to_ghost2_image", nameImg: "path_to_name2_image" },
+    { id: 3, name: "ผีเปรต", img: "path_to_ghost3_image", nameImg: "path_to_name3_image" },
+    { id: 4, name: "ผีนางรำ", img: "path_to_ghost4_image", nameImg: "path_to_name4_image" },
+    { id: 5, name: "ผีตายโหง", img: "path_to_ghost5_image", nameImg: "path_to_name5_image" },
 ];
 
 export default function Character() {
-  const [selected, setSelected] = useState([]);
-  const navigate = useNavigate();
+    const [selected, setSelected] = useState([]);
+    const navigate = useNavigate();
 
-  const toggleSelect = (id) => {
-    if (selected.includes(id)) {
-      setSelected(selected.filter((item) => item !== id));
-    } else {
-      if (selected.length < 5) setSelected([...selected, id]);
-    }
-  };
+    const toggleSelect = (id) => {
+        if (selected.includes(id)) {
+            setSelected(selected.filter((item) => item !== id));
+        } else {
+            if (selected.length < 5) setSelected([...selected, id]);
+        }
+    };
 
-  const handleConfirm = () => {
-    localStorage.setItem('selectedCharacters', JSON.stringify(selected));
-    navigate('/select');
-  };
+    const handleConfirm = async () => {
+        // ส่งข้อมูลมินเนียนที่เลือกไปที่ API
+        try {
+            const response = await fetch('http://localhost:8080/api/game/selectMinions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    selectedMinions: selected,  // ส่ง ID ของมินเนียนที่เลือก
+                })
+            });
 
-  return (
-    <div
-      className="character-container"
-      style={{
-      
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}
-          >
-      <img src={logo} alt="หัวข้อ" className="character-logo" />
-      <div className="character-list">
-        {characters.map((char) => (
-      <div 
-      key={char.id} 
-      className={`character-card ${selected.includes(char.id) ? 'selected' : ''}`} 
-      onClick={() => toggleSelect(char.id)}
-      >
-      <img src={char.img} alt={char.name} />
-      <img src={char.nameImg} alt={char.name} className="name-img" />
-      </div>
-      ))}
-      </div>
-      {selected.length > 0 && (
-        <div className="fire-container">
-          {selected.map((char, index) => (
-            <img key={index} src={fire} alt="fire" className="fire-img" />
-          ))}
+            if (response.ok) {
+                // หากส่งข้อมูลสำเร็จ, ไปที่หน้า Select
+                navigate('/select');
+            } else {
+                console.error("Failed to assign minions");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
+
+    return (
+        <div className="character-container">
+            <img src="path_to_logo_image" alt="หัวข้อ" className="character-logo" />
+            <div className="character-list">
+                {characters.map((char) => (
+                    <div
+                        key={char.id}
+                        className={`character-card ${selected.includes(char.id) ? 'selected' : ''}`}
+                        onClick={() => toggleSelect(char.id)}
+                    >
+                        <img src={char.img} alt={char.name} />
+                        <img src={char.nameImg} alt={char.name} className="name-img" />
+                    </div>
+                ))}
+            </div>
+
+            {selected.length > 0 && (
+                <div className="fire-container">
+                    {selected.map((char, index) => (
+                        <img key={index} src="path_to_fire_animation_image" alt="fire" className="fire-img" />
+                    ))}
+                </div>
+            )}
+
+            {selected.length > 0 && (
+                <img
+                    src={confirmBtn}
+                    alt="ยืนยัน"
+                    className="confirm-btn"
+                    onClick={handleConfirm}
+                />
+            )}
+            <BackBotton />
         </div>
-      )}
-       
-      
-      {selected.length > 0 && (
-      <img 
-      src={confirmBtn} 
-      alt="ยืนยัน" 
-      className="confirm-btn" 
-      onClick={handleConfirm} 
-      />
-      )}
-        <BackBotton />
-    </div>
-  );
+    );
 }

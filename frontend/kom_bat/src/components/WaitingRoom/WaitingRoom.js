@@ -1,138 +1,75 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BackBotton from '../BackBotton/BackBotton';
-import './Select.css';
-import ghost1 from '../Character/รูป/G1.png';
-import ghost2 from '../Character/รูป/G2.png';
-import ghost3 from '../Character/รูป/G3.png';
-import ghost4 from '../Character/รูป/G4.png';
-import ghost5 from '../Character/รูป/G5.png';
-import selectTitle from './ตกแต่ง/select_title.png';
 
-export default function Select() {
-  const navigate = useNavigate();
-  const [characters, setCharacters] = useState([]);
-  const [selectedChar, setSelectedChar] = useState(null);
-  const [strategy, setStrategy] = useState('');
-  const [hp, setHp] = useState('');
-  const [def, setDef] = useState('');
-  const [formData, setFormData] = useState([]);
-  const [lockedChars, setLockedChars] = useState([]);
-  const [activeCharId, setActiveCharId] = useState(null);
+const WaitingRoom = () => {
+    const [playerName, setPlayerName] = useState('');
+    const [roomCode, setRoomCode] = useState('');
+    const [createdRoomCode, setCreatedRoomCode] = useState('');
+    const navigate = useNavigate();
 
-  const characterData = [
-    { id: 1, name: "ผีเวตาล", img: ghost1 },
-    { id: 2, name: "ผีกุมาร", img: ghost2 },
-    { id: 3, name: "ผีเปรต", img: ghost3 },
-    { id: 4, name: "ผีนางรำ", img: ghost4 },
-    { id: 5, name: "ผีตายโหง", img: ghost5 },
-  ];
+    // ฟังก์ชันสำหรับการสร้างห้อง
+    const createRoom = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/room/create?playerName=${playerName}`, {
+                method: 'POST',
+            });
 
-  useEffect(() => {
-    const selected = JSON.parse(localStorage.getItem('selectedCharacters')) || [];
-    const selectedInfo = selected.map(id => characterData.find(c => c.id === id));
-    setCharacters(selectedInfo);
+            if (response.ok) {
+                const data = await response.json();
+                setCreatedRoomCode(data.roomCode);  // ตั้งค่ารหัสห้องจากข้อมูลที่ได้รับ
+                alert(`Room Created! Room Code: ${data.roomCode}`);
+            } else {
+                console.error("Failed to create room");
+            }
+        } catch (error) {
+            console.error("Error:", error);  // เก็บข้อผิดพลาดถ้ามี
+        }
+    };
 
-    if (selectedInfo.length > 0) {
-      setActiveCharId(selectedInfo[0].id);
-      setSelectedChar(selectedInfo[0]);
-    }
-  }, []);
+    // ฟังก์ชันสำหรับการเข้าร่วมห้อง
+    const joinRoom = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/room/join?roomCode=${roomCode}&playerName=${playerName}`, {
+                method: 'POST',
+            });
+            const data = await response.json();
+            if (data.status === 'success') {
+                alert('Successfully joined the room!');
+                navigate('/character');  // เปลี่ยนเป็นหน้า Character
+            } else {
+                alert('Failed to join room!');
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
 
-  const handleOK = () => {
-    if (!strategy || !hp || !def) {
-      alert('กรุณากรอก Strategy, HP, DEF หรือกด Auto');
-      return;
-    }
 
-    const existing = formData.find(f => f.id === selectedChar.id);
-    const updated = existing
-      ? formData.map(f => (f.id === selectedChar.id ? { ...f, strategy, hp, def } : f))
-      : [...formData, { ...selectedChar, strategy, hp, def }];
-    
-    setFormData(updated);
-    setLockedChars([...lockedChars, selectedChar.id]); // 🔒 ล็อกค่าหลังจากกด OK
-    alert(`บันทึก ${selectedChar.name} สำเร็จ!`);
-    // เพิ่มการเปลี่ยนสีเป็นเขียวหลังจากกด OK
-    setSelectedChar({ ...selectedChar, isSelected: true });
-  };
+    return (
+        <div>
+            <h2>Waiting Room</h2>
+            <input
+                type="text"
+                placeholder="Enter your name"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+            />
+            <button onClick={createRoom}>Create Room</button>
 
-  const handleAuto = () => {
-    setStrategy('Auto-Strategy');
-    setHp(100);
-    setDef(50);
-  };
-
-  const handleCancel = () => {
-    setLockedChars(lockedChars.filter(id => id !== selectedChar.id)); // 🔓 ปลดล็อก
-    setFormData(formData.filter(f => f.id !== selectedChar.id));      // ❌ ลบข้อมูลตัวนี้ออก
-    setSelectedChar(null); // รีเซ็ตการเลือก
-  };
-
-  const handleConfirm = () => {
-    localStorage.setItem('finalCharacters', JSON.stringify(formData));
-    navigate('/play');
-  };
-
-  const isLocked = selectedChar && lockedChars.includes(selectedChar.id);
-  const isCompleted = (id) => formData.some(f => f.id === id);
-
-  const handleIconClick = (id) => {
-    setSelectedChar(characterData.find(c => c.id === id));
-    setActiveCharId(id);
-  };
-
-  return (
-    <div className="select-container">
-      <img src={selectTitle} alt="หัวข้อ" className="select-title" />
-
-      <div className="select-layout">
-        <div className="character-side">
-          {characters.filter((_, i) => i % 2 === 0).map((char) => (
-            <div className="select-character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
-              <img
-                src={char.img}
-                alt={char.name}
-                className={`select-character-icon ${isCompleted(char.id) ? 'completed' : ''} ${char.isSelected ? 'selected-green' : ''}`}
-                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}  // เปลี่ยนสีเป็นขาวดำเมื่อเลือก
-              />
-            </div>
-          ))}
+            {createdRoomCode && (
+                <div>
+                    <p>Room Code: {createdRoomCode}</p>
+                    <input
+                        type="text"
+                        placeholder="Enter Room Code to Join"
+                        value={roomCode}
+                        onChange={(e) => setRoomCode(e.target.value)}
+                    />
+                    <button onClick={joinRoom}>Join Room</button>
+                </div>
+            )}
         </div>
+    );
+};
 
-        {selectedChar && (
-          <div className="center-box">
-            <img src={selectedChar.img} alt={selectedChar.name} className="select-selected-char-img" />
-            <textarea placeholder="Strategy" value={strategy} onChange={e => setStrategy(e.target.value)} disabled={isLocked} />
-            <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} disabled={isLocked} />
-            <input type="number" placeholder="DEF" value={def} onChange={e => setDef(e.target.value)} disabled={isLocked} />
-            <button className="auto-btn" onClick={handleAuto} disabled={isLocked}>Auto</button>
-            <button className="ok-btn" onClick={handleOK} disabled={isLocked}>OK</button>
-            {isLocked && <button className="cancel-btn" onClick={handleCancel}>ยกเลิก</button>}
-          </div>
-        )}
-
-        <div className="select-character-side">
-          {characters.filter((_, i) => i % 2 !== 0).map((char) => (
-            <div className="character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
-              <img
-                src={char.img}
-                alt={char.name}
-                className={`select-character-icon ${isCompleted(char.id) ? 'completed' : ''} ${char.isSelected ? 'selected-green' : ''}`}
-                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}  // เปลี่ยนสีเป็นขาวดำเมื่อเลือก
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {formData.length === characters.length && (
-        <button className="select-confirm-btn" onClick={handleConfirm}>
-          ยืนยันทั้งหมด
-        </button>
-      )}
-
-      <BackBotton />
-    </div>
-  );
-}
+export default WaitingRoom;

@@ -5,22 +5,8 @@ import { useNavigate } from 'react-router-dom';
 const Mode_1 = () => {
     const navigate = useNavigate();
 
-    const handleClick = async () => {
-        try {
-            const response = await fetch('http://localhost:8080/waiting-room/create?playerName=Player1', {
-                method: 'POST'
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log("Room Created:", data.roomCode); // ✅ Debug
-                navigate('/WaitingRoom');
-            } else {
-                console.error("Failed to create room");
-            }
-        } catch (error) {
-            console.error("Error:", error);
-        }
+    const handleClick = () => {
+        navigate('/waitingroom');
     };
 
     return (
@@ -28,7 +14,7 @@ const Mode_1 = () => {
             className="image1"
             src={B1}
             alt="Hover Image"
-            onClick={handleClick}
+            onClick={handleClick}  // คลิกแล้วไปหน้า Character ทันที
             style={{ cursor: 'pointer' }}
         />
     );

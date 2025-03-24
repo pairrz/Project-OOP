@@ -62,13 +62,20 @@ export default function Character() {
     };
 
     return (
-        <div className="character-container">
-            <img src="path_to_logo_image" alt="หัวข้อ" className="character-logo" />
+        <div
+            className="character-container"
+            style={{
+
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+            }}
+        >
+            <img src={logo} alt="หัวข้อ" className="character-logo" />
             <div className="character-list">
                 {characters.map((char) => (
                     <div
                         key={char.id}
-                        className={`character-card ${selected.includes(char.id) ? 'selected' : ''}`}
+                        className={character-card ${selected.includes(char.id) ? 'selected' : ''}}
                         onClick={() => toggleSelect(char.id)}
                     >
                         <img src={char.img} alt={char.name} />
@@ -76,14 +83,14 @@ export default function Character() {
                     </div>
                 ))}
             </div>
-
             {selected.length > 0 && (
                 <div className="fire-container">
                     {selected.map((char, index) => (
-                        <img key={index} src="path_to_fire_animation_image" alt="fire" className="fire-img" />
+                        <img key={index} src={fire} alt="fire" className="fire-img" />
                     ))}
                 </div>
             )}
+
 
             {selected.length > 0 && (
                 <img

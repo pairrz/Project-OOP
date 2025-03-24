@@ -12,4 +12,6 @@
   .waiting-room h1 {
     margin-bottom: 20px;
   }
-  
+  .selected-green {
+    border: 3px solid green;  /* ทำให้กรอบตัวละครมีสีเขียว */
+  }

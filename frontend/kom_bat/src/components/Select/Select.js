@@ -62,10 +62,9 @@ export default function Select() {
   };
 
   const handleCancel = () => {
-  setLockedChars(lockedChars.filter(id => id !== selectedChar.id)); // 🔓 ปลดล็อก
-  setFormData(formData.filter(f => f.id !== selectedChar.id));      // ❌ ลบข้อมูลตัวนี้ออก
-};
-
+    setLockedChars(lockedChars.filter(id => id !== selectedChar.id)); // 🔓 ปลดล็อก
+    setFormData(formData.filter(f => f.id !== selectedChar.id));      // ❌ ลบข้อมูลตัวนี้ออก
+  };
 
   const handleConfirm = () => {
     localStorage.setItem('finalCharacters', JSON.stringify(formData));
@@ -75,35 +74,32 @@ export default function Select() {
   const isLocked = selectedChar && lockedChars.includes(selectedChar.id);
   const isCompleted = (id) => formData.some(f => f.id === id);
 
+  const handleIconClick = (id) => {
+    setSelectedChar(characterData.find(c => c.id === id));
+    setActiveCharId(id);
+  };
+
   return (
     <div className="select-container">
       <img src={selectTitle} alt="หัวข้อ" className="select-title" />
 
       <div className="select-layout">
         <div className="character-side">
-          {characters.filter((_, i) => i % 2 === 0).map((char) =>
-            activeCharId === char.id ? null : (
+          {characters.filter((_, i) => i % 2 === 0).map((char) => (
+            <div className="select-character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
               <img
-                key={char.id}
                 src={char.img}
                 alt={char.name}
-                className={`character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
-                onClick={() => {
-                  setActiveCharId(char.id);
-                  setSelectedChar(char);
-                  const data = formData.find(f => f.id === char.id);
-                  setStrategy(data?.strategy || '');
-                  setHp(data?.hp || '');
-                  setDef(data?.def || '');
-                }}
+                className={`select-character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
+                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}  // เปลี่ยนสีเป็นขาวดำเมื่อเลือก
               />
-            )
-          )}
+            </div>
+          ))}
         </div>
 
         {selectedChar && (
           <div className="center-box">
-            <img src={selectedChar.img} alt={selectedChar.name} className="selected-char-img" />
+            <img src={selectedChar.img} alt={selectedChar.name} className="select-selected-char-img" />
             <textarea placeholder="Strategy" value={strategy} onChange={e => setStrategy(e.target.value)} disabled={isLocked} />
             <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} disabled={isLocked} />
             <input type="number" placeholder="DEF" value={def} onChange={e => setDef(e.target.value)} disabled={isLocked} />
@@ -113,34 +109,25 @@ export default function Select() {
           </div>
         )}
 
-        <div className="character-side">
-          {characters.filter((_, i) => i % 2 !== 0).map((char) =>
-            activeCharId === char.id ? null : (
+        <div className="select-character-side">
+          {characters.filter((_, i) => i % 2 !== 0).map((char) => (
+            <div className="character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
               <img
-                key={char.id}
                 src={char.img}
                 alt={char.name}
-                className={`character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
-                onClick={() => {
-                  setActiveCharId(char.id);
-                  setSelectedChar(char);
-                  const data = formData.find(f => f.id === char.id);
-                  setStrategy(data?.strategy || '');
-                  setHp(data?.hp || '');
-                  setDef(data?.def || '');
-                }}
+                className={`select-character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
+                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}  // เปลี่ยนสีเป็นขาวดำเมื่อเลือก
               />
-            )
-          )}
+            </div>
+          ))}
         </div>
       </div>
 
       {formData.length === characters.length && (
-  <button className="select-confirm-btn" onClick={handleConfirm}>
-    ยืนยันทั้งหมด
-  </button>
-)}
-
+        <button className="select-confirm-btn" onClick={handleConfirm}>
+          ยืนยันทั้งหมด
+        </button>
+      )}
 
       <BackBotton />
     </div>

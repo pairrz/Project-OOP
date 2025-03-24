@@ -9,6 +9,7 @@
 }
 
 /* Popup Overlay */
+/* Popup Overlay */
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -33,8 +34,8 @@
 
 /* Popup เป็นรูปภาพ */
 .popup-image {
-  width: 900px !important;
-  height: 650px !important;
+  width: 1200px !important;
+  height: 800px !important;
   max-width: none !important;
   display: block;
   position: relative;
@@ -57,13 +58,23 @@
   left: 50%;   
   transform: translate(-50%, -50%);
   color: #fff;
-  font-size: 36px;
-  width: 80%;
-  line-height: 1.5;
+  font-size: 30px;
+  width: 45%;
+  line-height: 1; /* เพิ่มระยะห่างบรรทัด */
+  text-align: left;
+  text-shadow: 4px 2px 4px #000;
+  z-index: 10;
+  font-family: 'MaxSomsin', sans-serif;
+  padding: 15px; /* เพิ่ม padding ให้ข้อความไม่ชิดขอบ */
+  background-color: rgba(0, 0, 0, 0.5); /* เพิ่มพื้นหลังโปร่งใส */
+  border-radius: 10px; /* เพิ่มมุมโค้งให้กรอบ */
+}
+
+.popup-text h1 {
   text-align: center;
-  text-shadow: 2px 2px 4px #000;
-  z-index: 20;
-  font-family: 'MaxSomsin', sans-serif;  /* ✅ เพิ่มฟอนต์ไทยตรงนี้ */
+  font-weight: bold;  /* เพิ่มความหนาให้กับหัวข้อ */
+  font-size: 48px;  /* เพิ่มขนาดหัวข้อให้ใหญ่ขึ้น */
+  margin-bottom: 20px; /* เพิ่มระยะห่างด้านล่าง */
 }
 
 @font-face {

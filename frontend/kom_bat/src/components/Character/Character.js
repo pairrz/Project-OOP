@@ -9,14 +9,15 @@ import ghost3 from './รูป/G3.png';
 import ghost4 from './รูป/G4.png';
 import ghost5 from './รูป/G5.png';
 
-import logo from './ตกแต่ง/logo.png';
-import fire from './ตกแต่ง/fire.png';
+import logo from './ตกแต่ง/logo2.png';
+import fire from './ตกแต่ง/fire_animation.gif';
+import confirmBtn from './ปุ่ม/button.png';
 
-import name1 from './ตกแต่ง/ผี (1).png';
-import name2 from './ตกแต่ง/ผี (2).png';
-import name3 from './ตกแต่ง/ผี (3).png';
-import name4 from './ตกแต่ง/ผี (4).png';
-import name5 from './ตกแต่ง/ผี (5).png';
+import name1 from './ตกแต่ง/Cr_เวตาล.png'; 
+import name2 from './ตกแต่ง/Cr_กุมารทอง.png';
+import name3 from './ตกแต่ง/Cr_เปรต.png';
+import name4 from './ตกแต่ง/Cr_ผีนางรำ.png';
+import name5 from './ตกแต่ง/Cr_ผีตายโหง.png';
 
 
 const characters = [
@@ -48,24 +49,24 @@ export default function Character() {
     <div
       className="character-container"
       style={{
-        backgroundImage: `url(${bgImage})`,
+      
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
-    >
+          >
       <img src={logo} alt="หัวข้อ" className="character-logo" />
       <div className="character-list">
-  {characters.map((char) => (
-    <div 
+        {characters.map((char) => (
+      <div 
       key={char.id} 
       className={`character-card ${selected.includes(char.id) ? 'selected' : ''}`} 
       onClick={() => toggleSelect(char.id)}
-    >
+      >
       <img src={char.img} alt={char.name} />
       <img src={char.nameImg} alt={char.name} className="name-img" />
-    </div>
-  ))}
-</div>
+      </div>
+      ))}
+      </div>
       {selected.length > 0 && (
         <div className="fire-container">
           {selected.map((char, index) => (
@@ -74,10 +75,16 @@ export default function Character() {
         </div>
       )}
        
+      
       {selected.length > 0 && (
-        <button className="confirm-btn" onClick={handleConfirm}>ยืนยัน</button>
+      <img 
+      src={confirmBtn} 
+      alt="ยืนยัน" 
+      className="confirm-btn" 
+      onClick={handleConfirm} 
+      />
       )}
-      <BackBotton />
+        <BackBotton />
     </div>
   );
 }

@@ -7,11 +7,18 @@ import ghost2 from '../Character/รูป/G2.png';
 import ghost3 from '../Character/รูป/G3.png';
 import ghost4 from '../Character/รูป/G4.png';
 import ghost5 from '../Character/รูป/G5.png';
+import selectTitle from './ตกแต่ง/select_title.png';
 
 export default function Select() {
   const navigate = useNavigate();
   const [characters, setCharacters] = useState([]);
+  const [selectedChar, setSelectedChar] = useState(null);
+  const [strategy, setStrategy] = useState('');
+  const [hp, setHp] = useState('');
+  const [def, setDef] = useState('');
   const [formData, setFormData] = useState([]);
+  const [lockedChars, setLockedChars] = useState([]);
+  const [activeCharId, setActiveCharId] = useState(null);
 
   const characterData = [
     { id: 1, name: "ผีเวตาล", img: ghost1 },
@@ -23,84 +30,118 @@ export default function Select() {
 
   useEffect(() => {
     const selected = JSON.parse(localStorage.getItem('selectedCharacters')) || [];
-    const autoData = selected.map((charId) => ({
-      id: charId,
-      strategy: '',
-      hp: '',
-      def: '',
-      isAuto: false,
-    }));
-    setCharacters(selected);
-    setFormData(autoData);
+    const selectedInfo = selected.map(id => characterData.find(c => c.id === id));
+    setCharacters(selectedInfo);
+
+    if (selectedInfo.length > 0) {
+      setActiveCharId(selectedInfo[0].id);
+      setSelectedChar(selectedInfo[0]);
+    }
   }, []);
 
-  const handleChange = (index, field, value) => {
-    const updated = [...formData];
-    updated[index][field] = value;
-    setFormData(updated);
-  };
-
-  const handleAuto = (index) => {
-    const updated = [...formData];
-    updated[index] = {
-      ...updated[index],
-      strategy: 'Auto-Strategy',
-      hp: 100,
-      def: 50,
-      isAuto: true
-    };
-    setFormData(updated);
-  };
-
-  const handleConfirm = () => {
-    const incomplete = formData.some(
-      (char) => !char.strategy || !char.hp || !char.def
-    );
-    if (incomplete) {
-      alert('กรุณากรอก Strategy, HP, DEF หรือเลือก Auto ให้ครบทุกตัว');
+  const handleOK = () => {
+    if (!strategy || !hp || !def) {
+      alert('กรุณากรอก Strategy, HP, DEF หรือกด Auto');
       return;
     }
+
+    const existing = formData.find(f => f.id === selectedChar.id);
+    const updated = existing
+      ? formData.map(f => (f.id === selectedChar.id ? { ...f, strategy, hp, def } : f))
+      : [...formData, { ...selectedChar, strategy, hp, def }];
+    
+    setFormData(updated);
+    setLockedChars([...lockedChars, selectedChar.id]); // 🔒 ล็อกค่าหลังจากกด OK
+    alert(`บันทึก ${selectedChar.name} สำเร็จ!`);
+  };
+
+  const handleAuto = () => {
+    setStrategy('Auto-Strategy');
+    setHp(100);
+    setDef(50);
+  };
+
+  const handleCancel = () => {
+  setLockedChars(lockedChars.filter(id => id !== selectedChar.id)); // 🔓 ปลดล็อก
+  setFormData(formData.filter(f => f.id !== selectedChar.id));      // ❌ ลบข้อมูลตัวนี้ออก
+};
+
+
+  const handleConfirm = () => {
     localStorage.setItem('finalCharacters', JSON.stringify(formData));
     navigate('/play');
   };
 
+  const isLocked = selectedChar && lockedChars.includes(selectedChar.id);
+  const isCompleted = (id) => formData.some(f => f.id === id);
+
   return (
     <div className="select-container">
-      <h1>ปลุกเสกวิญญาณ</h1>
-      {characters.map((charId, index) => {
-        const charInfo = characterData.find((c) => c.id === charId);
-        return (
-          <div className="character-box" key={index}>
-            {charInfo && <img src={charInfo.img} alt={charInfo.name} className="character-img" />}
-            <p>{charInfo?.name}</p>
+      <img src={selectTitle} alt="หัวข้อ" className="select-title" />
 
-            <input
-              type="text"
-              placeholder="Strategy"
-              value={formData[index]?.strategy}
-              onChange={(e) => handleChange(index, 'strategy', e.target.value)}
-              disabled={formData[index]?.isAuto}
-            />
-            <input
-              type="number"
-              placeholder="HP"
-              value={formData[index]?.hp}
-              onChange={(e) => handleChange(index, 'hp', e.target.value)}
-              disabled={formData[index]?.isAuto}
-            />
-            <input
-              type="number"
-              placeholder="DEF"
-              value={formData[index]?.def}
-              onChange={(e) => handleChange(index, 'def', e.target.value)}
-              disabled={formData[index]?.isAuto}
-            />
-            <button className="auto-btn" onClick={() => handleAuto(index)}>Auto</button>
+      <div className="select-layout">
+        <div className="character-side">
+          {characters.filter((_, i) => i % 2 === 0).map((char) =>
+            activeCharId === char.id ? null : (
+              <img
+                key={char.id}
+                src={char.img}
+                alt={char.name}
+                className={`character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
+                onClick={() => {
+                  setActiveCharId(char.id);
+                  setSelectedChar(char);
+                  const data = formData.find(f => f.id === char.id);
+                  setStrategy(data?.strategy || '');
+                  setHp(data?.hp || '');
+                  setDef(data?.def || '');
+                }}
+              />
+            )
+          )}
+        </div>
+
+        {selectedChar && (
+          <div className="center-box">
+            <img src={selectedChar.img} alt={selectedChar.name} className="selected-char-img" />
+            <textarea placeholder="Strategy" value={strategy} onChange={e => setStrategy(e.target.value)} disabled={isLocked} />
+            <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} disabled={isLocked} />
+            <input type="number" placeholder="DEF" value={def} onChange={e => setDef(e.target.value)} disabled={isLocked} />
+            <button className="auto-btn" onClick={handleAuto} disabled={isLocked}>Auto</button>
+            <button className="ok-btn" onClick={handleOK} disabled={isLocked}>OK</button>
+            {isLocked && <button className="cancel-btn" onClick={handleCancel}>ยกเลิก</button>}
           </div>
-        );
-      })}
+        )}
 
-      <button className="confirm-btn" onClick={handleConfirm}>ยืนยัน</button>
+        <div className="character-side">
+          {characters.filter((_, i) => i % 2 !== 0).map((char) =>
+            activeCharId === char.id ? null : (
+              <img
+                key={char.id}
+                src={char.img}
+                alt={char.name}
+                className={`character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
+                onClick={() => {
+                  setActiveCharId(char.id);
+                  setSelectedChar(char);
+                  const data = formData.find(f => f.id === char.id);
+                  setStrategy(data?.strategy || '');
+                  setHp(data?.hp || '');
+                  setDef(data?.def || '');
+                }}
+              />
+            )
+          )}
+        </div>
+      </div>
+
+      {formData.length === characters.length && (
+  <button className="select-confirm-btn" onClick={handleConfirm}>
+    ยืนยันทั้งหมด
+  </button>
+)}
+
+
       <BackBotton />
     </div>
   );

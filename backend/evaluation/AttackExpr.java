@@ -4,7 +4,6 @@ import backend.game.*;
 import backend.parser.*;
 import backend.minions.*;
 import backend.players.*;
-
 import java.util.Map;
 
 public record AttackExpr(Minion attacker, String direction, Expr expend) implements Expr {
@@ -35,7 +34,6 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
             }
 
             bindings.put("budget", budget - totalCost);
-            System.out.println("bindings[budget] = " + (budget - totalCost));
 
             player.setBudget(budget - totalCost);
 
@@ -55,18 +53,18 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
             int damage = Math.max(1, expenditure - defense);
             int newHP = Math.max(0, hp - damage);
 
+            System.out.println(targetMinion.getOwner().getName() + "'s minion at position " + targetMinion.getX() + ", " + targetMinion.getY() + " was attacked.");
             targetMinion.setHP(newHP);
 
-            if (newHP <= 0) {
+            if (newHP == 0) {
+                System.out.println(targetMinion.getOwner().getName() + "'s minion at position " + targetMinion.getX() + "," + targetMinion.getY() + " die.");
                 targetCell.removeMinion();
                 Player opponent = targetMinion.getOwner();
                 opponent.removeMinion(targetMinion);
             }
-
             return 0;
         } catch (Exception e) {
             throw new Exception("Error in AttackExpr: " + e.getMessage(), e);
         }
     }
 }
-

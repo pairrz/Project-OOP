@@ -9,5 +9,3 @@ public class Main {
         gameManage.gamePlay();
     }
 }
-
-//ติด move shoot(มากกว่าหนึ่งครั้ง) ไม่จบตามินเนียน

@@ -1,11 +1,9 @@
 package backend.evaluation;
 
-import backend.game.GameBoard;
-import backend.game.HexCell;
-import backend.minions.Minion;
-import backend.parser.Expr;
-import backend.players.Player;
-
+import backend.game.*;
+import backend.minions.*;
+import backend.parser.*;
+import backend.players.*;
 import java.io.IOException;
 import java.util.Map;
 
@@ -55,10 +53,7 @@ public record MoveExpr(Minion minion, String direction) implements Expr {
             if (moveDirect()) {
                 player.setBudget(budget - 1);
                 bindings.put("budget", budget - 1);
-                System.out.println("bindings[budget] = " + (budget - 1));
-
             }
-
             return 0;
         } catch (Exception e) {
             throw new Exception("Error in MoveExpr.eval: " + e.getMessage(), e);

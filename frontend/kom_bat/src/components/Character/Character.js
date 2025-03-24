@@ -74,13 +74,13 @@ export default function Character() {
             <div className="character-list">
                 {characters.map((char) => (
                     <div
-                        key={char.id}
-                        className={character-card ${selected.includes(char.id) ? 'selected' : ''}}
-                        onClick={() => toggleSelect(char.id)}
-                    >
-                        <img src={char.img} alt={char.name} />
-                        <img src={char.nameImg} alt={char.name} className="name-img" />
-                    </div>
+                    key={char.id}
+                    className={`character-card ${selected.includes(char.id) ? 'selected' : ''}`}
+                    onClick={() => toggleSelect(char.id)}
+                  >
+                    <img src={char.img} alt={char.name} />
+                    <img src={char.nameImg} alt={char.name} className="name-img" />
+                  </div>
                 ))}
             </div>
             {selected.length > 0 && (

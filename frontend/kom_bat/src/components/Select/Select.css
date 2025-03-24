@@ -137,3 +137,7 @@ input {
   opacity: 0.9;
   filter: grayscale(100%); /* ขาวดำ */
 }
+
+.selected-green {
+  border: 3px solid green;  /* ทำให้กรอบตัวละครมีสีเขียว */
+}

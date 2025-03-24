@@ -16,83 +16,70 @@
 
 .select-layout {
   display: flex;
-  justify-content: center;
+  justify-content: center;  /* ทำให้ตัวละครอยู่กลาง */
   align-items: center;
-  gap: 50px;
+  gap: 20px;  /* ลดช่องว่างระหว่างตัวละคร */
 }
 
 .select-character-side {
   display: flex;
   flex-direction: column;
-  gap: 100px;
+  gap: 100px;  /* ลดช่องว่างระหว่างตัวละคร */
+  margin: 0 200px; /* ขยับให้เข้ามาใกล้กลางมากขึ้น */
+}
+
+.select-character-card {
+  cursor: pointer;
+  transition: transform 0.3s;
+  padding: 10px;  /* เพิ่มระยะห่างรอบๆ ตัวละคร */
+  background-color: rgba(255, 255, 255, 0.2);  /* พื้นหลังโปร่งใส */
+  border-radius: 10px;
+  display: inline-block;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);  /* เงาจางๆ */
 }
 
 .select-character-icon {
-  width: 200px;   /* ปรับให้เล็กลง */
-  height: 200px;  /* ปรับให้เล็กลง */
-  cursor: pointer;
-  transition: transform 0.3s;
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 10px;
 }
 
-.select-selected-char-img {
-  width: 100px;  /* ลดขนาดจากเดิม */
-  height: auto;
-  object-fit: contain;
-  margin-bottom: 20px;
+.select-character-card.selected {
+  background-color: rgba(74, 74, 74, 0.4);  /* เปลี่ยนพื้นหลังเมื่อเลือก */
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.8);  /* เงาที่ชัดขึ้นเมื่อเลือก */
 }
+
+
 .center-box {
   background-color: rgba(0, 0, 0, 0.75);
   padding: 25px;
   border-radius: 15px;
-  width: 500px;
+  width: 400px;
+  height: 475px;
   max-width: 90%;
   text-align: center;
   position: relative;
-  top: 200px;  
-  left: 270px;
-  transform: translate(-50%, -50%);
-  z-index: 1050;  /* เพิ่ม z-index ให้กล่องอยู่ด้านบนสุด */
-  
+  z-index: 1050;
+  margin: 0 auto;
+  top: -40px;  /* ปรับค่า top ให้ใกล้กับด้านบนมากขึ้น */
 }
-
 
 .selected-char-img {
-  width: 100px;         /* ✅ ลดจาก 280px เหลือ 220px */
-  max-width: 100%;
+  width: 150px;
   height: auto;
   object-fit: contain;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
-textarea {
-  display: block;
-  margin: 10px auto;
-  padding: 15px;
-  width: 400px;
-  height: 200px;
-  resize: none;
-  border-radius: 8px;
-  font-size: 18px;
-}
-
-/* กล่อง input และปุ่มเรียงซ้าย-ขวา */
 .input-btn-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: 10px auto;
-  width: 90%;
+  width: 80%;
 }
 
-/* input ค่าพลัง */
-input {
-  padding: 15px;
-  width: 100px;
-  border-radius: 8px;
-  font-size: 18px;
-}
-
-/* ปุ่ม Action */
 .auto-btn, .ok-btn {
   background-color: #ff9800;
   color: white;
@@ -101,7 +88,6 @@ input {
   border-radius: 8px;
   cursor: pointer;
   font-size: 18px;
-  min-width: 80px;
 }
 
 .auto-btn {
@@ -116,9 +102,8 @@ input {
   background-color: #e67e00;
 }
 
-/* ปุ่มยืนยัน */
 .select-confirm-btn {
-  margin-top:-10px;
+  margin-top: 10px;
   padding: 14px 35px;
   font-size: 20px;
   background-color: gold;
@@ -130,14 +115,30 @@ input {
 .select-confirm-btn:hover {
   background-color: #e6c300;
 }
-.completed {
-  opacity: 0.;
-}
-.character-icon.completed {
-  opacity: 0.9;
-  filter: grayscale(100%); /* ขาวดำ */
+
+.select-selected-char-img {
+  width: 100px;   /* ลดขนาดของตัวละครตรงกลาง */
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 20px;
 }
 
-.selected-green {
-  border: 3px solid green;  /* ทำให้กรอบตัวละครมีสีเขียว */
+
+textarea {
+  display: block;
+  margin: 10px auto;
+  padding: 15px;
+  width: 350px;    /* ปรับให้กว้างขึ้น */
+  height: 200px;   /* ปรับความสูง */
+  resize: none;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+input {
+  padding: 12px;
+  width: 70px;    /* ปรับขนาดช่องกรอกตัวเลข */
+  margin: 10px auto;  /* จัดระยะห่างให้เหมาะสม */
+  border-radius: 10px;
+  font-size: 16px;
 }

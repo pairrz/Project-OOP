@@ -51,7 +51,7 @@ export default function Select() {
       : [...formData, { ...selectedChar, strategy, hp, def }];
     
     setFormData(updated);
-    setLockedChars([...lockedChars, selectedChar.id]); // 🔒 ล็อกค่าหลังจากกด OK
+    setLockedChars([...lockedChars, selectedChar.id]);
     alert(`บันทึก ${selectedChar.name} สำเร็จ!`);
   };
 
@@ -62,8 +62,8 @@ export default function Select() {
   };
 
   const handleCancel = () => {
-    setLockedChars(lockedChars.filter(id => id !== selectedChar.id)); // 🔓 ปลดล็อก
-    setFormData(formData.filter(f => f.id !== selectedChar.id));      // ❌ ลบข้อมูลตัวนี้ออก
+    setLockedChars(lockedChars.filter(id => id !== selectedChar.id));
+    setFormData(formData.filter(f => f.id !== selectedChar.id));
   };
 
   const handleConfirm = () => {
@@ -84,19 +84,21 @@ export default function Select() {
       <img src={selectTitle} alt="หัวข้อ" className="select-title" />
 
       <div className="select-layout">
-        <div className="character-side">
+        {/* แสดงตัวละครฝั่งซ้าย */}
+        <div className="select-character-side">
           {characters.filter((_, i) => i % 2 === 0).map((char) => (
             <div className="select-character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
               <img
                 src={char.img}
                 alt={char.name}
                 className={`select-character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
-                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}  // เปลี่ยนสีเป็นขาวดำเมื่อเลือก
+                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}
               />
             </div>
           ))}
         </div>
 
+        {/* กล่องรายละเอียดที่เลือก */}
         {selectedChar && (
           <div className="center-box">
             <img src={selectedChar.img} alt={selectedChar.name} className="select-selected-char-img" />
@@ -109,14 +111,15 @@ export default function Select() {
           </div>
         )}
 
+        {/* แสดงตัวละครฝั่งขวา */}
         <div className="select-character-side">
           {characters.filter((_, i) => i % 2 !== 0).map((char) => (
-            <div className="character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
+            <div className="select-character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
               <img
                 src={char.img}
                 alt={char.name}
                 className={`select-character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
-                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}  // เปลี่ยนสีเป็นขาวดำเมื่อเลือก
+                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}
               />
             </div>
           ))}

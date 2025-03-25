@@ -12,7 +12,7 @@ import ghost5 from './รูป/G5.png';
 import logo from './ตกแต่ง/logo2.png';
 import fire from './ตกแต่ง/fire_animation.gif';
 import confirmBtn from './ปุ่ม/button.png';
-import music from './ตกแต่ง/เสียง/Character_sound.mp3';  // 🔥 เพลงหน้า Character
+import music from './ตกแต่ง/เสียง/Character_sound.mp3';  
 
 import name1 from './ตกแต่ง/Cr_เวตาล.png'; 
 import name2 from './ตกแต่ง/Cr_กุมารทอง.png';

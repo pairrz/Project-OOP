@@ -9,7 +9,7 @@ import ghost3 from '../Character/รูป/GG3.png';
 import ghost4 from '../Character/รูป/GG4.png';
 import ghost5 from '../Character/รูป/GG5.png';
 import selectTitle from './ตกแต่ง/select_title.png';
-import selectMusic from './ตกแต่ง/เสียง/Select_sound.mp3';
+import selectMusic from './ตกแต่ง/เสียง/Select_sound1.mp3';
 
 import autoBtn from './ปุ่ม/auto.png';
 import okBtn from './ปุ่ม/ok.png';

@@ -1,17 +1,42 @@
 .play-container {
+  background-image: url('./พื้นหลัง/Bg_play3.gif');
   padding: 30px;
-  background-color: #222;
+  background-color: rgba(0, 0, 0, 0.9); /* เพิ่มความทึบให้พื้นหลัง */
   color: white;
-  min-height: 100vh;
+  min-height: 90vh;
   text-align: center;
-  position: relative; /* ✅ ให้ player-info อิง */
+  position: relative;
+  background-attachment: fixed;
+  background-size: 85%;  /* ลดขนาดภาพพื้นหลัง */
+  background-position: center;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;     /* จัดตำแหน่งให้อยู่กลาง */
+  align-items: center;
 }
 
 .hex-grid {
-  margin: 0 auto;
-  width: 600px;
-  height: 500px;
   position: relative;
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  margin: 0 auto;
+  transform: scale(0.9);
+  left: 50px; /* Adjust this value to shift the grid further to the right */
+}
+
+.hex-cell.highlight {
+  background-color: rgba(255, 255, 0, 0.5); /* สีเหลืองโปร่งใส */
+  border: 2px solid yellow;
+}
+
+.hex-outline {
+  width: 70px;
+  height: 70px;
+  background-color: rgba(255, 255, 0, 0.5); /* สีเหลือง */
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  border: 2px solid yellow;
 }
 
 .hex-cell {
@@ -67,7 +92,9 @@
 
 .player2-text.active {
   color: yellow;
-}.minion-selector {
+}
+
+.minion-selector {
   width: 200px;
   background-color: #f1f1f1;
   padding: 10px;
@@ -75,7 +102,7 @@
   margin-left: 20px;
   position: absolute;
   right: 20px;
-  top: 100px;
+  top: 100px;  /* อาจจะเพิ่มระยะห่างจากด้านบน */
 }
 
 .minion-images {
@@ -88,5 +115,83 @@
   width: 50px;
   height: 50px;
   object-fit: cover;
+  cursor: pointer;  /* เพิ่ม cursor pointer เพื่อให้รู้ว่าคลิกได้ */
 }
 
+.minion-on-hex {
+  position: absolute;
+  width: 40px;        /* ขนาดรูปมินเนี่ยน */
+  height: 40px;
+  top: 50%;           
+  left: 50%;
+  transform: translate(-50%, -50%);  /* จัดให้อยู่ตรงกลาง hex */
+  pointer-events: none; /* ไม่ให้บังการคลิก hex */
+}
+.minion-on-hex img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.turn-counter {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.game-over-popup {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: rgb(209, 54, 54);
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.popup-content h2 {
+  margin-bottom: 15px;
+  font-size: 28px;
+}
+
+.popup-content button {
+  padding: 10px 20px;
+  font-size: 18px;
+}
+
+.button-group button {
+  width: 150px;
+  height: 50px;
+  border: none;
+  background-size: cover;
+  background-position: center;
+  cursor: pointer;
+  background-color: transparent; /* ทำให้พื้นหลังโปร่งใส */
+  margin: 0 20px; /* ปรับระยะห่างด้านข้างให้ปุ่มเข้ามาใกล้ */
+  transform: translateX(10px); /* ขยับปุ่มเข้ามาในแนวนอน */
+}
+
+.button-group button.buy {
+  background-image: url('./ปุ่ม/buy_button.png');
+}
+
+.button-group button.summon {
+  background-image: url('./ปุ่ม/summon_button.png');
+}
+
+.button-group button.end-turn {
+  background-image: url('./ปุ่ม/endturn_button.png');
+}
+
+.button-group button.confirm {
+  background-image: url('./ปุ่ม/confirm_button.png'); /* เพิ่มเส้นทางรูปภาพปุ่มยืนยัน */
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import H2 from "./H";
 import Mode_1 from "./mode_1";
@@ -8,32 +8,34 @@ import BackBotton from "../BackBotton/BackBotton";
 import './gamemode.css';
 import modeMusic from './ตกแต่ง/เสียง/M_sound.mp3';
 
+const audio = new Audio(modeMusic);  // ประกาศ Audio เป็น global-level
+
 function Gamemode() {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef(null);
   const location = useLocation();
 
   useEffect(() => {
     if (location.pathname === '/gamemode') {
-      audioRef.current = new Audio(modeMusic);
-      audioRef.current.loop = true;
-      audioRef.current.play();
-      setIsPlaying(true);
+      audio.loop = true;
+      audio.play().catch(err => {
+        console.error("เล่นเสียงไม่ได้:", err);
+      });
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+      console.log('เสียงหยุด');
     }
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        setIsPlaying(false);
-      }
+      audio.pause();
+      audio.currentTime = 0;
+      console.log('เสียงหยุด');
     };
   }, [location.pathname]);
 
   return (
     <div className="mode">
       <BackBotton />
-      <H2 />          
+      <H2 />
       <div className="mode-group">
         <Mode_1 />
         <Mode_2 />

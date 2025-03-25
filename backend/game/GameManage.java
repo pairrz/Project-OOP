@@ -13,7 +13,7 @@ public class GameManage {
     public static int turn = 1;
     private int maxTurn;
 
-    public void gamePlay() throws IOException {
+    public void gamePlay() throws IOException, StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
         FileProcess file = new FileProcess();
         file.readConfig("D:\\OOP project\\backend\\Configuration");
 

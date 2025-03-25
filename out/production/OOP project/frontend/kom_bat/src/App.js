@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/Home/Home.js';
 import Gamemode from './components/mode/gamemode.js';
 import Character from './components/Character/Character.js';
-import Select from './components/./Select/Select.js';
+import Select from './components/Select/Select.js';
 import Play from './components/Play/Play';
 import WaitingRoom from './components/WaitingRoom/WaitingRoom.js';
 /*import WaitingRoom from './components/WaitingRoom/WaitingRoom';

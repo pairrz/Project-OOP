@@ -9,40 +9,38 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StrategyReader {
-    Map<String,Integer> bindings = new HashMap<>();
+    Map<String, Integer> bindings = new HashMap<>();
 
-    public void readStrategyFromFile(String fileName, Minion minion) throws IOException {
+    public void readStrategyFromFile(String fileName, Minion minion) throws IOException, StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
         if (!Files.exists(Paths.get(fileName))) {
-            System.err.println("Input file does not exist: " + fileName);
-            return;
+            throw new FileNotFoundException("Input file does not exist: " + fileName);
         }
         String content = readFile(fileName);
         processStrategy(content, minion);
     }
 
-    public void readStrategyFromString(String strategyContent, Minion minion) {
+    public void readStrategyFromString(String strategyContent, Minion minion) throws StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
         if (strategyContent == null || strategyContent.trim().isEmpty()) {
-            System.err.println("Strategy content is empty or null.");
-            return;
+            throw new IllegalArgumentException("Strategy content is empty or null.");
         }
         processStrategy(strategyContent, minion);
     }
 
-    private void processStrategy(String content, Minion minion) {
+    private void processStrategy(String content, Minion minion) throws InvalidStrategyException, StrategyEvaluationException, StrategyProcessingException {
         try {
             Tokenizer token = new ExprTokenizer(content);
             if (!token.hasNextToken()) {
-                return;
+                throw new IllegalArgumentException("Strategy content is invalid or empty.");
             }
             Parser parser = new ExprParse(token, minion);
             Expr expr = parser.parse();
             expr.eval(bindings);
-        } catch (IllegalArgumentException x) {
-            //System.out.println("Invalid operator in strategy: " + x.getMessage());
-        } catch (ArithmeticException x) {
-            //System.out.println("Error evaluating strategy: " + x.getMessage());
-        } catch (Exception x) {
-            //System.out.println("Error processing strategy: " + x.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidStrategyException("Invalid operator or syntax in strategy: " + e.getMessage(), e);
+        } catch (ArithmeticException e) {
+            throw new StrategyEvaluationException("Error evaluating strategy: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new StrategyProcessingException("Error processing strategy: " + e.getMessage(), e);
         }
     }
 
@@ -61,7 +59,7 @@ public class StrategyReader {
         }
 
         if (fullContent.isEmpty()) {
-            System.err.println("Strategy file is empty or only contains whitespace.");
+            throw new IOException("Strategy file is empty or only contains whitespace.");
         }
 
         return fullContent.toString();

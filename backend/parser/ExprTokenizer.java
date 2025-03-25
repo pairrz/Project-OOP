@@ -67,7 +67,7 @@ public class ExprTokenizer implements Tokenizer {
                 result.append(src.charAt(pos));
                 pos++;
             }
-        } else if ("{}()+-*/^%=;".indexOf(c) != -1) { // เครื่องหมายพิเศษ
+        } else if ("{}()+-*/^%=".indexOf(c) != -1) { // เครื่องหมายพิเศษ
             result.append(c);
             pos++;
         } else {

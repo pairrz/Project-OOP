@@ -1,0 +1,15 @@
+.waiting-room {
+    background-color: #222;
+    color: white;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+  }
+  
+  .waiting-room h1 {
+    margin-bottom: 20px;
+  }
+  

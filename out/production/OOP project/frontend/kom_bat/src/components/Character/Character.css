@@ -1,0 +1,104 @@
+.character-container {
+    background-image: url("./พื้นหลัง/bg_animation.gif");
+    text-align: center;
+    background-color: #222;
+    color: #fff;
+    min-height: 94vh;
+    padding: 20px;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .character-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: -120px;    /* ดันตัวละครขึ้น ให้ชิดโลโก้ */
+  }
+  
+  .character-card {
+    width: 200px;            /* ความกว้างกล่อง */
+    height: 250px;           /* ความสูงกล่อง */
+    background-color: rgba(0, 0, 0, 0.3);  /* พื้นหลังโปร่งใส */
+    border-radius: 10px;     /* มุมโค้ง */
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s;
+  }
+  
+  .character-card:hover {
+    transform: scale(1.05);  /* เอฟเฟกต์ขยายเวลาชี้ */
+  }
+  
+  .character-card img {
+    width: 100%;             /* ให้รูปเต็มกรอบ */
+    height: auto;
+    object-fit: cover;
+  }
+  
+  .character-card p {
+    margin-top: 10px;
+    color: #fff;
+  }
+  
+  .character-card.selected {
+    border: 3px solid gold;
+    transform: scale(1.1);
+  }
+  
+  .confirm-btn {
+    position: fixed;   /* ให้ปุ่มอยู่คงที่ */
+    bottom: 30px;      /* กำหนดระยะห่างจากด้านล่าง */
+    left: 50%;         /* ให้อยู่กลาง */
+    transform: translateX(-50%); /* ย้ายให้กลาง */
+    z-index: 1000;     /* ให้ปุ่มอยู่ด้านหน้าทุกอย่าง */
+    transition: transform 0.2s ease-in-out;
+    width: 150px;
+    cursor: pointer;
+  }
+  
+  .confirm-btn:hover {
+    transform: scale(1.1);  /* ขยายเล็กน้อยเมื่อโฮเวอร์ */
+  }
+  
+  .back-btn {
+    margin-top: 20px;
+    padding: 8px 20px;
+    font-size: 18px;
+    background-color: #555;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: white;
+  }
+  
+  .back-btn:hover {
+    background-color: #333;
+  }
+  .character-logo {
+    width: 600px;
+    margin-bottom: -20px;   /* ลดระยะให้ชิดที่สุด */
+    position: relative;
+    top: -50px;           /* ดันโลโก้ขึ้นเล็กน้อย (ปรับได้) */
+  }
+
+  .fire-container {
+    display: flex;
+    justify-content: center;
+    gap: 0px;        /* ระยะห่างแต่ละดวงไฟ */
+    margin: 50px 0;   /* ด้านบน-ล่างห่าง 30px */
+  }
+  
+  .fire-img {
+    width: 70px;
+    height: auto;
+  }
+
+  .name-img {
+    width: 120px;   /* บังคับขนาดภาพชื่อ */
+    height: auto;   /* ให้สูงสัมพันธ์กับความกว้าง */
+    margin-top: 5px;
+  }

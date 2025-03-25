@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import B2 from './ปุ่ม/B2.png';         // ปุ่มเรียก popup
 import closeImg from './ปุ่ม/B5.png';   // รูปปุ่มกากบาท
-import popupBG from './พื้นหลัง/BG2.png'; // รูป popup (รองรับ .png)
+import popupBG from './ตกแต่ง/Howto.png'; // รูป popup (รองรับ .png)
 import './How_to_play.css';
 
 const How_to_play = () => {
@@ -32,9 +32,9 @@ const How_to_play = () => {
           />
 
           {/* ✅ ข้อความซ้อนบนรูป */}
-          <div className="popup-text">
+          {/*<div className="popup-text">
           <h1>วิธีการเล่นเกม</h1>
-<p>
+          <p>
     <strong>การควบคุมเกม</strong><br/>
     ใช้เมาส์และคีย์บอร์ดในการเล่น  
     <br/>
@@ -59,7 +59,7 @@ const How_to_play = () => {
     - หากจำนวนมินเนี่ยนเท่ากัน จะวัดจาก **ผลรวมค่าพลังชีวิตของมินเนี่ยน** <br/> 
     - หากค่าพลังชีวิตเท่ากัน ให้พิจารณาจาก **ทรัพยากรที่เหลืออยู่**  
 </p>
-          </div>
+          </div>*/}
 
           {/* ปุ่มกากบาท */}
           <img 

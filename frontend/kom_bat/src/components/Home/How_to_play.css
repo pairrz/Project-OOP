@@ -34,11 +34,12 @@
 
 /* Popup เป็นรูปภาพ */
 .popup-image {
-  width: 1200px !important;
-  height: 800px !important;
+  width: 2000px !important;
+  height: 1000px !important;
   max-width: none !important;
   display: block;
   position: relative;
+  top: 40px;
 }
 
 /* ปุ่มกากบาท */

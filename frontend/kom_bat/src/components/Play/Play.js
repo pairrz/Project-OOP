@@ -132,7 +132,6 @@ export default function Play() {
     } else if (summonMode) {
       if (!selectedMinion) return ;
       if (grid[row][col] === currentPlayer && minionGrid[row][col] === null) setSelectedSummonHex([row, col]);
-      else ;
     }
   };
 
@@ -147,7 +146,7 @@ export default function Play() {
       setHighlightCells([]);
       setSelectedHex(null);
       setHasBought(true);
-    } else ;
+    }
   };
 
   const confirmSummon = () => {
@@ -162,7 +161,7 @@ export default function Play() {
       setSelectedMinion(null);
       setSelectedSummonHex(null);
       setHasSummoned(true);
-    } else ;
+    }
   };
 
   const handleConfirm = () => {
@@ -253,10 +252,12 @@ export default function Play() {
       </div>
 
       <div className="button-group">
-        <button onClick={handleBuyMode} disabled={hasBought}>Buy Mode</button>
-        <button onClick={handleSummonMode} disabled={hasSummoned}>Summon Mode</button>
-        <button onClick={handleEndTurn}>End Turn</button>
-        {(selectedHex || selectedSummonHex) && <button onClick={handleConfirm}>ยืนยัน</button>}
+        <button className="buy" onClick={handleBuyMode} disabled={hasBought}></button>
+        <button className="summon" onClick={handleSummonMode} disabled={hasSummoned}></button>
+        <button className="end-turn" onClick={handleEndTurn}></button>
+        {(selectedHex || selectedSummonHex) && 
+        <button className="confirm" onClick={handleConfirm}></button>
+        }
       </div>
 
       <BackBotton />

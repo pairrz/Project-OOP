@@ -62,7 +62,7 @@ export default function Select() {
 
   const handleOK = () => {
     if (!strategy || !hp || !def) {
-      alert('กรุณากรอก Strategy, HP, DEF หรือกด Auto');
+      /*alert('กรุณากรอก Strategy, HP, DEF หรือกด Auto');*/
       return;
     }
     const existing = formData.find(f => f.id === selectedChar.id);
@@ -71,7 +71,7 @@ export default function Select() {
       : [...formData, { ...selectedChar, strategy, hp, def }];
     setFormData(updated);
     setLockedChars([...lockedChars, selectedChar.id]);
-    alert(`บันทึก ${selectedChar.name} สำเร็จ!`);
+    /*alert(`บันทึก ${selectedChar.name} สำเร็จ!`);*/
   };
 
   const handleAuto = () => {

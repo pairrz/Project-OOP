@@ -37,6 +37,8 @@
 }
 
 .select-character-icon {
+  background-color: rgba(0, 0, 0, 0.75);
+  
   width: 140px;
   height: 140px;
   object-fit: contain;
@@ -44,7 +46,7 @@
 }
 
 .select-character-card.active {
-  box-shadow: 0 0 20px 10px rgba(112, 14, 14, 0.873);
+  box-shadow: 0 0 10px 20px rgba(112, 14, 14, 0.873);
 }
 
 .select-character-card.locked img {
@@ -54,6 +56,7 @@
 /* กล่องกลางแบ่งซ้ายขวา */
 .center-box {
   background-color: rgba(0, 0, 0, 0.75);
+  
   padding: 25px;
   border-radius: 15px;
   width: 750px;
@@ -64,9 +67,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;   /* ✅ ทำให้ปุ่มด้านขวากลางแนว Y */
+  
 
   position: relative;
-  top: -20px;
+  top: -26px;
 }
 
 /* ด้านซ้าย */
@@ -127,7 +131,7 @@ input {
 }
 
 .auto-btn, .ok-btn, .cancel-btn {
-  width: 160px;
+  width: 200px;
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -140,9 +144,10 @@ input {
 .select-confirm-btn {
   width: 150px;
   max-width: 90%;
-  margin: 10px auto 0;
+  margin: -20px auto 0;
   cursor: pointer;
   transition: transform 0.3s ease;
+ 
 }
 
 .select-confirm-btn:hover {

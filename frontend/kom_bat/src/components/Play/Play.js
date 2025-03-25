@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-//import BackBotton from '../BackBotton/BackBotton';
+import BackBotton from '../BackBotton/BackBotton';
 import './Play.css';
 import hexDefault from './รูป/h1.png';
 import hexPlayer1 from './รูป/h3.png';
@@ -27,7 +27,7 @@ export default function Play() {
   const [selectedMinion, setSelectedMinion] = useState(null);
   const [selectedMinions, setSelectedMinions] = useState([]);
   const [turnCount, setTurnCount] = useState(1);
-  const maxTurnLimit = 10;
+  const maxTurnLimit = 69;
   const [gameOver, setGameOver] = useState(false);
   const [playerBudget, setPlayerBudget] = useState({ 1: 10000, 2: 10000 });
   const buyCost = 1000;
@@ -211,7 +211,7 @@ export default function Play() {
 
       {summonMode && (
         <div className="minion-selector">
-          <h3>เลือกมินเนี่ยน</h3>
+          <h3>เลือกวิญญาณ</h3>
           <div className="minion-images">
             {selectedMinions.map((minion, index) => (
               <img key={index} src={minion.img} alt={minion.name} className="minion-image"
@@ -273,6 +273,7 @@ export default function Play() {
           </div>
         </div>
       )}
+      <BackBotton />
     </div>
   );
 }

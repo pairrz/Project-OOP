@@ -211,3 +211,54 @@
   background-color: gray; /* เปลี่ยนปุ่มให้เป็นสีเทาเมื่อถูกปิดการใช้งาน */
   cursor: not-allowed; /* ปรับให้แสดงว่าไม่สามารถคลิกได้ */
 }
+
+.game-over-popup {
+  background-image: url('./ตกแต่ง/กระดาษ.png'); /* แทนที่ด้วย path ของภาพพื้นหลัง */
+  background-size: cover; /* ทำให้พื้นหลังครอบคลุมพื้นที่ popup */
+  background-position: center;
+  background-repeat: no-repeat;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40%;  /* ปรับขนาดให้เหมาะสม */
+  padding: 10px;
+  border-radius: 10px;
+  text-align: center;
+  color: white;
+  
+}
+
+.popup-content {
+  background-color: rgba(0, 0, 0, 0.7); /* ทำให้พื้นหลังของ popup มีความโปร่งแสง */
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 500px;
+  width: 80%;
+}
+
+.popup-content h2 {
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+
+.popup-content p {
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+.popup-content button {
+  padding: 10px 20px;
+  background-color: #ff5c5c;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+}
+
+.popup-content button:hover {
+  background-color: #e04e4e;
+}

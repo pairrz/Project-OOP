@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from './ตกแต่ง/logo.png';
 import './WaitingRoom.css';
+import BackBotton from '../BackBotton/BackBotton';
 
 const WaitingRoom = () => {
     const [playerName, setPlayerName] = useState('');
@@ -78,6 +79,7 @@ const WaitingRoom = () => {
                     <button onClick={joinRoom}>Join Room</button> {/* ปุ่ม Join Room */}
                 </div>
             )}
+             <BackBotton />
         </div>
     );
 };

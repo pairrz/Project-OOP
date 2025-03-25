@@ -265,13 +265,13 @@ export default function Play() {
 
       {gameOver && (
         <div className="game-over-popup">
-          <div className="popup-content">
+        <div className="popup-content">
             <h2>จบเกม</h2>
             <p>{determineWinner()}</p>
             <button onClick={() => window.location.reload()}>เริ่มใหม่</button>
             <button onClick={() => navigate('/')}>กลับหน้า Home</button>
-          </div>
         </div>
+    </div>
       )}
        <BackBotton />
     </div>

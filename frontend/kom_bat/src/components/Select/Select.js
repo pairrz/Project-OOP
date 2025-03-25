@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import BackBotton from '../BackBotton/BackBotton';
 import './Select.css';
+
 import ghost1 from '../Character/รูป/GG1.png';
 import ghost2 from '../Character/รูป/GG2.png';
 import ghost3 from '../Character/รูป/GG3.png';
@@ -9,6 +10,11 @@ import ghost4 from '../Character/รูป/GG4.png';
 import ghost5 from '../Character/รูป/GG5.png';
 import selectTitle from './ตกแต่ง/select_title.png';
 import selectMusic from './ตกแต่ง/เสียง/Select_sound.mp3';
+
+import autoBtn from './ปุ่ม/auto.png';
+import okBtn from './ปุ่ม/ok.png';
+import confirmAllBtn from './ปุ่ม/confirm_all.png';
+import cancelBtn from './ปุ่ม/cancel.png';
 
 export default function Select() {
   const navigate = useNavigate();
@@ -38,11 +44,9 @@ export default function Select() {
       audio.loop = true;
       audio.play().catch(err => console.error('เล่นเสียง Select ไม่ได้:', err));
     }
-
     return () => {
       audioRef.current.pause();
       audioRef.current.currentTime = 0;
-      console.log('หยุดเพลง Select');
     };
   }, [location.pathname]);
 
@@ -50,7 +54,6 @@ export default function Select() {
     const selected = JSON.parse(localStorage.getItem('selectedCharacters')) || [];
     const selectedInfo = selected.map(id => characterData.find(c => c.id === id));
     setCharacters(selectedInfo);
-
     if (selectedInfo.length > 0) {
       setActiveCharId(selectedInfo[0].id);
       setSelectedChar(selectedInfo[0]);
@@ -62,12 +65,10 @@ export default function Select() {
       alert('กรุณากรอก Strategy, HP, DEF หรือกด Auto');
       return;
     }
-
     const existing = formData.find(f => f.id === selectedChar.id);
     const updated = existing
       ? formData.map(f => (f.id === selectedChar.id ? { ...f, strategy, hp, def } : f))
       : [...formData, { ...selectedChar, strategy, hp, def }];
-
     setFormData(updated);
     setLockedChars([...lockedChars, selectedChar.id]);
     alert(`บันทึก ${selectedChar.name} สำเร็จ!`);
@@ -75,43 +76,21 @@ export default function Select() {
 
   const handleAuto = () => {
     setStrategy(`t = t + 1
-      m = 0
-      while (3 - m) {
-        if (budget - 100) then {} else done
-        opponentLoc = opponent
-        cost = 30
-        if (budget - cost) then {
-          if ((opponentLoc - nearby upleft) * (opponentLoc - nearby upleft)) then shoot upleft cost
-          else if ((opponentLoc - nearby upright) * (opponentLoc - nearby upright)) then shoot upright cost
-          else if ((opponentLoc - nearby up) * (opponentLoc - nearby up)) then shoot up cost
-          else if ((opponentLoc - nearby downleft) * (opponentLoc - nearby downleft)) then shoot downleft cost
-          else if ((opponentLoc - nearby downright) * (opponentLoc - nearby downright)) then shoot downright cost
-          else if ((opponentLoc - nearby down) * (opponentLoc - nearby down)) then shoot down cost
-        } else done
-        if (opponentLoc / 10 - 1) then {
-          if (opponentLoc % 10 - 5) then move downleft
-          else if (opponentLoc % 10 - 4) then move down
-          else if (opponentLoc % 10 - 3) then move downright
-          else if (opponentLoc % 10 - 2) then move upleft
-          else if (opponentLoc % 10 - 1) then move upright
-          else move up
-        } else {
-          try = 0
-          while (3 - try) {
-            success = 1
-            dir = random % 6
-            if ((dir - 4) * ((nearby upleft % 10) + 1) ^ 2) then move upleft
-            else if ((dir - 3) * (nearby downleft % 10 + 1) ^ 2) then move downleft
-            else if ((dir - 2) * (nearby down % 10 + 1) ^ 2) then move down
-            else if ((dir - 1) * (nearby downright % 10 + 1) ^ 2) then move downright
-            else if (dir * ((nearby upright % 10 + 1) ^ 2)) then move upright
-            else if ((nearby up % 10 + 1) ^ 2) then move up
-            else success = 0
-            if (success) then try = 3 else try = try + 1
-          }
-        }
-        m = m + 1
-      }`);
+m = 0
+while (3 - m) {
+  if (budget - 100) then {} else done
+  opponentLoc = opponent
+  cost = 30
+  if (budget - cost) then {
+    if ((opponentLoc - nearby upleft) * (opponentLoc - nearby upleft)) then shoot upleft cost
+    else if ((opponentLoc - nearby upright) * (opponentLoc - nearby upright)) then shoot upright cost
+    else if ((opponentLoc - nearby up) * (opponentLoc - nearby up)) then shoot up cost
+    else if ((opponentLoc - nearby downleft) * (opponentLoc - nearby downleft)) then shoot downleft cost
+    else if ((opponentLoc - nearby downright) * (opponentLoc - nearby downright)) then shoot downright cost
+    else if ((opponentLoc - nearby down) * (opponentLoc - nearby down)) then shoot down cost
+  } else done
+  m = m + 1
+}`);
     setHp(100);
     setDef(50);
   };
@@ -130,7 +109,6 @@ export default function Select() {
     const charData = characterData.find(c => c.id === id);
     setSelectedChar(charData);
     setActiveCharId(id);
-
     const existing = formData.find(f => f.id === id);
     if (existing) {
       setStrategy(existing.strategy);
@@ -144,7 +122,6 @@ export default function Select() {
   };
 
   const isCompleted = (id) => formData.some(f => f.id === id);
-
   const isLocked = selectedChar && lockedChars.includes(selectedChar.id);
 
   return (
@@ -167,20 +144,29 @@ export default function Select() {
         )}
 
         {selectedChar && (
-          <div className={`center-box`}>
-            <img src={selectedChar.img} alt={selectedChar.name} className="select-selected-char-img" />
-            <textarea
-              placeholder="Strategy"
-              value={strategy}
-              onChange={e => setStrategy(e.target.value)}
-              spellCheck={false}
-              disabled={isLocked}
-            />
-            <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} disabled={isLocked} />
-            <input type="number" placeholder="DEF" value={def} onChange={e => setDef(e.target.value)} disabled={isLocked} />
-            <button className="auto-btn" onClick={handleAuto} disabled={isLocked}>Auto</button>
-            <button className="ok-btn" onClick={handleOK} disabled={isLocked}>OK</button>
-            {isLocked && <button className="cancel-btn" onClick={handleCancel}>ยกเลิก</button>}
+          <div className="center-box">
+            {/* ซ้าย */}
+            <div className="left-input">
+              <img src={selectedChar.img} alt={selectedChar.name} className="select-selected-char-img" />
+              <textarea
+                placeholder="Strategy"
+                value={strategy}
+                onChange={e => setStrategy(e.target.value)}
+                spellCheck={false}
+                disabled={isLocked}
+              />
+              <div className="input-group">
+                <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} disabled={isLocked} />
+                <input type="number" placeholder="DEF" value={def} onChange={e => setDef(e.target.value)} disabled={isLocked} />
+              </div>
+            </div>
+
+            {/* ขวา */}
+            <div className="right-button">
+              <img src={autoBtn} alt="Auto" className="auto-btn" onClick={handleAuto} style={{ cursor: isLocked ? 'not-allowed' : 'pointer', opacity: isLocked ? 0.5 : 1 }} />
+              <img src={okBtn} alt="OK" className="ok-btn" onClick={handleOK} style={{ cursor: isLocked ? 'not-allowed' : 'pointer', opacity: isLocked ? 0.5 : 1 }} />
+              {isLocked && <img src={cancelBtn} alt="Cancel" className="cancel-btn" onClick={handleCancel} />}
+            </div>
           </div>
         )}
 
@@ -200,9 +186,12 @@ export default function Select() {
       </div>
 
       {formData.length === characters.length && (
-        <button className="select-confirm-btn" onClick={handleConfirm}>
-          ยืนยันทั้งหมด
-        </button>
+        <img
+          src={confirmAllBtn}
+          alt="ตกลงทั้งหมด"
+          className="select-confirm-btn"
+          onClick={handleConfirm}
+        />
       )}
 
       <BackBotton />

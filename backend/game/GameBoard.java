@@ -221,4 +221,8 @@ public class GameBoard {
         playerTwo.buyMinion(cell);
         setStatus();
     }
+
+    public Map<String,HexCell> getPlayer1Hexes() {
+        return player1Hexes;
+    }
 }

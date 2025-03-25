@@ -89,6 +89,28 @@ while (3 - m) {
     else if ((opponentLoc - nearby downright) * (opponentLoc - nearby downright)) then shoot downright cost
     else if ((opponentLoc - nearby down) * (opponentLoc - nearby down)) then shoot down cost
   } else done
+  if (opponentLoc / 10 - 1) then {
+    if (opponentLoc % 10 - 5) then move downleft
+    else if (opponentLoc % 10 - 4) then move down
+    else if (opponentLoc % 10 - 3) then move downright
+    else if (opponentLoc % 10 - 2) then move upleft
+    else if (opponentLoc % 10 - 1) then  move upright
+    else move up
+  } else {
+    try = 0
+    while (3 - try) {
+      success = 1
+      dir = random % 6
+      if ((dir - 4) * ((nearby upleft % 10) + 1) ^ 2) then move upleft
+      else if ((dir - 3) * (nearby downleft % 10 + 1) ^ 2) then move downleft
+      else if ((dir - 2) * (nearby down % 10 + 1) ^ 2) then move down
+      else if ((dir - 1) * (nearby downright % 10 + 1) ^ 2) then move downright
+      else if (dir * ((nearby upright % 10 + 1) ^ 2)) then move upright
+      else if ((nearby up % 10 + 1) ^ 2) then move up
+      else success = 0
+      if (success) then try = 3 else try = try + 1
+    }
+  }
   m = m + 1
 }`);
     setHp(100);

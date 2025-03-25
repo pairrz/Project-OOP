@@ -24,7 +24,7 @@ public class Minion {
         addMinion(cell);
     }
 
-    public void minionStrategy(String strategy) throws IOException{
+    public void minionStrategy(String strategy) throws IOException, StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
         StrategyReader str = new StrategyReader();
         if(GameBoard.HaveStrategy){
             str.readStrategyFromString(strategy,this);

@@ -5,7 +5,6 @@ import backend.minions.*;
 import backend.parser.*;
 import backend.players.*;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,13 +34,15 @@ class ExprParseTest {
 
         this.player = board.getPlayerOne();
         this.cell = GameBoard.getHexCell(0, 0);
-        this.minion  = new Minion(player, cell);
         board.buyMinionForPlayerOne(cell);
+        this.minion  = new Minion(player, cell);
+
 
         this.opponent = board.getPlayerTwo();
         this.targetCell = GameBoard.getHexCell(7, 7); // อยู่ด้านบน
-        this.targetMinion = new Minion(opponent, targetCell);
         board.buyMinionForPlayerTwo(targetCell);
+        this.targetMinion = new Minion(opponent, targetCell);
+
     }
 
     @Test
@@ -63,7 +64,7 @@ class ExprParseTest {
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(4, bindings.get("x")); // 3 + (2 * 5) = 13
+        assertEquals(4, bindings.get("x")); // 3 ^ 2 % 5 = 4
     }
 
     @Test
@@ -73,7 +74,7 @@ class ExprParseTest {
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(1, bindings.get("x")); // (10 - 5) gives true, so x = 1
+        assertEquals(1, bindings.get("x")); // (10 - 5) เป็นจริง -> x = 1
     }
 
     @Test
@@ -83,7 +84,7 @@ class ExprParseTest {
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(2, bindings.get("x")); // (5 - 10) gives -5, so x = 2
+        assertEquals(2, bindings.get("x")); // (5 - 10) ได้ -5 เป็นเท็จ -> x = 2
     }
 
     @Test
@@ -101,7 +102,7 @@ class ExprParseTest {
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(1, bindings.get("x")); // (10 - 5) และ (20 - 15) เป็นจริง, x ควรเป็น 1
+        assertEquals(1, bindings.get("x")); // (10 - 5) และ (20 - 15) เป็นจริง -> x = 1
     }
 
     @Test
@@ -122,7 +123,7 @@ class ExprParseTest {
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(2, bindings.get("x")); // (10-5) และ (20-10) เป็นจริง, (30-30) เป็น false → x ควรเป็น 2
+        assertEquals(2, bindings.get("x")); // (10-5) และ (20-10) เป็นจริง, (30-30) เป็นเท็จ → x = 2
     }
 
     @Test
@@ -141,9 +142,8 @@ class ExprParseTest {
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(2, bindings.get("y")); // x = 5 → (x - 3) เป็น true → (x - 5) เป็น false → y ควรเป็น 2
+        assertEquals(2, bindings.get("y")); // x = 5 → (x - 3) เป็นจริง → (x - 5) เป็นเท็จ → y = 2
     }
-
 
     @Test
     void testWhileLoop() throws Exception {
@@ -152,7 +152,7 @@ class ExprParseTest {
         Expr expr = parser.parse();
 
         expr.eval(bindings);
-        assertEquals(3, bindings.get("x"), "x should increment to 3 and stop");
+        assertEquals(3, bindings.get("x")); // x = 3
     }
 
     @Test
@@ -165,13 +165,13 @@ class ExprParseTest {
 
         expr.eval(bindings);
 
-        assertEquals(budgetAfter, player.getBudget(), "Budget should remain unchanged if not enough");
+        assertEquals(budgetAfter, player.getBudget());
     }
 
     @Test
     void testNearbyExpression() throws Exception {
         System.out.println(opponent.getName());
-        HexCell testCell = GameBoard.getHexCell(4, 7); // อยู่ด้านบน
+        HexCell testCell = GameBoard.getHexCell(4, 7); //อยู่ขวาล่าง
         Minion testMinion = new Minion(opponent, testCell);
 
         System.out.println(minion.getX() + " " + minion.getY());
@@ -197,7 +197,7 @@ class ExprParseTest {
         expr.eval(bindings);
         int result = bindings.get("x");
 
-        assertEquals(0, result, "Should return 0 when no minion is nearby");
+        assertEquals(0, result);
     }
 
     @Test
@@ -214,7 +214,7 @@ class ExprParseTest {
 
         System.out.println("Test result: " + result);
 
-        assertEquals(73, result, "Expected 77 but got " + result);
+        assertEquals(73, result);
     }
 
     @Test
@@ -264,9 +264,41 @@ class ExprParseTest {
         board.showBoard();
     }
 
-//    @Test
-//    void strategyTest() throws Exception {
-//        FileProcess file = new FileProcess();
-//        file.readStrategy("D:\\OOP project\\backend\\strategy\\Strategy2.txt",minion);
-//    }
+    @Test
+    void strategyBaseTest() throws Exception {
+        StrategyReader file = new StrategyReader();
+
+        try {
+            file.readStrategyFromFile("D:\\OOP project\\backend\\strategy\\Strategy3.txt", minion);
+        } catch (IOException e) {
+            fail("Failed to read strategy file: " + e.getMessage());
+        }
+
+    }
+
+    @Test
+    void strategyTestPass() throws Exception {
+        StrategyReader file = new StrategyReader();
+
+        file.readStrategyFromString("cost = 30 if(cost) then shoot down cost", minion);
+    }
+
+    @Test
+    void strategyTestFailed() {
+        HexCell cell = new HexCell(1,0);
+        Minion minForTest = new Minion(player,cell);
+
+        String strategy = "cost = 30; if(cost) shoot down cost";
+
+        StrategyReader file = new StrategyReader();
+        Exception exception = assertThrows(StrategyProcessingException.class, () -> {
+            file.readStrategyFromString(strategy, minForTest);
+        });
+
+        String actualMessage = exception.getMessage();
+        assertNotNull(actualMessage, "The exception message should not be null");
+
+        String expectedMessage = "Error processing strategy";
+        assertTrue(actualMessage.contains(expectedMessage), "The error message should contain: " + expectedMessage);
+    }
 }

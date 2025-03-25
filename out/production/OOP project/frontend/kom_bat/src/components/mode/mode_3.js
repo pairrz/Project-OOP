@@ -27,6 +27,31 @@ const Mode_3 = () => {
     }
   };
 
+  // const handleClick = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:8080/api/game/create', {
+  //       method: 'POST',
+  //       headers: { 'Content-Type': 'application/json' },
+  //       body: JSON.stringify({
+  //         playerOneName: "Bot1",
+  //         playerTwoName: "Bot2",
+  //         gameMode: "AUTO_MODE"
+  //       })
+  //     });
+  //
+  //     // ตรวจสอบสถานะการตอบกลับ
+  //     if (response.ok) {
+  //       console.log('Game created successfully');
+  //       // ไปที่หน้า Character
+  //       navigate('/character');
+  //     } else {
+  //       console.error('Failed to create game');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // };
+
   return (
       <img
           className="image3"

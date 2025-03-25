@@ -1,35 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import H2 from "./H";
 import Mode_1 from "./mode_1";
 import Mode_2 from "./mode_2";
 import Mode_3 from "./mode_3";
-import BackBotton from "../BackBotton/BackBotton"; // เพิ่มปุ่มย้อนกลับเข้ามา
+import BackBotton from "../BackBotton/BackBotton";
 import './gamemode.css';
-
-import modeMusic from './ตกแต่ง/เสียง/M_sound.mp3';  // Import ไฟล์เสียง
+import modeMusic from './ตกแต่ง/เสียง/M_sound.mp3';
 
 function Gamemode() {
-  const [isPlaying, setIsPlaying] = useState(false);  // สถานะการเล่นเสียง
-  const location = useLocation(); // ใช้เพื่อรู้ว่าอยู่ที่หน้าไหน
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef(null);
+  const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === '/gamemode' && !isPlaying) {
-      const audio = new Audio(modeMusic);
-      audio.loop = true;
-      audio.play();
+    if (location.pathname === '/gamemode') {
+      audioRef.current = new Audio(modeMusic);
+      audioRef.current.loop = true;
+      audioRef.current.play();
       setIsPlaying(true);
     }
 
     return () => {
-      if (isPlaying) {
-        const audio = new Audio(modeMusic);
-        audio.pause();
-        audio.currentTime = 0;
-        setIsPlaying(false); // หยุดเสียงเมื่อออกจากหน้า
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        setIsPlaying(false);
       }
     };
-  }, [location.pathname, isPlaying]); // รันเมื่อเส้นทางเปลี่ยน
+  }, [location.pathname]);
 
   return (
     <div className="mode">

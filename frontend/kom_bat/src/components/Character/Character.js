@@ -41,6 +41,7 @@ export default function Character() {
     };
 
     const handleConfirm = async () => {
+        localStorage.setItem('selectedCharacters', JSON.stringify(selected));
         // ส่งข้อมูลมินเนียนที่เลือกไปที่ API
             navigate('/select');
 

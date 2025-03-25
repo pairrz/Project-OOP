@@ -7,25 +7,23 @@ import Start from './Start.js';
 import H from './H.js';
 
 const Home = () => {
+  const [audio] = useState(new Audio(backgroundMusic));
   const [isPlaying, setIsPlaying] = useState(false);
 
   useEffect(() => {
-    const audio = new Audio(backgroundMusic);
-    audio.loop = true;  // ทำให้เสียงเล่นต่อเนื่อง
-
-    // พยายามเล่นเสียงเมื่อเข้าหน้า
+    audio.loop = true;
     audio.play().then(() => {
       setIsPlaying(true);
     }).catch((err) => {
       console.error("ไม่สามารถเล่นเสียงได้", err);
     });
-
-    // จัดการเมื่อหน้า unmount
+  
     return () => {
       audio.pause();
       audio.currentTime = 0;
     };
-  }, []);
+  }, [audio]);
+  
 
   return (
     <div>

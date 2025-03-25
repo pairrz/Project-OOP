@@ -49,7 +49,7 @@ export default function Select() {
     const updated = existing
       ? formData.map(f => (f.id === selectedChar.id ? { ...f, strategy, hp, def } : f))
       : [...formData, { ...selectedChar, strategy, hp, def }];
-    
+
     setFormData(updated);
     setLockedChars([...lockedChars, selectedChar.id]);
     alert(`บันทึก ${selectedChar.name} สำเร็จ!`);
@@ -72,9 +72,9 @@ export default function Select() {
   };
 
   const isLocked = selectedChar && lockedChars.includes(selectedChar.id);
-  const isCompleted = (id) => formData.some(f => f.id === id);
 
   const handleIconClick = (id) => {
+    if (lockedChars.includes(id)) return; // ห้ามเลือกตัวที่ lock แล้ว
     setSelectedChar(characterData.find(c => c.id === id));
     setActiveCharId(id);
   };
@@ -84,23 +84,28 @@ export default function Select() {
       <img src={selectTitle} alt="หัวข้อ" className="select-title" />
 
       <div className="select-layout">
-        {/* แสดงตัวละครฝั่งซ้าย */}
-        <div className="select-character-side">
-          {characters.filter((_, i) => i % 2 === 0).map((char) => (
-            <div className="select-character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
-              <img
-                src={char.img}
-                alt={char.name}
-                className={`select-character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
-                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}
-              />
-            </div>
-          ))}
-        </div>
+        {/* แสดง icon ซ้ายขวาเฉพาะตอนเลือกเกิน 1 ตัว */}
+        {characters.length > 1 && (
+          <div className="select-character-side">
+            {characters.filter((_, i) => i % 2 === 0).map((char) => (
+              <div
+                className={`select-character-card ${activeCharId === char.id ? 'active' : ''} ${lockedChars.includes(char.id) ? 'locked' : ''}`}
+                key={char.id}
+                onClick={() => handleIconClick(char.id)}
+              >
+                <img
+                  src={char.img}
+                  alt={char.name}
+                  className="select-character-icon"
+                />
+              </div>
+            ))}
+          </div>
+        )}
 
-        {/* กล่องรายละเอียดที่เลือก */}
+        {/* center box */}
         {selectedChar && (
-          <div className="center-box">
+          <div className={`center-box ${isLocked ? 'box-locked' : ''}`}>
             <img src={selectedChar.img} alt={selectedChar.name} className="select-selected-char-img" />
             <textarea placeholder="Strategy" value={strategy} onChange={e => setStrategy(e.target.value)} disabled={isLocked} />
             <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} disabled={isLocked} />
@@ -111,19 +116,23 @@ export default function Select() {
           </div>
         )}
 
-        {/* แสดงตัวละครฝั่งขวา */}
-        <div className="select-character-side">
-          {characters.filter((_, i) => i % 2 !== 0).map((char) => (
-            <div className="select-character-card" key={char.id} onClick={() => handleIconClick(char.id)}>
-              <img
-                src={char.img}
-                alt={char.name}
-                className={`select-character-icon ${isCompleted(char.id) ? 'completed' : ''}`}
-                style={{ filter: selectedChar?.id === char.id ? 'grayscale(100%)' : 'none' }}
-              />
-            </div>
-          ))}
-        </div>
+        {characters.length > 1 && (
+          <div className="select-character-side">
+            {characters.filter((_, i) => i % 2 !== 0).map((char) => (
+              <div
+                className={`select-character-card ${activeCharId === char.id ? 'active' : ''} ${lockedChars.includes(char.id) ? 'locked' : ''}`}
+                key={char.id}
+                onClick={() => handleIconClick(char.id)}
+              >
+                <img
+                  src={char.img}
+                  alt={char.name}
+                  className="select-character-icon"
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {formData.length === characters.length && (
@@ -135,4 +144,4 @@ export default function Select() {
       <BackBotton />
     </div>
   );
-}
+} 

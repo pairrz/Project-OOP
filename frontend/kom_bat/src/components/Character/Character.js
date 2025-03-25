@@ -27,7 +27,6 @@ const characters = [
     { id: 5, name: "ผีตายโหง", img: ghost5, nameImg: name5 },
 ];
 
-
 export default function Character() {
     const [selected, setSelected] = useState([]);
     const navigate = useNavigate();
@@ -42,25 +41,25 @@ export default function Character() {
 
     const handleConfirm = async () => {
         // ส่งข้อมูลมินเนียนที่เลือกไปที่ API
-            navigate('/select');
 
-        //     const response = fetch('http://localhost:8080/api/game/selectMinions', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({
-        //             selectedMinions: selected,  // ส่ง ID ของมินเนียนที่เลือก
-        //         })
-        //     });
-        //
-        //     if (response.ok) {
-        //         // หากส่งข้อมูลสำเร็จ, ไปที่หน้า Select
+            try{
+            const response = fetch('http://localhost:8080/api/game/selectMinions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    selectedMinions: selected,  // ส่ง ID ของมินเนียนที่เลือก
+                })
+            });
 
-        //     } else {
-        //         console.error("Failed to assign minions");
-        //     }
-        // } catch (error) {
-        //     console.error("Error:", error);
-        // }
+            if (response.ok) {
+                // หากส่งข้อมูลสำเร็จ, ไปที่หน้า Select
+                navigate('/select');
+            } else {
+                console.error("Failed to assign minions");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
     };
 
     return (

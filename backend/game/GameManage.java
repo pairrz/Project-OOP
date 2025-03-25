@@ -1,10 +1,14 @@
 package backend.game;
 
+import backend.minions.Minion;
 import backend.players.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class GameManage {
+    public static String[] selectedMinions;
     private GameBoard board;
     public static int turn = 1;
     private int maxTurn;
@@ -37,6 +41,7 @@ public class GameManage {
             default:
                 break;
         }
+        chooseMinion();
         setStrategy();
         board.showBoard();
 
@@ -147,6 +152,36 @@ public class GameManage {
             GameBoard.Strategy = "D:\\OOP project\\backend\\strategy\\Strategy3.txt";
         }else {
             System.out.println("Invalid strategy");
+        }
+    }
+
+    private void chooseMinion() {
+        System.out.println("1. LordMinion");
+        System.out.println("2. GiantMinion");
+        System.out.println("3. WarriorMinion");
+        System.out.println("4. HumanMinion");
+        System.out.println("5. SlaveMinion");
+        System.out.println("Choose minion types (e.g. 2,4,5): ");
+
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+
+        // ตัดช่องว่างและตรวจสอบค่าที่ถูกต้อง
+        String[] rawMinions = input.split(",");
+        List<String> validMinions = new ArrayList<>();
+
+        for (String minion : rawMinions) {
+            minion = minion.trim();  // ลบช่องว่าง
+            if (minion.matches("[1-5]")) { // ตรวจสอบว่าต้องเป็น 1-5 เท่านั้น
+                validMinions.add(minion);
+            }
+        }
+
+        // แปลงเป็น array และเก็บใน selectedMinions
+        GameManage.selectedMinions = validMinions.toArray(new String[0]);
+
+        if (GameManage.selectedMinions.length == 0) {
+            System.out.println("Error: No valid minion types selected!");
         }
     }
 

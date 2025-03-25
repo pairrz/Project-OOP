@@ -3,10 +3,10 @@ package backend.players;
 import backend.game.*;
 import backend.minions.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+
+import static java.lang.Math.min;
+import static java.lang.Math.random;
 
 public class BotPlayer extends Player {
 
@@ -35,8 +35,10 @@ public class BotPlayer extends Player {
         }
 
         //minion strategy
-        for (Minion minion : minions) {
-            minion.minionStrategy("D:\\OOP project\\backend\\strategy\\Strategy3.txt");
+        if(!minions.isEmpty()) {
+            for (Minion minion : minions) {
+                minion.minionStrategy("D:\\OOP project\\backend\\strategy\\Strategy3.txt");
+            }
         }
 
         printStatus();
@@ -90,9 +92,77 @@ public class BotPlayer extends Player {
     }
 
     @Override
-    public void buyMinion(HexCell targetCell) {
-        super.buyMinion(targetCell);
+    public void buyMinion(HexCell cell) {
+        if (budget >= GameConfig.SpawnCost) {
+            HexCell hexCell = GameBoard.getHexCell(cell.getX(), cell.getY());
+
+            if (isMyHex(hexCell) && !hexCell.hasMinion()) {
+                Minion minion = chooseType(hexCell);
+                hexCell.addMinion(minion);
+                budget -= GameConfig.SpawnCost;
+                minions.add(minion);
+
+                System.out.println("มินเนียนถูกวางใน HexCell (" + cell.getX() + "," + cell.getY() + ")");
+            } else {
+                System.out.println("ไม่สามารถวางมินเนียนที่นี่ได้!" + cell.getX() + "," + cell.getY());
+            }
+        } else {
+            System.out.println("งบประมาณไม่พอ!");
+        }
     }
+
+//        return switch ((int) num) {
+//            case 1 -> new LordMinion(this, cell);
+//            case 2 -> new GiantMinion(this, cell);
+//            case 3 -> new WarriorMinion(this, cell);
+//            case 4 -> new HumanMinion(this, cell);
+//            case 5 -> new SlaveMinion(this, cell);
+//            default -> null;
+//        };
+
+    @Override
+    public Minion chooseType(HexCell cell) {
+        // ตรวจสอบว่า selectedMinions ไม่เป็น null และไม่ว่าง
+        if (GameManage.selectedMinions == null || GameManage.selectedMinions.length == 0) {
+            System.out.println("Error: No minions selected!");
+            return null;
+        }
+
+        // สุ่มเลือกจาก selectedMinions
+        Random rand = new Random();
+        int index = rand.nextInt(GameManage.selectedMinions.length);
+        int minionType = Integer.parseInt(GameManage.selectedMinions[index]);
+
+        Minion minion = null;
+        switch (minionType) {
+            case 1 -> {
+                minion = new LordMinion(this, cell);
+                System.out.println("1. LordMinion selected");
+            }
+            case 2 -> {
+                minion = new GiantMinion(this, cell);
+                System.out.println("2. GiantMinion selected");
+            }
+            case 3 -> {
+                minion = new WarriorMinion(this, cell);
+                System.out.println("3. WarriorMinion selected");
+            }
+            case 4 -> {
+                minion = new HumanMinion(this, cell);
+                System.out.println("4. HumanMinion selected");
+            }
+            case 5 -> {
+                minion = new SlaveMinion(this, cell);
+                System.out.println("5. SlaveMinion selected");
+            }
+            default -> {
+                System.out.println("Error: Invalid minion type selected");
+                return null;
+            }
+        }
+        return minion;
+    }
+
 
     @Override
     public boolean isAdjacent(HexCell cell) {

@@ -211,7 +211,7 @@ export default function Play() {
 
       {summonMode && (
         <div className="minion-selector">
-          <h3>เลือกวิญญาณ</h3>
+          <h3>เลือกมินเนี่ยน</h3>
           <div className="minion-images">
             {selectedMinions.map((minion, index) => (
               <img key={index} src={minion.img} alt={minion.name} className="minion-image"
@@ -273,7 +273,7 @@ export default function Play() {
           </div>
         </div>
       )}
-      <BackBotton />
+       <BackBotton />
     </div>
   );
 }

@@ -84,7 +84,7 @@ public class Player {
             HexCell hexCell = GameBoard.getHexCell(cell.getX(), cell.getY());
 
             if (isMyHex(hexCell) && !hexCell.hasMinion()) {
-                Minion minion = new Minion(this, hexCell);
+                Minion minion = chooseType(hexCell);
                 hexCell.addMinion(minion);
 
                 budget -= GameConfig.SpawnCost;
@@ -97,6 +97,45 @@ public class Player {
         } else {
             System.out.println("งบประมาณไม่พอ!");
         }
+    }
+
+    public Minion chooseType(HexCell cell) {
+        if (GameManage.selectedMinions == null) {
+            System.out.println("Error: No minions selected!");
+            return null;
+        }
+
+        for(String str : GameManage.selectedMinions){
+            switch (str){
+                case "1":
+                    System.out.println("1.LordMinion");
+                    break;
+                case "2":
+                    System.out.println("2.GiantMinion");
+                    break;
+                case "3":
+                    System.out.println("3.WarriorMinion");
+                    break;
+                case "4":
+                    System.out.println("4.HumanMinion");
+                    break;
+                case "5":
+                    System.out.println("5.SlaveMinion");
+                    break;
+            }
+        }
+        System.out.println("Choose a minion type to spawn: ");
+        Scanner scanner = new Scanner(System.in);
+        String str = scanner.nextLine();
+
+        return switch (str) {
+            case "1" -> new LordMinion(this, cell);
+            case "2" -> new GiantMinion(this, cell);
+            case "3" -> new WarriorMinion(this, cell);
+            case "4" -> new HumanMinion(this, cell);
+            case "5" -> new SlaveMinion(this, cell);
+            default -> null;
+        };
     }
 
     public void buyHexCell(HexCell cell) {

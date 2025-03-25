@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import logo from './ตกแต่ง/mlogo.png';
+import logo from './ตกแต่ง/logo_mode.png';
 
 const H2= () => {
   const [currentImage, setCurrentImage] = useState(logo);
@@ -13,12 +13,13 @@ const H2= () => {
   }, []);
 console.log('test')
   return (
-    <h1>
-      <img 
-        src={currentImage} 
-        width="200" 
-      />
-    </h1>
+    <h1 className="logo-container">
+  <img 
+    src={currentImage} 
+    width="500" 
+    alt="Logo"
+  />
+</h1>
   );
 };
 

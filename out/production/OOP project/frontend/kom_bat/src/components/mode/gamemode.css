@@ -1,0 +1,31 @@
+.mode{
+  background-image: url('./พื้นหลัง/detailed_fire_animation_fixed.gif');
+
+  background-size: cover; /* ทำให้ภาพพอดีกับหน้าจอ */
+  background-position: center; /* จัดภาพให้อยู่ตรงกลาง */
+  background-repeat: no-repeat; /* ไม่ให้ภาพซ้ำ */
+  height: 100vh; /* ใช้ความสูง 100% ของหน้าจอ */
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  text-align: center;
+
+  /* ใช้ flexbox เพื่อจัดตำแหน่ง */
+  display: flex;
+  justify-content: center; /* จัดแนวนอนให้ตรงกลาง */
+  align-items: center; /* จัดแนวตั้งให้ตรงกลาง */
+  flex-direction: column; /* ถ้าต้องการให้เนื้อหาจัดเรียงในแนวตั้ง */
+}
+
+.mode h1 {
+  margin-top: -20px;
+  margin-bottom: 0px;
+}
+
+.mode-group {
+  display: flex;
+  flex-direction: column;   /* บังคับเรียงจากบนลงล่าง */
+  align-items: center;      /* ให้แต่ละโหมดอยู่ตรงกลาง */
+  gap: 20px;                /* ระยะห่างแต่ละโหมด ปรับเพิ่มได้ */
+  margin-top: 50px;         /* ดันลงจากโลโก้ */
+}

@@ -27,7 +27,7 @@ export default function Play() {
   const [selectedMinion, setSelectedMinion] = useState(null);
   const [selectedMinions, setSelectedMinions] = useState([]);
   const [turnCount, setTurnCount] = useState(1);
-  const maxTurnLimit = 5;
+  const maxTurnLimit = 10;
   const [gameOver, setGameOver] = useState(false);
   const [playerBudget, setPlayerBudget] = useState({ 1: 10000, 2: 10000 });
   const buyCost = 1000;
@@ -130,9 +130,9 @@ export default function Play() {
     if (buyMode) {
       if (highlightCells.some(([r, c]) => r === row && c === col)) setSelectedHex([row, col]);
     } else if (summonMode) {
-      if (!selectedMinion) return alert('ยังไม่ได้เลือกมินเนี่ยน');
+      if (!selectedMinion) return ;
       if (grid[row][col] === currentPlayer && minionGrid[row][col] === null) setSelectedSummonHex([row, col]);
-      else alert('วางได้เฉพาะช่องตัวเองและต้องว่าง');
+      else ;
     }
   };
 
@@ -147,7 +147,7 @@ export default function Play() {
       setHighlightCells([]);
       setSelectedHex(null);
       setHasBought(true);
-    } else alert('เงินไม่พอซื้อ');
+    } else ;
   };
 
   const confirmSummon = () => {
@@ -162,7 +162,7 @@ export default function Play() {
       setSelectedMinion(null);
       setSelectedSummonHex(null);
       setHasSummoned(true);
-    } else alert('เงินไม่พออัญเชิญ');
+    } else ;
   };
 
   const handleConfirm = () => {

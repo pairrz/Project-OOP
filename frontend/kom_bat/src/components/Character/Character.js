@@ -60,8 +60,9 @@ export default function Character() {
 
     const handleConfirm = async () => {
         localStorage.setItem('selectedCharacters', JSON.stringify(selected));
-<<<<<<< HEAD
         navigate('/select');
+/*<<<<<<< HEAD
+        
 =======
         // ส่งข้อมูลมินเนียนที่เลือกไปที่ API
 
@@ -83,7 +84,7 @@ export default function Character() {
         } catch (error) {
             console.error("Error:", error);
         }
->>>>>>> 6d021ed0337fa8aee6c5bf893b72b3768cf3c513
+>>>>>>> 6d021ed0337fa8aee6c5bf893b72b3768cf3c513*/
     };
 
     return (

@@ -20,7 +20,7 @@ public class BotPlayer extends Player {
 
         //buy Hex cell
         if (budget >= GameConfig.HexPurchase) {
-            HexCell targetCell = findHexCell(turn);
+            HexCell targetCell = findHexCell();
             if (targetCell != null) {
                 buyHexCell(targetCell);
             }
@@ -46,26 +46,25 @@ public class BotPlayer extends Player {
         resetBudget(turn);
     }
 
-    private HexCell findHexCell(int turn) {
-        if(turn % 2 == 0){
-            for(int i = 0; i < 8; i++){
-                for(int j = 0; j < 8; j++){
-                    HexCell cell = GameBoard.getHexCell(i,j);
-                    if(isAdjacent(cell) && !GameBoard.isOccupied(i, j)){
-                        return cell;
-                    }
-                }
-            }
-        }else{
-            for(int i = 7; i >= 0; i--){
-                for(int j = 7; j >= 0; j--){
-                    HexCell cell = GameBoard.getHexCell(i,j);
-                    if(isAdjacent(cell) && !GameBoard.isOccupied(i, j)){
-                        return cell;
-                    }
-                }
+
+    private HexCell findHexCell() {
+        Set<HexCell> availableCells = new HashSet<>();
+
+        for (HexCell cell : GameBoard.hexCellMap.values()) {
+            if (!hexCells.containsKey(cell.getKey()) && isAdjacent(cell) && GameBoard.isValidPosition(cell.getX(), cell.getY())) {
+                availableCells.add(cell);
             }
         }
+
+        if (!availableCells.isEmpty()) {
+            List<HexCell> availableList = new ArrayList<>(availableCells);
+
+            Random random = new Random();
+            int randomIndex = random.nextInt(availableList.size());
+
+            return availableList.get(randomIndex);
+        }
+
         return null;
     }
 

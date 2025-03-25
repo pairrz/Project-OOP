@@ -7,7 +7,7 @@
   text-align: center;
   position: relative;
   background-attachment: fixed;
-  background-size: 85%;  /* ลดขนาดภาพพื้นหลัง */
+  background-size: 88%;  /* ลดขนาดภาพพื้นหลัง */
   background-position: center;
   
   display: flex;
@@ -23,12 +23,14 @@
   height: auto;
   margin: 0 auto;
   transform: scale(0.9);
-  left: 50px; /* Adjust this value to shift the grid further to the right */
+  left: 45px; /* Adjust this value to shift the grid further to the right */
+  top: 20px;
 }
 
 .hex-cell.highlight {
   background-color: rgba(255, 255, 0, 0.5); /* สีเหลืองโปร่งใส */
-  border: 2px solid yellow;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  
 }
 
 .hex-outline {
@@ -36,12 +38,12 @@
   height: 70px;
   background-color: rgba(255, 255, 0, 0.5); /* สีเหลือง */
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  border: 2px solid yellow;
+  
 }
 
 .hex-cell {
   position: absolute;
-  width: 65px;
+  width: 75px;
   height: 75px;
   background-size: 100% 100%;
   background-repeat: no-repeat;
@@ -96,7 +98,7 @@
 
 .minion-selector {
   width: 200px;
-  background-color: #f1f1f1;
+  background-color: #1a1a1a;
   padding: 10px;
   border-radius: 5px;
   margin-left: 20px;
@@ -149,6 +151,7 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  
 }
 
 .popup-content {
@@ -176,7 +179,7 @@
   background-position: center;
   cursor: pointer;
   background-color: transparent; /* ทำให้พื้นหลังโปร่งใส */
-  margin: 0 20px; /* ปรับระยะห่างด้านข้างให้ปุ่มเข้ามาใกล้ */
+  margin: 0 100px; /* ปรับระยะห่างด้านข้างให้ปุ่มเข้ามาใกล้ */
   transform: translateX(10px); /* ขยับปุ่มเข้ามาในแนวนอน */
 }
 
@@ -194,4 +197,13 @@
 
 .button-group button.confirm {
   background-image: url('./ปุ่ม/confirm_button.png'); /* เพิ่มเส้นทางรูปภาพปุ่มยืนยัน */
+}
+.player-info.active {
+  box-shadow: 0 0 15px rgb(0, 255, 13); /* ทำให้กล่องของ Player ขยายและเป็นสีเหลือง */
+}
+
+/* ปรับปุ่มให้เป็นสีเทาหลังจากซื้อ */
+.button-group button:disabled {
+  background-color: gray; /* เปลี่ยนปุ่มให้เป็นสีเทาเมื่อถูกปิดการใช้งาน */
+  cursor: not-allowed; /* ปรับให้แสดงว่าไม่สามารถคลิกได้ */
 }

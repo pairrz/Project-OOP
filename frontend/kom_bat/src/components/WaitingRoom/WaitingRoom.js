@@ -5,6 +5,7 @@ const WaitingRoom = () => {
     const [playerName, setPlayerName] = useState('');
     const [roomCode, setRoomCode] = useState('');
     const [createdRoomCode, setCreatedRoomCode] = useState('');
+    const [roomId, setRoomId] = useState('');  // เพิ่ม state สำหรับ roomId
     const navigate = useNavigate();
 
     // ฟังก์ชันสำหรับการสร้างห้อง
@@ -17,7 +18,8 @@ const WaitingRoom = () => {
             if (response.ok) {
                 const data = await response.json();
                 setCreatedRoomCode(data.roomCode);  // ตั้งค่ารหัสห้องจากข้อมูลที่ได้รับ
-                alert(`Room Created! Room Code: ${data.roomCode}`);
+                setRoomId(data.roomId);  // ตั้งค่า ID ของห้องที่ได้รับ
+                alert(`Room Created! Room Code: ${data.roomCode}, Room ID: ${data.roomId}`);  // แจ้งรหัสห้องและ ID
             } else {
                 console.error("Failed to create room");
             }
@@ -44,7 +46,6 @@ const WaitingRoom = () => {
         }
     };
 
-
     return (
         <div>
             <h2>Waiting Room</h2>
@@ -59,6 +60,7 @@ const WaitingRoom = () => {
             {createdRoomCode && (
                 <div>
                     <p>Room Code: {createdRoomCode}</p>
+                    <p>Room ID: {roomId}</p>  {/* แสดง ID ของห้อง */}
                     <input
                         type="text"
                         placeholder="Enter Room Code to Join"

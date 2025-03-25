@@ -48,6 +48,10 @@ public record AttackExpr(Minion attacker, String direction, Expr expend) impleme
                 return 0;
             }
 
+            if(targetMinion.getOwner() == player) {
+                return 0;
+            }
+
             int hp = targetMinion.getHP();
             int defense = targetMinion.getDef();
             int damage = Math.max(1, expenditure - defense);

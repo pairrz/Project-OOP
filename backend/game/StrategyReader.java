@@ -36,11 +36,11 @@ public class StrategyReader {
             Expr expr = parser.parse();
             expr.eval(bindings);
         } catch (IllegalArgumentException e) {
-            throw new InvalidStrategyException("Invalid operator or syntax in strategy: " + e.getMessage(), e);
+            //throw new InvalidStrategyException("Invalid operator or syntax in strategy: " + e.getMessage(), e);
         } catch (ArithmeticException e) {
-            throw new StrategyEvaluationException("Error evaluating strategy: " + e.getMessage(), e);
+            //throw new StrategyEvaluationException("Error evaluating strategy: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new StrategyProcessingException("Error processing strategy: " + e.getMessage(), e);
+            //throw new StrategyProcessingException("Error processing strategy: " + e.getMessage(), e);
         }
     }
 

@@ -46,11 +46,18 @@ public class GameManage {
         board.showBoard();
 
         while (!isOver()) {
-            System.out.println("\n" + currentName() + "'s turn (Turn: " + turn + ")\n");
+            System.out.println("\n" + currentName() + "'s turn (Turn: " + turn + ")");
             current().takeTurn(turn);
             board.showBoard();
 
             System.out.println("-----End " + currentName() + "'s turn-----");
+            board.switchPlayers();
+
+            System.out.println("\n" + currentName() + "'s turn (Turn: " + turn + ")");
+            current().takeTurn(turn);
+            board.showBoard();
+            System.out.println("-----End " + currentName() + "'s turn-----");
+
             board.switchPlayers();
             turn++;
         }

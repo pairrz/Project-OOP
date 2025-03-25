@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BackBotton from '../BackBotton/BackBotton';
+//import BackBotton from '../BackBotton/BackBotton';
 import './Play.css';
 import hexDefault from './รูป/h1.png';
 import hexPlayer1 from './รูป/h3.png';
@@ -145,9 +145,10 @@ export default function Play() {
       setBuyMode(false);
       setHighlightCells([]);
       setSelectedHex(null);
-      setHasBought(true);
+      setHasBought(true); // เปลี่ยนสถานะปุ่มให้เป็นสีเทาเมื่อซื้อแล้ว
     }
   };
+  
 
   const confirmSummon = () => {
     if (playerBudget[currentPlayer] >= summonCost) {
@@ -160,15 +161,14 @@ export default function Play() {
       setHighlightCells([]);
       setSelectedMinion(null);
       setSelectedSummonHex(null);
-      setHasSummoned(true);
+      setHasSummoned(true); // เปลี่ยนสถานะปุ่มให้เป็นสีเทาหลังการซัมม่อน
     }
   };
-
   const handleConfirm = () => {
     if (buyMode && selectedHex) confirmBuy();
     else if (summonMode && selectedSummonHex) confirmSummon();
   };
-
+ 
   const handleEndTurn = () => {
     setCurrentPlayer(currentPlayer === 1 ? 2 : 1);
     setBuyMode(false);
@@ -178,6 +178,7 @@ export default function Play() {
     setSelectedSummonHex(null);
     setHasBought(false);
     setHasSummoned(false);
+    // เปลี่ยนสถานะปุ่มเมื่อขึ้นเทิร์นใหม่
     if (currentPlayer === 2) {
       setPlayerBudget(prev => ({
         1: prev[1] + Math.floor(prev[1] * interestRate),
@@ -260,7 +261,7 @@ export default function Play() {
         }
       </div>
 
-      <BackBotton />
+      {/*<div><BackBotton /></div>*/}
 
       {gameOver && (
         <div className="game-over-popup">

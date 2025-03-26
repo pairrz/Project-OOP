@@ -9,7 +9,7 @@ import ghost3 from '../Character/รูป/GG3.png';
 import ghost4 from '../Character/รูป/GG4.png';
 import ghost5 from '../Character/รูป/GG5.png';
 import selectTitle from './ตกแต่ง/select_title.png';
-import selectMusic from './ตกแต่ง/เสียง/Select_sound1.mp3';
+import selectMusic from './ตกแต่ง/เสียง/Select_sound.mp3';
 
 import autoBtn from './ปุ่ม/auto.png';
 import okBtn from './ปุ่ม/ok.png';
@@ -24,7 +24,6 @@ export default function Select() {
   const [characters, setCharacters] = useState([]);
   const [selectedChar, setSelectedChar] = useState(null);
   const [strategy, setStrategy] = useState('');
-  const [hp, setHp] = useState('');
   const [def, setDef] = useState('');
   const [formData, setFormData] = useState([]);
   const [activeCharId, setActiveCharId] = useState(null);
@@ -61,17 +60,15 @@ export default function Select() {
   }, []);
 
   const handleOK = () => {
-    if (!strategy || !hp || !def) {
-      /*alert('กรุณากรอก Strategy, HP, DEF หรือกด Auto');*/
+    if (!strategy || !def) {
       return;
     }
     const existing = formData.find(f => f.id === selectedChar.id);
     const updated = existing
-      ? formData.map(f => (f.id === selectedChar.id ? { ...f, strategy, hp, def } : f))
-      : [...formData, { ...selectedChar, strategy, hp, def }];
+      ? formData.map(f => (f.id === selectedChar.id ? { ...f, strategy, def } : f))
+      : [...formData, { ...selectedChar, strategy, def }];
     setFormData(updated);
     setLockedChars([...lockedChars, selectedChar.id]);
-    /*alert(`บันทึก ${selectedChar.name} สำเร็จ!`);*/
   };
 
   const handleAuto = () => {
@@ -113,7 +110,6 @@ while (3 - m) {
   }
   m = m + 1
 }`);
-    setHp(100);
     setDef(50);
   };
 
@@ -134,11 +130,9 @@ while (3 - m) {
     const existing = formData.find(f => f.id === id);
     if (existing) {
       setStrategy(existing.strategy);
-      setHp(existing.hp);
       setDef(existing.def);
     } else {
       setStrategy('');
-      setHp('');
       setDef('');
     }
   };
@@ -178,7 +172,7 @@ while (3 - m) {
                 disabled={isLocked}
               />
               <div className="input-group">
-                <input type="number" placeholder="HP" value={hp} onChange={e => setHp(e.target.value)} disabled={isLocked} />
+                {/* Remove HP input field */}
                 <input type="number" placeholder="DEF" value={def} onChange={e => setDef(e.target.value)} disabled={isLocked} />
               </div>
             </div>

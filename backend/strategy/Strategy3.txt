@@ -10,7 +10,7 @@ while (3 - m) {
     else if ((opponentLoc - nearby up) * (opponentLoc - nearby up)) then shoot up cost
     else if ((opponentLoc - nearby downleft) * (opponentLoc - nearby downleft)) then shoot downleft cost
     else if ((opponentLoc - nearby downright) * (opponentLoc - nearby downright)) then shoot downright cost
-    else if ((opponentLoc - nearby down) * (opponentLoc - nearby down)) then shoot down cost
+    else if ((opponentLoc - nearby down) * (opponentLoc - nearby down)) then shoot down cost else done
   } else done
   if (opponentLoc / 10 - 1) then {
     if (opponentLoc % 10 - 5) then move downleft

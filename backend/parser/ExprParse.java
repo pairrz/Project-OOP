@@ -1,7 +1,7 @@
 package backend.parser;
 
 import SyntaxErrorException.DoneException;
-import backend.evaluation.*;
+import backend.ast.*;
 import backend.minions.*;
 import backend.players.*;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class ExprParse implements Parser {
                         finalExpr.eval(bindings);
                         return nextExpr.eval(bindings);
                     } catch (DoneException e) {
-                        throw e;
+                        return 0;
                     }
                 };
             }
@@ -68,11 +68,8 @@ public class ExprParse implements Parser {
             token.consume("then");
             Expr statement1 = token.peek("{") ? BlockStatement() : Statement();
 
-            Expr statement2 = new NoOpExpr();
-            if (token.peek("else")) {
-                token.consume("else");
-                statement2 = token.peek("{") ? BlockStatement() : Statement();
-            }
+            token.consume("else");
+            Expr statement2 = token.peek("{") ? BlockStatement() : Statement();
 
             return new IfStatementExpr(condition, statement1, statement2);
         } else if (token.peek("while")) {
@@ -84,11 +81,9 @@ public class ExprParse implements Parser {
             if (!token.peek("{")) {
                 throw new IOException("Expected '{' after while condition");
             }
-
             return new WhileStatementExpr(condition, BlockStatement());
         } else if (token.peek("{")) {
             return BlockStatement();
-
         } else {
             return Command();
         }
@@ -105,10 +100,9 @@ public class ExprParse implements Parser {
         if (!token.hasNextToken()) {
             throw new IOException("Unexpected end of block, missing '}'");
         }
-
         token.consume("}");
 
-        return statements.isEmpty() ? new NoOpExpr() : new BlockExpr(statements);
+        return new BlockExpr(statements);
     }
 
     private Expr Command() throws IOException {
@@ -128,7 +122,7 @@ public class ExprParse implements Parser {
         }
 
         token.consume("=");
-        Expr expr = Expression();  // คำนวณค่าที่กำหนดให้ตัวแปร
+        Expr expr = Expression();
         return new AssignmentExpr(var, expr);
     }
 
@@ -141,7 +135,7 @@ public class ExprParse implements Parser {
         } else if (token.peek("shoot")) {
             return AttackCommand();
         } else {
-            throw new IOException("Invalid action command: " + token.peek());  // Changed to IOException
+            throw new IOException("Invalid action command: " + token.peek());
         }
     }
 
@@ -162,7 +156,7 @@ public class ExprParse implements Parser {
                 token.peek("downleft") || token.peek("downright")) {
             return token.consume();
         } else {
-            throw new IOException("Expected direction but found: " + token.peek());  // Changed to IOException
+            throw new IOException("Expected direction but found: " + token.peek());
         }
     }
 
@@ -214,7 +208,7 @@ public class ExprParse implements Parser {
             return new InfoExpr(token.consume(), minion);
         } else if (token.peek("nearby")) {
             token.consume("nearby");
-            String direction = Direction();  // ตรวจสอบว่า direction ถูกรับมาอย่างถูกต้อง
+            String direction = Direction();
             return new NearbyExpr(direction, minion);
         } else {
             throw new IOException("Unexpected info expression: " + token.peek());

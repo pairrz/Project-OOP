@@ -11,7 +11,7 @@ public class GiantMinion extends Minion {
         super(owner, cell);
     }
     @Override
-    public void minionStrategy(String strategy) throws IOException, StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
+    public void minionStrategy(String strategy) throws Exception {
         super.minionStrategy(strategy);
     }
 

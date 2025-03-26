@@ -53,6 +53,10 @@
   font-size: 12px;
 }
 
+.hex-cell.highlight {
+  background-image: url('./รูป/h4.png'); /* ใช้ h4.png */
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
 .button-group {
   position: absolute;
   bottom: 150px;

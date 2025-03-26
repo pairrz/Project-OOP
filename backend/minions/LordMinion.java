@@ -1,9 +1,6 @@
 package backend.minions;
 
 import backend.game.HexCell;
-import backend.game.InvalidStrategyException;
-import backend.game.StrategyEvaluationException;
-import backend.game.StrategyProcessingException;
 import backend.players.Player;
 
 import java.io.IOException;
@@ -14,7 +11,7 @@ public class LordMinion extends Minion {
         super(owner, cell);
     }
     @Override
-    public void minionStrategy(String strategy) throws IOException, StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
+    public void minionStrategy(String strategy) throws Exception {
         super.minionStrategy(strategy);
     }
 

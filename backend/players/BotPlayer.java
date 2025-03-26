@@ -15,7 +15,7 @@ public class BotPlayer extends Player {
     }
 
     @Override
-    public void takeTurn(int turn) throws IOException, StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
+    public void takeTurn(int turn) throws Exception {
         printStatus();
 
         //buy Hex cell

@@ -1,7 +1,7 @@
 package SyntaxErrorException;
 
-public class DoneException extends Exception {
+public class DoneException extends RuntimeException {
     public DoneException() {
-        super("");
+        super();
     }
 }

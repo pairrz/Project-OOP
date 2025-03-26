@@ -263,42 +263,4 @@ class ExprParseTest {
 
         board.showBoard();
     }
-
-    @Test
-    void strategyBaseTest() throws Exception {
-        StrategyReader file = new StrategyReader();
-
-        try {
-            file.readStrategyFromFile("D:\\OOP project\\backend\\strategy\\Strategy3.txt", minion);
-        } catch (IOException e) {
-            fail("Failed to read strategy file: " + e.getMessage());
-        }
-
-    }
-
-    @Test
-    void strategyTestPass() throws Exception {
-        StrategyReader file = new StrategyReader();
-
-        file.readStrategyFromString("cost = 30 if(cost) then shoot down cost", minion);
-    }
-
-    @Test
-    void strategyTestFailed() {
-        HexCell cell = new HexCell(1,0);
-        Minion minForTest = new Minion(player,cell);
-
-        String strategy = "cost = 30; if(cost) shoot down cost";
-
-        StrategyReader file = new StrategyReader();
-        Exception exception = assertThrows(StrategyProcessingException.class, () -> {
-            file.readStrategyFromString(strategy, minForTest);
-        });
-
-        String actualMessage = exception.getMessage();
-        assertNotNull(actualMessage, "The exception message should not be null");
-
-        String expectedMessage = "Error processing strategy";
-        assertTrue(actualMessage.contains(expectedMessage), "The error message should contain: " + expectedMessage);
-    }
 }

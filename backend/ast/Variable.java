@@ -1,4 +1,4 @@
-package backend.evaluation;
+package backend.ast;
 
 import backend.game.*;
 import backend.minions.*;
@@ -30,7 +30,7 @@ public record Variable(String var, Minion minion) implements Expr {
                 return GameBoard.getSpawnRemaining();
             }
             case "random" -> {
-                return (int) (Math.random() * 1000); //สุ่มค่า 0-999
+                return (int) (Math.random() * 1000);
             }
             default -> {
                 bindings.putIfAbsent(var, 0);

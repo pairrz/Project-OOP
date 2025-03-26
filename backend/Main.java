@@ -4,7 +4,7 @@ import backend.game.*;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException, StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
+    public static void main(String[] args) throws Exception {
         GameManage gameManage = new GameManage();
         gameManage.gamePlay();
     }

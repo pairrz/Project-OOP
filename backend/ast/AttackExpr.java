@@ -1,4 +1,4 @@
-package backend.evaluation;
+package backend.ast;
 
 import backend.game.*;
 import backend.parser.*;

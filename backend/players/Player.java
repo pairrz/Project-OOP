@@ -21,7 +21,7 @@ public class Player {
         this.baseR = GameConfig.InterestPct;
     }
 
-    public void takeTurn(int turn) throws IOException, StrategyEvaluationException, StrategyProcessingException, InvalidStrategyException {
+    public void takeTurn(int turn) throws Exception {
         printStatus();
 
         boolean boughtHex = false;

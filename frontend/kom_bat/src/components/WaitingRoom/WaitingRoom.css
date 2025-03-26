@@ -13,7 +13,7 @@
   text-align: center;
 }
 
-.waiting-room h1 {
+.waiting-room  {
   margin-bottom: 20px;
 }
 
@@ -29,7 +29,7 @@
 
 .waiting-room button {
   padding: 10px 20px;
-  background-color: #ff5c5c; /* ปรับสีปุ่ม */
+  background-color: #17a917; /* ปรับสีปุ่ม */
   color: white;
   font-size: 16px;
   border: none;
@@ -41,5 +41,13 @@
 }
 
 .waiting-room button:hover {
-  background-color: #e04e4e; /* สีเมื่อ hover */
+  background-color: #88e04e; /* สีเมื่อ hover */
+}
+
+.title2-logo {
+  width: 100%; /* ปรับให้ขนาดของรูปภาพไม่เกินขนาดของพื้นที่ที่กำหนด */
+  max-width: 250px; /* ตั้งขีดจำกัดความกว้างสูงสุดของรูปภาพ */
+  height: auto; /* คงอัตราส่วนของภาพเมื่อปรับขนาด */
+  display: block; /* ทำให้รูปแสดงในลักษณะบล็อก */
+  margin: 0 auto; /* ทำให้รูปภาพอยู่กึ่งกลาง */
 }

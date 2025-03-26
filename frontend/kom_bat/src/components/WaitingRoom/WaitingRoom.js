@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from './ตกแต่ง/logo.png';
 import './WaitingRoom.css';
+import BackBotton from '../BackBotton/BackBotton';
 
 const WaitingRoom = () => {
     const [playerName, setPlayerName] = useState('');
@@ -55,7 +56,7 @@ const WaitingRoom = () => {
     return (
         <div className='waiting-room'>
             <h1 className="game-title">
-                <img src={logo} alt="คอมแบท" className="title-logo" />
+                <img src={logo} alt="คอมแบท" className="title2-logo" />
             </h1>
             <input
                 type="text"
@@ -65,9 +66,9 @@ const WaitingRoom = () => {
             />
             <button onClick={createRoom}>Create Room</button>
 
-            {createdRoomCode && (
+            {createdRoomCode || (
                 <div>
-                    <p>Room Code: {createdRoomCode}</p> {/* แสดงรหัสห้องที่สร้าง */}
+                    
                     <p>Room ID: {roomId}</p>  {/* แสดง ID ห้อง */}
                     <input
                         type="text"
@@ -78,6 +79,7 @@ const WaitingRoom = () => {
                     <button onClick={joinRoom}>Join Room</button> {/* ปุ่ม Join Room */}
                 </div>
             )}
+             <BackBotton />
         </div>
     );
 };
